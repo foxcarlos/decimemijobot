@@ -84,12 +84,49 @@ def comando_dolartoday(mensaje):
     response = '{0} El precio del paralelo en Vzla es: {1}'
     bot.send_message(chat_id, response.format(user_first_name, msg_response))
 
+@bot.message_handler(commands=['bitcoin'])
+def comando_bitcoin(mensaje):
+    '''.'''
+
+    chat_id = mensaje.chat.id
+    user_first_name = mensaje.from_user.first_name
+
+    url = "https://api.coinbase.com/v2/exchange-rates?currency=BTC"
+    response = requests.get(url).json().get("data").get("rates").get("USD")
+
+    msg_response = '{0} El precio del Bitcoin es: {1} USD'.format(user_first_name, response)
+    bot.send_message(chat_id, msg_response)
+
 @bot.message_handler(commands=['chao'])
 def comando_chao(mensaje):
     '''.'''
 
     chat_id = mensaje.chat.id
     bot.send_message(chat_id, 'Dala papi nos vemos, cualquier verga gritais')
+# ---------------------------------------------------------------------------------------------
+
+@bot.message_handler(commands=['gay'])
+def comando_chao(mensaje):
+    '''.'''
+
+    alias_gay(mensaje)
+
+
+def alias_gay(mensaje):
+    '''.'''
+
+    chat_id = mensaje.chat.id
+    user_first_name = mensaje.from_user.first_name
+
+    bot.send_message(chat_id, 'Mas marico sois vos {0}'.format(user_first_name))
+
+
+@bot.message_handler(commands=['mamamelo'])
+def comando_chao(mensaje):
+    '''.'''
+
+    chat_id = mensaje.chat.id
+    bot.send_message(chat_id, 'Mamamelo vos a mi')
 
 bot.polling(none_stop = True)
 
