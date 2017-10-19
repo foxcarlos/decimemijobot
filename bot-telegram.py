@@ -58,6 +58,8 @@ def ayuda(mensaje):
     /hola
     /chao
     /ayudame
+    /dameunaayudaitaahi
+    /quierocolaborar
     """
     user_first_name = mensaje.from_user.first_name
 
