@@ -46,6 +46,14 @@ def comando_quierocolaborar(mensaje):
 def comando_ayuda(mensaje):
     response = ayuda(mensaje)
 
+@bot.message_handler(commands=['help'])
+def comando_ayuda(mensaje):
+    response = ayuda(mensaje)
+
+@bot.message_handler(commands=['?'])
+def comando_ayuda(mensaje):
+    response = ayuda(mensaje)
+
 @bot.message_handler(commands=['dameunaayudaitaahi'])
 def comando_ayuda(mensaje):
     response = ayuda(mensaje)
@@ -60,6 +68,7 @@ def ayuda(mensaje):
     /hola
     /chao
     /ayudame
+    /help
     /dameunaayudaitaahi
     /quierocolaborar
     /dolartoday
@@ -103,7 +112,9 @@ def comando_chao(mensaje):
 
     chat_id = mensaje.chat.id
     bot.send_message(chat_id, 'Dala papi nos vemos, cualquier verga gritais')
+
 # ---------------------------------------------------------------------------------------------
+# Groserias y Jodezon
 
 @bot.message_handler(commands=['gay'])
 def comando_chao(mensaje):
