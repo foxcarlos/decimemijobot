@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 import telebot
 from telebot import types
+import requests
+
 
 TOKEN = '336382255:AAHwrdIgN0j3gIet0xnJfCKs78ojp1dm28s'
 bot = telebot.TeleBot(TOKEN)
@@ -28,7 +30,7 @@ def comando_suma(mensaje):
     bot.send_message(chat_id, response.format(user_first_name, total_sum))
 
 @bot.message_handler(commands=['quierocolaborar'])
-def comando_suma(mensaje):
+def comando_quierocolaborar(mensaje):
     '''.'''
 
     chat_id = mensaje.chat.id
@@ -60,12 +62,27 @@ def ayuda(mensaje):
     /ayudame
     /dameunaayudaitaahi
     /quierocolaborar
+    /dolartoday
+    /bitcoin
     """
     user_first_name = mensaje.from_user.first_name
 
     response = 'Ey..! {0} aqui teneis tu ayuda, {1}'
     bot.send_message(chat_id, response.format(user_first_name, msg_response))
 
+@bot.message_handler(commands=['dolartoday'])
+def comando_dolartoday(mensaje):
+    '''.'''
+
+    chat_id = mensaje.chat.id
+    user_first_name = mensaje.from_user.first_name
+
+    rq = requests.get('https://s3.amazonaws.com/dolartoday/data.json')
+    devuelto = rq.json()
+    msg_response = devuelto['USD']['transferencia']
+
+    response = '{0} El precio del paralelo en Vzla es: {1}'
+    bot.send_message(chat_id, response.format(user_first_name, msg_response))
 
 @bot.message_handler(commands=['chao'])
 def comando_chao(mensaje):
