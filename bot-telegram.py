@@ -27,25 +27,43 @@ def comando_suma(mensaje):
     response = 'Ey..! {0} aqui teneis tu suma, {1}, a ver si te comprais una calculadora'
     bot.send_message(chat_id, response.format(user_first_name, total_sum))
 
-
-@bot.message_handler(commands=['ayudame'])
+@bot.message_handler(commands=['quierocolaborar'])
 def comando_suma(mensaje):
     '''.'''
 
     chat_id = mensaje.chat.id
     msg_response = """
+     cloname este ve: https://github.com/foxcarlos/decimemijobot
+    """
+    user_first_name = mensaje.from_user.first_name
 
-    Lista de Comandos: 
+    response = '{0} {1}'
+    bot.send_message(chat_id, response.format(user_first_name, msg_response))
+
+@bot.message_handler(commands=['ayudame'])
+def comando_ayuda(mensaje):
+    response = ayuda(mensaje)
+
+@bot.message_handler(commands=['dameunaayudaitaahi'])
+def comando_ayuda(mensaje):
+    response = ayuda(mensaje)
+
+def ayuda(mensaje):
+    '''.'''
+
+    chat_id = mensaje.chat.id
+    msg_response = """
+    Lista de Comandos:
     /suma 2,2,5
     /hola
     /chao
     /ayudame
-
     """
     user_first_name = mensaje.from_user.first_name
 
     response = 'Ey..! {0} aqui teneis tu ayuda, {1}'
     bot.send_message(chat_id, response.format(user_first_name, msg_response))
+
 
 @bot.message_handler(commands=['chao'])
 def comando_chao(mensaje):
