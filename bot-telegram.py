@@ -73,6 +73,7 @@ def ayuda(mensaje):
     /quierocolaborar
     /dolartoday
     /bitcoin
+    /porno
     """
     user_first_name = mensaje.from_user.first_name
 
@@ -115,6 +116,19 @@ def comando_chao(mensaje):
 
 # ---------------------------------------------------------------------------------------------
 # Groserias y Jodezon
+
+@bot.message_handler(commands=['porno'])
+def comando_porno(mensaje):
+    '''.'''
+
+    chat_id = mensaje.chat.id
+    msg_response = """
+     Aqui teneis  esto pa' que te pajieis: https://www.redtube.com/redtube/gay
+    """
+    user_first_name = mensaje.from_user.first_name
+
+    response = '{0} {1}'
+    bot.send_message(chat_id, response.format(user_first_name, msg_response))
 
 @bot.message_handler(commands=['gay'])
 def comando_chao(mensaje):
