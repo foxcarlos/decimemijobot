@@ -27,6 +27,26 @@ def comando_suma(mensaje):
     response = 'Ey..! {0} aqui teneis tu suma, {1}, a ver si te comprais una calculadora'
     bot.send_message(chat_id, response.format(user_first_name, total_sum))
 
+
+@bot.message_handler(commands=['ayudame'])
+def comando_suma(mensaje):
+    '''.'''
+
+    chat_id = mensaje.chat.id
+    msg_response = """
+
+    Lista de Comandos: 
+    /suma 2,2,5
+    /hola
+    /chao
+    /ayudame
+
+    """
+    user_first_name = mensaje.from_user.first_name
+
+    response = 'Ey..! {0} aqui teneis tu ayuda, {1}'
+    bot.send_message(chat_id, response.format(user_first_name, msg_response))
+
 @bot.message_handler(commands=['chao'])
 def comando_chao(mensaje):
     '''.'''
