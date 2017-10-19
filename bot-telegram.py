@@ -22,8 +22,12 @@ def comando_suma(mensaje):
     '''.'''
 
     chat_id = mensaje.chat.id
-    parameters = mensaje.text.split()[1].split(',')
-    total_sum = sum([float(n) for n in parameters])
+    try:
+        parameters = mensaje.text.split()[1].split(',')
+        total_sum = sum([float(n) for n in parameters])
+    except Exception as inst:
+        total_sum = 0
+
     user_first_name = mensaje.from_user.first_name
 
     response = 'Ey..! {0} aqui teneis tu suma, {1}, a ver si te comprais una calculadora'
