@@ -111,6 +111,23 @@ def comando_chao(mensaje):
 
     alias_gay(mensaje)
 
+@bot.message_handler(commands=['marico'])
+def comando_chao(mensaje):
+    '''.'''
+
+    alias_gay(mensaje)
+
+@bot.message_handler(commands=['marisco'])
+def comando_chao(mensaje):
+    '''.'''
+
+    alias_gay(mensaje)
+
+@bot.message_handler(commands=['homosexual'])
+def comando_chao(mensaje):
+    '''.'''
+
+    alias_gay(mensaje)
 
 def alias_gay(mensaje):
     '''.'''
