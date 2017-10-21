@@ -27,19 +27,15 @@ def comando_calculo(mensaje):
 
     try:
         cadena_sin_el_comando = ' '.join(parameters.split()[1:])
-
-        posicion_inicial_formula = cadena_sin_el_comando.find("[",0,len(cadena_sin_el_comando))
-        posicion_final_formula = cadena_sin_el_comando.find("]",0,len(cadena_sin_el_comando))
-
-        cadena_sin_comando_sin_formula  = cadena_sin_el_comando[:posicion_inicial_formula]
-        ubicar_formula = cadena_sin_el_comando[posicion_inicial_formula+1: posicion_final_formula]
-
-        # cadena_sin_el_comando.replace(cadena_sin_el_comando[ci: cf+1],
-        # "$formula")
-
-        total_cal = eval(ubicar_formula)
-        response = '{0} Dice: {1} {2}'.format(user_first_name, cadena_sin_comando_sin_formula, total_cal)
-
+        cadena = ""
+        # TODO: Esto se puede hacer en una linea con lista por comprension lo
+        # dejo asi por ahora para que se entienda un poco mejor
+        for palabra in cadena_sin_el_comando.split():
+            if palabra.find("[",0,len(palabra))>=0:
+                cadena+=str(eval(palabra.replace("[", "").replace("]", ""))) + " "
+            else:
+                cadena+=palabra+" "
+            response = '{0} Dice: {1} '.format(user_first_name, cadena)
     except Exception as inst:
         total_cal = inst
         response = 'verga paso algo..! {0}, aqui esta el error {1} deja de invertar hace algo mas facil'.format(user_first_name, total_cal)
