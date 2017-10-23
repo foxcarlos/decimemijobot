@@ -98,13 +98,11 @@ def ayuda(mensaje):
     chat_id = mensaje.chat.id
     msg_response = """
     Lista de Comandos:
-    /calcular (2+4) * 5
-    /insertarcalculo  La suma de 2 mas  es [2+2] y 3 por 3 es [3*3] 
+
+    /calcular  La suma de 2 mas  es [2+2] y 3 por 3 es [3*3]
     /hola
     /chao
-    /ayudame
     /help
-    /quierocolaborar
     /dolartoday
     /bitcoin
     /porno
