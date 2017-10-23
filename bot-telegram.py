@@ -17,7 +17,7 @@ def comando_hola(mensaje):
 
     bot.send_message(chat_id, 'Que fue mijo {0} como estais..?'.format(user_first_name))
 
-@bot.message_handler(commands=['insertarcalculo'])
+@bot.message_handler(commands=['calcular'])
 def comando_calculo(mensaje):
     '''.'''
 
@@ -41,27 +41,6 @@ def comando_calculo(mensaje):
         response = 'verga paso algo..! {0}, aqui esta el error {1} deja de invertar hace algo mas facil'.format(user_first_name, total_cal)
 
     bot.send_message(chat_id, response)
-
-@bot.message_handler(commands=['calcular'])
-def comando_calculo(mensaje):
-    '''.'''
-
-    chat_id = mensaje.chat.id
-    try:
-        parameters = mensaje.text.split()[1]
-
-        if 'import' in parameters:
-            total_sum = 'Que inventais mijo'
-        else:
-            total_sum = eval(parameters)
-
-        response = 'Ey..! {0} aqui teneis tu calculo, {1}, a ver si te comprais una calculadora'
-    except Exception as inst:
-        total_sum = inst
-        response = 'verga paso algo..! {0} aqui esta el error {1} deja de invertar hace algi facil'
-
-    user_first_name = mensaje.from_user.first_name
-    bot.send_message(chat_id, response.format(user_first_name, total_sum))
 
 @bot.message_handler(commands=['quierocolaborar'])
 def comando_quierocolaborar(mensaje):
