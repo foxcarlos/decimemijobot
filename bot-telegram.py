@@ -55,7 +55,7 @@ def bitcoin(mensaje):
     url = "https://api.coinbase.com/v2/exchange-rates?currency=BTC"
     response = requests.get(url).json().get("data").get("rates").get("USD")
 
-    msg_response = '{0} El precio del Bitcoin es: {1:0,.2f} USD'.format(user_first_name, response)
+    msg_response = '{0} El precio del Bitcoin es: {1:0,.2f} USD'.format(user_first_name, float(response))
     bot.send_message(chat_id, msg_response)
 
 @bot.message_handler(commands=['calcular'])
@@ -101,8 +101,8 @@ def dolartoday(mensaje):
     devuelto = rq.json()
     msg_response = devuelto['USD']['transferencia']
 
-    response = '{0} El precio del paralelo en Vzla es: {1}'
-    bot.send_message(chat_id, response.format(user_first_name, msg_response))
+    response = '{0} El precio del paralelo en Vzla es: {1:0,.2f}'
+    bot.send_message(chat_id, response.format(user_first_name, float(msg_response)))
 
 @bot.message_handler(commands=['hola'])
 def comando_hola(mensaje):

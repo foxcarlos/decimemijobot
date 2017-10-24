@@ -46,7 +46,7 @@ class NoticiasPanorama(object):
 
         self.driver.get(url)
         wait = WebDriverWait(self.driver, 10)
-        time.sleep(60)
+        time.sleep(6)
 
         for titular in self.driver.find_elements_by_xpath(ruta_xpath):
             titulares+="- {0}\n\n".format(titular.get_property("href"))
