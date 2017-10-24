@@ -55,7 +55,7 @@ def bitcoin(mensaje):
     url = "https://api.coinbase.com/v2/exchange-rates?currency=BTC"
     response = requests.get(url).json().get("data").get("rates").get("USD")
 
-    msg_response = '{0} El precio del Bitcoin es: {1} USD'.format(user_first_name, response)
+    msg_response = '{0} El precio del Bitcoin es: {1:.2f} USD'.format(user_first_name, response)
     bot.send_message(chat_id, msg_response)
 
 @bot.message_handler(commands=['calcular'])
