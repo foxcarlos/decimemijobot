@@ -2,3 +2,4 @@ ipdb==0.10.3
 ipython==6.2.1
 pyTelegramBotAPI==3.2.1
 requests
+selenium==3.6.0
