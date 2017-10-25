@@ -8,21 +8,30 @@ from scrapy import NoticiasPanorama
 TOKEN = '336382255:AAHwrdIgN0j3gIet0xnJfCKs78ojp1dm28s'
 bot = telebot.TeleBot(TOKEN)
 
+
 @bot.message_handler(commands=['ayudame'])
-def ayuda(mensaje):
+def ayudame(mensaje):
     response = ayuda(mensaje)
+    return True
+
 
 @bot.message_handler(commands=['help'])
-def ayuda(mensaje):
+def help(mensaje):
     response = ayuda(mensaje)
+    return True
+
 
 @bot.message_handler(commands=['?'])
-def ayuda(mensaje):
+def signo_ayuda(mensaje):
     response = ayuda(mensaje)
+    return True
+
 
 @bot.message_handler(commands=['dameunaayudaitaahi'])
-def ayuda(mensaje):
+def dameunaayudita(mensaje):
     response = ayuda(mensaje)
+    return True
+
 
 def ayuda(mensaje):
     '''.'''
@@ -45,6 +54,7 @@ def ayuda(mensaje):
     response = 'Ey..! {0} aqui teneis tu ayuda, {1}'
     bot.send_message(chat_id, response.format(user_first_name, msg_response))
 
+
 @bot.message_handler(commands=['bitcoin'])
 def bitcoin(mensaje):
     '''.'''
@@ -57,6 +67,7 @@ def bitcoin(mensaje):
 
     msg_response = '{0} El precio del Bitcoin es: {1:0,.2f} USD'.format(user_first_name, float(response))
     bot.send_message(chat_id, msg_response)
+
 
 @bot.message_handler(commands=['calcular'])
 def calculo(mensaje):
@@ -72,10 +83,10 @@ def calculo(mensaje):
         # TODO: Esto se puede hacer en una linea con lista por comprension lo
         # dejo asi por ahora para que se entienda un poco mejor
         for palabra in cadena_sin_el_comando.split():
-            if palabra.find("[",0,len(palabra))>=0:
-                cadena+=str(eval(palabra.replace("[", "").replace("]", ""))) + " "
+            if palabra.find("[", 0, len(palabra)) >= 0:
+                cadena += str(eval(palabra.replace("[", "").replace("]", ""))) + " "
             else:
-                cadena+=palabra+" "
+                cadena += palabra+" "
             response = '{0} Dice: {1} '.format(user_first_name, cadena)
     except Exception as inst:
         total_cal = inst
@@ -83,12 +94,14 @@ def calculo(mensaje):
 
     bot.send_message(chat_id, response)
 
+
 @bot.message_handler(commands=['chao'])
 def chao(mensaje):
     '''.'''
 
     chat_id = mensaje.chat.id
     bot.send_message(chat_id, 'Dala papi nos vemos, cualquier verga gritais')
+
 
 @bot.message_handler(commands=['dolartoday'])
 def dolartoday(mensaje):
@@ -104,6 +117,7 @@ def dolartoday(mensaje):
     response = '{0} El precio del paralelo en Vzla es: {1:0,.2f}'
     bot.send_message(chat_id, response.format(user_first_name, float(msg_response)))
 
+
 @bot.message_handler(commands=['hola'])
 def comando_hola(mensaje):
     '''.'''
@@ -113,6 +127,7 @@ def comando_hola(mensaje):
     user_first_name = mensaje.from_user.first_name
 
     bot.send_message(chat_id, 'Que fue mijo {0} como estais..?'.format(user_first_name))
+
 
 @bot.message_handler(commands=['quierocolaborar'])
 def comando_quierocolaborar(mensaje):
@@ -127,13 +142,12 @@ def comando_quierocolaborar(mensaje):
     response = '{0} {1}'
     bot.send_message(chat_id, response.format(user_first_name, msg_response))
 
+
 @bot.message_handler(commands=['panorama'])
 def sucesos(mensaje):
     '''.'''
 
     chat_id = mensaje.chat.id
-    user_first_name = mensaje.from_user.first_name
-
     noti = NoticiasPanorama()
     response = noti.sucesos()
 
@@ -141,6 +155,7 @@ def sucesos(mensaje):
 
 # ---------------------------------------------------------------------------------------------
 # Groserias y Jodezon
+
 
 @bot.message_handler(commands=['porno'])
 def porno(mensaje):
@@ -155,29 +170,34 @@ def porno(mensaje):
     response = '{0} {1}'
     bot.send_message(chat_id, response.format(user_first_name, msg_response))
 
+
 @bot.message_handler(commands=['gay'])
-def chao(mensaje):
+def gay(mensaje):
     '''.'''
 
     alias_gay(mensaje)
+
 
 @bot.message_handler(commands=['marico'])
-def chao(mensaje):
+def marico(mensaje):
     '''.'''
 
     alias_gay(mensaje)
+
 
 @bot.message_handler(commands=['marisco'])
-def chao(mensaje):
+def marisco(mensaje):
     '''.'''
 
     alias_gay(mensaje)
+
 
 @bot.message_handler(commands=['homosexual'])
-def chao(mensaje):
+def homo(mensaje):
     '''.'''
 
     alias_gay(mensaje)
+
 
 def alias_gay(mensaje):
     '''.'''
@@ -187,13 +207,13 @@ def alias_gay(mensaje):
 
     bot.send_message(chat_id, 'Mas marico sois vos {0}'.format(user_first_name))
 
+
 @bot.message_handler(commands=['mamamelo'])
-def chao(mensaje):
+def mamamelo(mensaje):
     '''.'''
 
     chat_id = mensaje.chat.id
     bot.send_message(chat_id, 'Mamamelo vos a mi')
 
-bot.polling(none_stop = True)
 
-
+bot.polling(none_stop=True)
