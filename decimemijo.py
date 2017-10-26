@@ -9,30 +9,7 @@ TOKEN = '336382255:AAHwrdIgN0j3gIet0xnJfCKs78ojp1dm28s'
 bot = telebot.TeleBot(TOKEN)
 
 
-@bot.message_handler(commands=['ayudame'])
-def ayudame(mensaje):
-    response = ayuda(mensaje)
-    return True
-
-
-@bot.message_handler(commands=['help'])
-def help(mensaje):
-    response = ayuda(mensaje)
-    return True
-
-
-@bot.message_handler(commands=['?'])
-def signo_ayuda(mensaje):
-    response = ayuda(mensaje)
-    return True
-
-
-@bot.message_handler(commands=['dameunaayudaitaahi'])
-def dameunaayudita(mensaje):
-    response = ayuda(mensaje)
-    return True
-
-
+@bot.message_handler(commands=['dameunaayudaitaahi', 'help', 'ayuda', '?', 'ayudame'])
 def ayuda(mensaje):
     '''.'''
 
@@ -55,7 +32,12 @@ def ayuda(mensaje):
     bot.send_message(chat_id, response.format(user_first_name, msg_response))
 
 
-@bot.message_handler(commands=['bitcoin'])
+@bot.message_handler(commands=['si', 'no'])
+def send_welcome(message):
+        bot.reply_to(message, "Howdy, how are you doing?")
+
+
+@bot.message_handler(commands=['bitcoin', 'Bitcoin', 'BitCoin', 'BITCOIN'])
 def bitcoin(mensaje):
     '''.'''
 
@@ -69,7 +51,7 @@ def bitcoin(mensaje):
     bot.send_message(chat_id, msg_response)
 
 
-@bot.message_handler(commands=['calcular'])
+@bot.message_handler(commands=['calcular', 'calcular', 'CALCULAR', 'calc'])
 def calculo(mensaje):
     '''.'''
 
@@ -103,7 +85,7 @@ def chao(mensaje):
     bot.send_message(chat_id, 'Dala papi nos vemos, cualquier verga gritais')
 
 
-@bot.message_handler(commands=['dolartoday'])
+@bot.message_handler(commands=['dolartoday', 'Dolartoday', 'DolarToday', 'dt'])
 def dolartoday(mensaje):
     '''.'''
 
@@ -118,7 +100,7 @@ def dolartoday(mensaje):
     bot.send_message(chat_id, response.format(user_first_name, float(msg_response)))
 
 
-@bot.message_handler(commands=['hola'])
+@bot.message_handler(commands=['hola', 'hello', 'hi'])
 def comando_hola(mensaje):
     '''.'''
 
@@ -171,44 +153,16 @@ def porno(mensaje):
     bot.send_message(chat_id, response.format(user_first_name, msg_response))
 
 
-@bot.message_handler(commands=['gay'])
+@bot.message_handler(commands=['gay', 'marico', 'marisco', 'homosexual', 'maricon'])
 def gay(mensaje):
     '''.'''
-
-    alias_gay(mensaje)
-
-
-@bot.message_handler(commands=['marico'])
-def marico(mensaje):
-    '''.'''
-
-    alias_gay(mensaje)
-
-
-@bot.message_handler(commands=['marisco'])
-def marisco(mensaje):
-    '''.'''
-
-    alias_gay(mensaje)
-
-
-@bot.message_handler(commands=['homosexual'])
-def homo(mensaje):
-    '''.'''
-
-    alias_gay(mensaje)
-
-
-def alias_gay(mensaje):
-    '''.'''
-
     chat_id = mensaje.chat.id
     user_first_name = mensaje.from_user.first_name
 
     bot.send_message(chat_id, 'Mas marico sois vos {0}'.format(user_first_name))
 
 
-@bot.message_handler(commands=['mamamelo'])
+@bot.message_handler(commands=['mamamelo', 'chupamelo'])
 def mamamelo(mensaje):
     '''.'''
 
