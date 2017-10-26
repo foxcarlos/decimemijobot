@@ -57,19 +57,6 @@ def query_text(inline_query):
         print(e)
 """
 
-alerta:
-========
-- id
-- descripcion
-
-
-alerta_usuario:
-================
-
-- alerta_id
-- status = on
-- chat_id = 434234
-- chat_username = foxcarlos
 
 @bot.message_handler(commands=['alerta', 'Alerta', 'ALERTA'])
 def bitcoin(mensaje):
