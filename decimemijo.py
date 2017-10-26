@@ -44,7 +44,7 @@ def send_welcome(message):
 def echo_all(message):
     import ipdb; ipdb.set_trace() # BREAKPOINT
     bot.reply_to(message, message.text)
-"""
+
 
 @bot.inline_handler(lambda query: query.query == 'text')
 def query_text(inline_query):
@@ -55,6 +55,8 @@ def query_text(inline_query):
         bot.answer_inline_query(inline_query.id, [r, r2])
     except Exception as e:
         print(e)
+"""
+
 
 @bot.message_handler(commands=['bitcoin', 'Bitcoin', 'BitCoin', 'BITCOIN', 'btc', 'BTC'])
 def bitcoin(mensaje):
