@@ -32,12 +32,31 @@ def ayuda(mensaje):
     bot.send_message(chat_id, response.format(user_first_name, msg_response))
 
 
+""" Hacer reply al mensaje
 @bot.message_handler(commands=['si', 'no'])
 def send_welcome(message):
         bot.reply_to(message, "Howdy, how are you doing?")
+"""
 
 
-@bot.message_handler(commands=['bitcoin', 'Bitcoin', 'BitCoin', 'BITCOIN'])
+""" Captura todo
+@bot.message_handler(func=lambda m: True)
+def echo_all(message):
+    import ipdb; ipdb.set_trace() # BREAKPOINT
+    bot.reply_to(message, message.text)
+"""
+
+@bot.inline_handler(lambda query: query.query == 'text')
+def query_text(inline_query):
+    import ipdb; ipdb.set_trace() # BREAKPOINT
+    try:
+        r = types.InlineQueryResultArticle('1', 'Result', types.InputTextMessageContent('Result message.'))
+        r2 = types.InlineQueryResultArticle('2', 'Result2', types.InputTextMessageContent('Result message2.'))
+        bot.answer_inline_query(inline_query.id, [r, r2])
+    except Exception as e:
+        print(e)
+
+@bot.message_handler(commands=['bitcoin', 'Bitcoin', 'BitCoin', 'BITCOIN', 'btc', 'BTC'])
 def bitcoin(mensaje):
     '''.'''
 
@@ -58,10 +77,12 @@ def calculo(mensaje):
     parameters = mensaje.text
     chat_id = mensaje.chat.id
     user_first_name = mensaje.from_user.first_name
+    cadena_sin_el_comando = ' '.join(parameters.split()[1:])
+    cadena = ""
+    palabra = ""
+    response = ""
 
     try:
-        cadena_sin_el_comando = ' '.join(parameters.split()[1:])
-        cadena = ""
         # TODO: Esto se puede hacer en una linea con lista por comprension lo
         # dejo asi por ahora para que se entienda un poco mejor
         for palabra in cadena_sin_el_comando.split():
@@ -69,7 +90,11 @@ def calculo(mensaje):
                 cadena += str(eval(palabra.replace("[", "").replace("]", ""))) + " "
             else:
                 cadena += palabra+" "
-            response = '{0} Dice: {1} '.format(user_first_name, cadena)
+
+        if not cadena:
+            cadena = 'Teneis que indicar un calculo, Ejemplo: [2+2]'
+
+        response = '{0} Dice: {1} '.format(user_first_name, cadena)
     except Exception as inst:
         total_cal = inst
         response = 'verga paso algo..! {0}, aqui esta el error {1} deja de invertar hace algo mas facil'.format(user_first_name, total_cal)
