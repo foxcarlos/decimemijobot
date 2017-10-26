@@ -57,6 +57,31 @@ def query_text(inline_query):
         print(e)
 """
 
+alerta:
+========
+- id
+- descripcion
+
+
+alerta_usuario:
+================
+
+- alerta_id
+- status = on
+- chat_id = 434234
+- chat_username = foxcarlos
+
+@bot.message_handler(commands=['alerta', 'Alerta', 'ALERTA'])
+def bitcoin(mensaje):
+    '''.'''
+
+    chat_id = mensaje.chat.id
+    user_first_name = mensaje.from_user.first_name
+    alerta, status = parameters.split()[1:]
+
+    # Buscar el alerta y luego ver si el usuario tiene configurado de lo
+    # contrario configurarle un alerta
+
 
 @bot.message_handler(commands=['bitcoin', 'Bitcoin', 'BitCoin', 'BITCOIN', 'btc', 'BTC'])
 def bitcoin(mensaje):
