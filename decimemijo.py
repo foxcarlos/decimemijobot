@@ -59,7 +59,7 @@ def query_text(inline_query):
 
 
 @bot.message_handler(commands=['alerta', 'Alerta', 'ALERTA'])
-def bitcoin(mensaje):
+def alerta(mensaje):
     '''.'''
 
     chat_id = mensaje.chat.id
