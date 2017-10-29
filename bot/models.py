@@ -8,6 +8,7 @@ class Alerta(models.Model):
     '''.'''
     comando = models.CharField(max_length=100, blank=True, null=True, unique=True)
     descripcion = models.TextField(blank=True, null=True)
+    ultimo_precio = models.FloatField(default=0.0)
     activo = models.BooleanField(default=False)
 
     def __str__(self):
