@@ -8,7 +8,7 @@ from .models import Alerta, AlertaUsuario
 class AlertaAdmin(admin.ModelAdmin):
     model = Alerta
 
-    list_display = ['comando', 'descripcion', 'activo', 'pk']
+    list_display = ['comando', 'descripcion', 'ultimo_precio', 'activo', 'pk']
     search_fields = ['comando', 'activo']
 
 
