@@ -1,6 +1,7 @@
 from __future__ import unicode_literals
 
 from django.db import models
+from datetime import timedelta
 
 # Create your models here.
 
@@ -32,6 +33,8 @@ class AlertaUsuario(models.Model):
 
     chat_id = models.IntegerField(default=0)
     chat_username = models.CharField(max_length=100, blank=True, null=True)
+    # frecuencia = models.IntegerField(default=300)
+    # ultima_actualizacion = models.DateTimeField(auto_now=True)
 
 
     def __str__(self):
