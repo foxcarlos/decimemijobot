@@ -25,43 +25,51 @@ class Command(BaseCommand):
         response = devuelto['USD']['transferencia']
         return response
 
-    def generar_alerta_dt(self):
-        pass
+    def obtener_precio(self, comando):
+        if comando == 'bitcoin':
+            ultimo_precio = self.obtener_precio_bitcoin()
+        elif comando == 'dolartoday':
+            ultimo_precio = self.obtener_precio_dolar_paralelo_venezuela()
+        else:
+            ultimo_precio = 0
+        return ultimo_precio
 
-    def generar_alerta_btc(self):
-        precio_actual_botcoin = self.obtener_precio_bitcoin()
+    def generar_alerta(self, comando):
+        precio_actual = self.obtener_precio(comando)
 
-        lista_de_alertas_bitcoin = AlertaUsuario.objects.filter(
-                alerta__comando='bitcoin').exclude(
-                        alerta__ultimo_precio=precio_actual_botcoin)
+        lista_de_alertas = AlertaUsuario.objects.filter(
+                alerta__comando=comando).exclude(
+                        alerta__ultimo_precio=precio_actual)
 
-        ultimo_precio_bitcoin = lista_de_alertas_bitcoin[0].alerta.ultimo_precio\
-                if lista_de_alertas_bitcoin else 0
+        ultimo_precio = lista_de_alertas[0].alerta.ultimo_precio\
+                if lista_de_alertas else 0
 
-        if precio_actual_botcoin > ultimo_precio_bitcoin:
+        if precio_actual > ultimo_precio:
             alta_o_baja = "Subio"
-        elif precio_actual_botcoin < ultimo_precio_bitcoin:
+        elif precio_actual < ultimo_precio:
             alta_o_baja = "bajo"
         else:
             alta_o_baja = "Se mantuvo"
 
-        for chat in lista_de_alertas_bitcoin:
-            mensaje_a_chat = "El precio del bitcoin {0} a: {1}".format(
+        for chat in lista_de_alertas:
+            mensaje_a_chat = "El precio del {0} {1} a: {2}".format(
+                    comando,
                     alta_o_baja,
-                    precio_actual_botcoin)
+                    precio_actual)
 
             DjangoTelegramBot.dispatcher.bot.sendMessage(
                     chat.chat_id,
                     mensaje_a_chat)
 
-        Alerta.objects.filter(comando="bitcoin").update(
-                ultimo_precio=precio_actual_botcoin)
+        Alerta.objects.filter(comando=comando).update(
+                ultimo_precio=precio_actual)
+
 
     def handle(self, *args, **options):
 
         if 'dolartoday' in options.get("comando"):
-            self.generar_alerta_dt()
+            self.generar_alerta('dolartoday')
         elif 'bitcoin' in options.get("comando"):
-            self.generar_alerta_btc()
+            self.generar_alerta("bitcoin")
 
         self.stdout.write('Ejecutando comando')
