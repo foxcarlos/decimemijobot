@@ -33,8 +33,10 @@ class AlertaUsuario(models.Model):
 
     chat_id = models.IntegerField(default=0)
     chat_username = models.CharField(max_length=100, blank=True, null=True)
-    # frecuencia = models.IntegerField(default=300)
-    # ultima_actualizacion = models.DateTimeField(auto_now=True)
+    frecuencia = models.IntegerField(default=1200,
+            verbose_name="frecuencia de notificacion de alertas en segundos",
+            help_text="Tiempo en segundos")
+    ultima_actualizacion = models.DateTimeField()
 
 
     def __str__(self):
