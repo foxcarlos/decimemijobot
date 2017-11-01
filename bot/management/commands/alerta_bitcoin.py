@@ -38,7 +38,7 @@ class Command(BaseCommand):
         precio_actual = self.obtener_precio(comando)
 
         lista_de_alertas = AlertaUsuario.objects.filter(
-                alerta__comando=comando).exclude(
+                alerta__comando=comando, estado="A").exclude(
                         alerta__ultimo_precio=precio_actual)
 
         ultimo_precio = lista_de_alertas[0].alerta.ultimo_precio\
