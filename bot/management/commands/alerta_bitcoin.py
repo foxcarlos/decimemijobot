@@ -5,6 +5,7 @@ from bot.models import Alerta, AlertaUsuario
 from django.db.models import Q
 
 import requests
+from datetime import datetime, timedelta
 
 
 class Command(BaseCommand):
@@ -52,18 +53,32 @@ class Command(BaseCommand):
             alta_o_baja = "Se mantuvo"
 
         for chat in lista_de_alertas:
-            mensaje_a_chat = "El precio del {0} {1} a: {2}".format(
-                    comando,
-                    alta_o_baja,
-                    precio_actual)
 
-            DjangoTelegramBot.dispatcher.bot.sendMessage(
-                    chat.chat_id,
-                    mensaje_a_chat)
+            segundos_transcurridos_ultimo_aviso = datetime.now().timestamp() - \
+                    chat.ultima_actualizacion.timestamp()
 
+            if segundos_transcurridos_ultimo_aviso >= (chat.frecuencia * 60) or \
+                    precio_actual * eval("1.{}".format(chat.porcentaje_cambio)) >= \
+                    ultimo_precio:
+
+                    # Armo el mensaje
+                    mensaje_a_chat = "El precio del {0} {1} a: {2}".format(
+                            comando,
+                            alta_o_baja,
+                            precio_actual)
+
+                    # Envio el Alerta
+                    DjangoTelegramBot.dispatcher.bot.sendMessage(
+                            chat.chat_id,
+                            mensaje_a_chat)
+
+                    # Actualizo la Fecha
+                    AlertaUsuario.objects.filter(id=chat.id).update(
+                            ultima_actualizacion=datetime.now())
+
+        # Actualizo para todos el precio del bitcoin
         Alerta.objects.filter(comando=comando).update(
                 ultimo_precio=precio_actual)
-
 
     def handle(self, *args, **options):
 

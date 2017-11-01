@@ -15,10 +15,12 @@ from bot.scrapy import NoticiasPanorama
 
 
 def start(bot, update):
+    print(update.message)
     bot.sendMessage(update.message.chat_id, text='Que fue mijo como estais!')
 
 
 def startgroup(bot, update):
+    print(update.message)
     bot.sendMessage(update.message.chat_id, text='Hi!')
 
 
@@ -35,6 +37,7 @@ def forwarded(bot, update):
 
 
 def bitcoin(bot, update):
+    print(update.message)
     user_first_name = update.message.from_user.first_name
     url = "https://api.coinbase.com/v2/exchange-rates?currency=BTC"
     get_price = requests.get(url).json().get("data").get("rates").get("USD")
@@ -43,6 +46,7 @@ def bitcoin(bot, update):
 
 
 def calcular(bot, update):
+    print(update.message)
     parameters = update.message.text
     user_first_name = update.message.from_user.first_name
     cadena_sin_el_comando = ' '.join(parameters.split()[1:])
@@ -60,7 +64,7 @@ def calcular(bot, update):
                 cadena += palabra+" "
 
         if not cadena:
-            cadena = 'Teneis que indicar un calculo, Ejemplo: [2+2]'
+            cadena = 'Teneis que indicar un calculo entre [ ] Ej: /calcular [2+2]'
 
         response = '{0} Dice: {1} '.format(user_first_name, cadena)
     except Exception as inst:
@@ -71,6 +75,7 @@ def calcular(bot, update):
 
 
 def dolartoday(bot, update):
+    print(update.message)
     user_first_name = update.message.from_user.first_name
     rq = requests.get('https://s3.amazonaws.com/dolartoday/data.json')
     devuelto = rq.json()
