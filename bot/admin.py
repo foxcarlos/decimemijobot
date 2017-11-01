@@ -15,7 +15,8 @@ class AlertaAdmin(admin.ModelAdmin):
 class AlertaUsuarioAdmin(admin.ModelAdmin):
     model = AlertaUsuario
 
-    list_display = ['alerta', 'estado', 'chat_id', 'chat_username']
+    list_display = ['alerta', 'estado', 'frecuencia', 'ultima_actualizacion',
+            'chat_id', 'chat_username']
     search_fields = ['alerta', 'estado', 'chat_username']
     list_filter = ['alerta']
 

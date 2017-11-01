@@ -70,11 +70,6 @@ def calcular(bot, update):
     bot.sendMessage(update.message.chat_id, text=response)
 
 
-def chao(bot, update):
-    response = 'Dala papi nos vemos, cualquier verga gritais'
-    bot.sendMessage(update.message.chat_id, text=response)
-
-
 def dolartoday(bot, update):
     user_first_name = update.message.from_user.first_name
     rq = requests.get('https://s3.amazonaws.com/dolartoday/data.json')
@@ -99,12 +94,9 @@ def help(bot, update):
 
     /bitcoin
     /calcular  La suma de 2 mas  es [2+2] y 3 por 3 es [3*3]
-    /chao
     /dolartoday
     /help
-    /hola
     /panorama
-    /porno
     """
     user_first_name = update.message.from_user.first_name
     response = 'Ey..! {0} aqui teneis tu ayuda, {1}'.format(user_first_name, msg_response)
@@ -119,7 +111,7 @@ def panorama_sucesos(bot, update):
     bot.sendMessage(update.message.chat_id, text=response)
 
 def porno(bot, update):
-    response = "Aqui teneis esto pervertido: https://www.redtube.com/redtube/gay"
+    response = "Uhmmm! no se que intentais buscar, googlealo mejor mijo"
     bot.sendMessage(update.message.chat_id, text=response)
 
 def main():
@@ -133,8 +125,6 @@ def main():
 
     # on different commands - answer in Telegram
     dp.add_handler(CommandHandler("start", start))
-    dp.add_handler(CommandHandler("hola", start))
-    dp.add_handler(CommandHandler("hello", start))
 
     dp.add_handler(CommandHandler("help", help))
     dp.add_handler(CommandHandler("ayuda", help))
@@ -142,7 +132,6 @@ def main():
 
     dp.add_handler(CommandHandler("bitcoin", bitcoin))
     dp.add_handler(CommandHandler("calcular", calcular))
-    dp.add_handler(CommandHandler("chao", chao))
     dp.add_handler(CommandHandler("dolartoday", dolartoday))
     dp.add_handler(CommandHandler("panorama", panorama_sucesos))
     dp.add_handler(CommandHandler("porno", porno))
