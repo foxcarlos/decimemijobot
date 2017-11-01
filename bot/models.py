@@ -36,6 +36,9 @@ class AlertaUsuario(models.Model):
     frecuencia = models.IntegerField(default=1200,
             verbose_name="frecuencia de notificacion de alertas en segundos",
             help_text="Tiempo en segundos")
+    procentaje_cambio = models.IntegerField(default=0,
+            verbose_name="Porcentaje de cambio en la tasa",
+            help_text="Numero entero")
     ultima_actualizacion = models.DateTimeField()
 
 
