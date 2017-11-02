@@ -9,19 +9,21 @@ import logging
 logger = logging.getLogger(__name__)
 
 from bot.scrapy import NoticiasPanorama
-from bot.models import Alerta, AlertaUsuario
+from bot.models import Alerta, AlertaUsuario, User
 
 
 # Define a few command handlers. These usually take the two arguments bot and
 # update. Error handlers also receive the raised TelegramError object in error.
 
 def usuario_nuevo(update):
-
     id_user = update.message.from_user.id
     usuario = update.message.from_user.username
-    nombre = update.message.from_user.first_name
-    apellido = update.message.from_user.last_name
-    codigo_leng = update.message.from_user.language_code
+    nombre = update.message.from_user.first_name if \
+            hasattr(update.message.from_user, "first_name") else ""
+    apellido = update.message.from_user.last_name if \
+            hasattr(update.message.from_user, "lasta_name") else ""
+    codigo_leng = update.message.from_user.language_code if\
+            hasattr(update.message.from_user, "language_code") else ""
 
     try:
         User.objects.update_or_create(
@@ -34,6 +36,7 @@ def usuario_nuevo(update):
     except Exception as E:
         print(E)
     return True
+
 
 def start(bot, update):
     # print(update.message)
@@ -62,12 +65,14 @@ def forwarded(bot, update):
 
 
 def bitcoin(bot, update):
-    print(update.message)
+    # print(update.message)
     user_first_name = update.message.from_user.first_name
+    print(hasattr(update.message.from_user, "first_name"))
     url = "https://api.coinbase.com/v2/exchange-rates?currency=BTC"
     get_price = requests.get(url).json().get("data").get("rates").get("USD")
     response = '{0} El precio del Bitcoin es: {1:0,.2f} USD'.format(user_first_name, float(get_price))
     bot.sendMessage(update.message.chat_id, text=response)
+    usuario_nuevo(update)
 
 
 def calcular(bot, update):
@@ -141,9 +146,11 @@ def panorama_sucesos(bot, update):
 
     bot.sendMessage(update.message.chat_id, text=response)
 
+
 def porno(bot, update):
     response = "Uhmmm! no se que intentais buscar, googlealo mejor mijo"
     bot.sendMessage(update.message.chat_id, text=response)
+
 
 def main():
     logger.info("Loading handlers for telegram bot")
@@ -170,12 +177,10 @@ def main():
     dp.add_handler(CommandHandler("startgroup", startgroup))
     dp.add_handler(CommandHandler("me", me))
     dp.add_handler(CommandHandler("chat", chat))
-    dp.add_handler(MessageHandler(Filters.forwarded , forwarded))
+    dp.add_handler(MessageHandler(Filters.forwarded, forwarded))
 
     # on noncommand i.e message - echo the message on Telegram
     dp.add_handler(MessageHandler(Filters.text, echo))
 
     # log all errors
     dp.add_error_handler(error)
-
-
