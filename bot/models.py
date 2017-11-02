@@ -25,7 +25,7 @@ class Alerta(models.Model):
 class AlertaUsuario(models.Model):
     '''.'''
     alerta = models.ForeignKey(Alerta, related_name='alertas')
-    estado = models.CharField(max_length=3, default="Off",\
+    estado = models.CharField(max_length=3, default="I",\
             choices=(
                 ('A', 'On'),
                 ('I', 'Off')

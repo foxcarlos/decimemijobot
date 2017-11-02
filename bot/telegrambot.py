@@ -25,14 +25,17 @@ def startgroup(bot, update):
 
 
 def me(bot, update):
+    print(update.message)
     bot.sendMessage(update.message.chat_id, text='Tu informacion:\n{}'.format(update.effective_user))
 
 
 def chat(bot, update):
+    print(update.message)
     bot.sendMessage(update.message.chat_id, text='This chat information:\n {}'.format(update.effective_chat))
 
 
 def forwarded(bot, update):
+    print(update.message)
     bot.sendMessage(update.message.chat_id, text='This msg forwaded information:\n {}'.format(update.effective_message))
 
 
@@ -86,10 +89,12 @@ def dolartoday(bot, update):
 
 
 def echo(bot, update):
+    print(update.message)
     update.message.reply_text(update.message.text)
 
 
 def error(bot, update, error):
+    print(update.message)
     logger.warn('Update "%s" caused error "%s"' % (update, error))
 
 
