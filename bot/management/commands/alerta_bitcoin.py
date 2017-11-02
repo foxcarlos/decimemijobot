@@ -42,8 +42,9 @@ class Command(BaseCommand):
                 alerta__comando=comando, estado="A").exclude(
                         alerta__ultimo_precio=precio_actual)
 
-        ultimo_precio = lista_de_alertas[0].alerta.ultimo_precio\
-                if lista_de_alertas else 0
+        get_ultimo_precio = Alerta.objects.filter(comando__icontains=comando)
+        ultimo_precio =  get_ultimo_precio[0].ultimo_precio \
+                if get_ultimo_precio else 0
 
         if precio_actual > ultimo_precio:
             alta_o_baja = "Subio"
@@ -61,6 +62,7 @@ class Command(BaseCommand):
                     precio_actual * eval("1.{}".format(chat.porcentaje_cambio)) >= \
                     ultimo_precio:
 
+                    # TODO: Hacer un metodo emviar de este codigo
                     # Armo el mensaje
                     mensaje_a_chat = "El precio del {0} {1} a: {2}".format(
                             comando,
