@@ -11,6 +11,7 @@ class User(models.Model):
     chat_id = models.IntegerField(default=0)
     username = models.CharField(max_length=50, blank=True, null=True,)
     first_name = models.CharField(max_length=50, blank=True, null=True,)
+    last_name = models.CharField(max_length=50, blank=True, null=True,)
     language_code = models.CharField(max_length=50, blank=True, null=True,)
 
     def __str__(self):

@@ -47,6 +47,7 @@ def start(bot, update):
 def startgroup(bot, update):
     print(update.message)
     bot.sendMessage(update.message.chat_id, text='Que fue mijos como estan! , /help para que vean lo que puedo hacer')
+    usuario_nuevo(update)
 
 
 def me(bot, update):
@@ -102,6 +103,7 @@ def calcular(bot, update):
         response = 'verga paso algo..! {0}, aqui esta el error {1} deja de invertar hace algo mas facil'.format(user_first_name, total_cal)
 
     bot.sendMessage(update.message.chat_id, text=response)
+    usuario_nuevo(update)
 
 
 def dolartoday(bot, update):
@@ -113,6 +115,7 @@ def dolartoday(bot, update):
 
     response = '{0} El precio del paralelo en Vzla es: {1:0,.2f}'
     bot.sendMessage(update.message.chat_id, response.format(user_first_name, float(msg_response)))
+    usuario_nuevo(update)
 
 
 def echo(bot, update):
