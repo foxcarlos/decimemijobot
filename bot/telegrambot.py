@@ -15,23 +15,35 @@ from bot.models import Alerta, AlertaUsuario
 # Define a few command handlers. These usually take the two arguments bot and
 # update. Error handlers also receive the raised TelegramError object in error.
 
+def usuario_nuevo(update):
+
+    id_user = update.message.from_user.id
+    usuario = update.message.from_user.username
+    nombre = update.message.from_user.first_name
+    apellido = update.message.from_user.last_name
+    codigo_leng = update.message.from_user.language_code
+
+    try:
+        User.objects.update_or_create(
+            chat_id=id_user,
+            username=usuario,
+            first_name=nombre,
+            last_name=apellido,
+            language_code=codigo_leng
+            )
+    except Exception as E:
+        print(E)
+    return True
 
 def start(bot, update):
-    print(update.message)
+    # print(update.message)
     bot.sendMessage(update.message.chat_id, text='Que fue mijo como estais!')
-
-    # Guardo los clientes nuevos
-    """AlertaUsuario.objects.update_or_create(
-            chat_id=update.message.chat_id,
-            username=update.message.chat.username,
-            first_name=update.message.chat.first_name,
-            language_code=update.message.chat.language_code
-            )"""
+    usuario_nuevo(update)
 
 
 def startgroup(bot, update):
     print(update.message)
-    bot.sendMessage(update.message.chat_id, text='Hi!')
+    bot.sendMessage(update.message.chat_id, text='Que fue mijos como estan! , /help para que vean lo que puedo hacer')
 
 
 def me(bot, update):
@@ -104,7 +116,6 @@ def echo(bot, update):
 
 
 def error(bot, update, error):
-    print(update.message)
     logger.warn('Update "%s" caused error "%s"' % (update, error))
 
 

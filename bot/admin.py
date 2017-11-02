@@ -3,7 +3,14 @@ from django.contrib import admin
 # Register your models here.
 from django.contrib import admin
 
-from .models import Alerta, AlertaUsuario
+from .models import Alerta, AlertaUsuario, User
+
+
+class UserAdmin(admin.ModelAdmin):
+    model = User
+
+    list_display = ['chat_id', 'username', 'first_name', 'language_code', 'pk']
+    search_fields = ['username', 'chat_id']
 
 class AlertaAdmin(admin.ModelAdmin):
     model = Alerta
@@ -22,5 +29,6 @@ class AlertaUsuarioAdmin(admin.ModelAdmin):
     list_filter = ['alerta']
 
 
+admin.site.register(User, UserAdmin)
 admin.site.register(Alerta, AlertaAdmin)
 admin.site.register(AlertaUsuario, AlertaUsuarioAdmin)
