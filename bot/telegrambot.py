@@ -9,6 +9,8 @@ import logging
 logger = logging.getLogger(__name__)
 
 from bot.scrapy import NoticiasPanorama
+from bot.models import Alerta, AlertaUsuario
+
 
 # Define a few command handlers. These usually take the two arguments bot and
 # update. Error handlers also receive the raised TelegramError object in error.
@@ -17,6 +19,14 @@ from bot.scrapy import NoticiasPanorama
 def start(bot, update):
     print(update.message)
     bot.sendMessage(update.message.chat_id, text='Que fue mijo como estais!')
+
+    # Guardo los clientes nuevos
+    """AlertaUsuario.objects.update_or_create(
+            chat_id=update.message.chat_id,
+            username=update.message.chat.username,
+            first_name=update.message.chat.first_name,
+            language_code=update.message.chat.language_code
+            )"""
 
 
 def startgroup(bot, update):

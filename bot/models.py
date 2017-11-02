@@ -5,6 +5,24 @@ from datetime import timedelta
 
 # Create your models here.
 
+class User(models.Model):
+    '''.'''
+
+    chat_id = models.IntegerField(default=0)
+    username = models.CharField(max_length=50, blank=True, null=True,)
+    first_name = models.CharField(max_length=50, blank=True, null=True,)
+    language_code = models.CharField(max_length=50, blank=True, null=True,)
+
+    def __str__(self):
+        return self.username
+
+    class Meta:
+        '''.'''
+        verbose_name_plural = 'Users'
+        verbose_name = 'User'
+        ordering = ['username']
+
+
 class Alerta(models.Model):
     '''.'''
     comando = models.CharField(max_length=100, blank=True, null=True, unique=True)
