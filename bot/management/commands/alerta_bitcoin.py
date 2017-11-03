@@ -58,11 +58,13 @@ class Command(BaseCommand):
             segundos_transcurridos_ultimo_aviso = datetime.now().timestamp() - \
                     chat.ultima_actualizacion.timestamp()
 
-            if segundos_transcurridos_ultimo_aviso >= (chat.frecuencia * 60) or \
-                    precio_actual * eval("1.{}".format(chat.porcentaje_cambio)) >= \
-                    ultimo_precio:
+            porc_cambio = chat.porcentaje_cambio
+            if (chat.frecuencia and \
+                    segundos_transcurridos_ultimo_aviso >= (chat.frecuencia * 60)) \
+                    or (ultimo_precio * eval("1.{}".format(porc_cambio)) >= \
+                    precio_actual or ultimo_precio <= \
+                    ultimo_precio-(ultimo_precio*porc_cambio/100)):
 
-                    # TODO: Hacer un metodo emviar de este codigo
                     # Armo el mensaje
                     mensaje_a_chat = "El precio del {0} {1} a: {2}".format(
                             comando,

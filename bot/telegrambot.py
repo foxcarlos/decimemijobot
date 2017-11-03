@@ -68,7 +68,6 @@ def forwarded(bot, update):
 def bitcoin(bot, update):
     # print(update.message)
     user_first_name = update.message.from_user.first_name
-    print(hasattr(update.message.from_user, "first_name"))
     url = "https://api.coinbase.com/v2/exchange-rates?currency=BTC"
     get_price = requests.get(url).json().get("data").get("rates").get("USD")
     response = '{0} El precio del Bitcoin es: {1:0,.2f} USD'.format(user_first_name, float(get_price))
