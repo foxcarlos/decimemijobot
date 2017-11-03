@@ -35,16 +35,13 @@ class Command(BaseCommand):
             ultimo_precio = 0
         return ultimo_precio
 
-    def generar_alerta(self, comando):
-        precio_actual = self.obtener_precio(comando)
-
-        lista_de_alertas = AlertaUsuario.objects.filter(
-                alerta__comando=comando, estado="A").exclude(
-                        alerta__ultimo_precio=precio_actual)
+    def validar_alarma(self, comando, chat):
 
         get_ultimo_precio = Alerta.objects.filter(comando__icontains=comando)
-        ultimo_precio =  get_ultimo_precio[0].ultimo_precio \
+        ultimo_precio = get_ultimo_precio[0].ultimo_precio \
                 if get_ultimo_precio else 0
+
+        precio_actual = self.obtener_precio(comando)
 
         if precio_actual > ultimo_precio:
             alta_o_baja = "Subio"
@@ -53,33 +50,47 @@ class Command(BaseCommand):
         else:
             alta_o_baja = "Se mantuvo"
 
+        segundos_transcurridos_ultimo_aviso = datetime.now().timestamp() - \
+                chat.ultima_actualizacion.timestamp()
+
+        porc_cambio = chat.porcentaje_cambio
+
+        paso = False
+        if chat.frecuencia:
+            if segundos_transcurridos_ultimo_aviso >= (chat.frecuencia * 60):
+                paso = True
+
+        if chat.porcentaje_cambio:
+            if precio_actual >= ultimo_precio * eval("1.{}".format(porc_cambio)) or \
+                    ultimo_precio <= (ultimo_precio - (ultimo_precio*porc_cambio/100)):
+                paso = True
+
+        mensaje_a_chat = "El precio del {0} {1} a: {2}".format(
+                comando,
+                alta_o_baja,
+                precio_actual
+                )
+
+        return paso, mensaje_a_chat
+
+    def generar_alerta(self, comando):
+
+        precio_actual = self.obtener_precio(comando)
+        lista_de_alertas = AlertaUsuario.objects.filter(
+                alerta__comando=comando, estado="A").exclude(
+                        alerta__ultimo_precio=precio_actual)
+
         for chat in lista_de_alertas:
+            enviar, mensaje_a_chat = self.validar_alarma(comando, chat)
+            if enviar:
+                # Envio el Alerta
+                DjangoTelegramBot.dispatcher.bot.sendMessage(
+                        chat.chat_id,
+                        mensaje_a_chat)
 
-            segundos_transcurridos_ultimo_aviso = datetime.now().timestamp() - \
-                    chat.ultima_actualizacion.timestamp()
-
-            porc_cambio = chat.porcentaje_cambio
-            if (chat.frecuencia and \
-                    segundos_transcurridos_ultimo_aviso >= (chat.frecuencia * 60)) \
-                    or (ultimo_precio * eval("1.{}".format(porc_cambio)) >= \
-                    precio_actual or ultimo_precio <= \
-                    ultimo_precio-(ultimo_precio*porc_cambio/100)):
-
-                    # Armo el mensaje
-                    mensaje_a_chat = "El precio del {0} {1} a: {2}".format(
-                            comando,
-                            alta_o_baja,
-                            precio_actual)
-
-                    # Envio el Alerta
-                    DjangoTelegramBot.dispatcher.bot.sendMessage(
-                            chat.chat_id,
-                            mensaje_a_chat)
-
-                    # Actualizo la Fecha
-                    AlertaUsuario.objects.filter(id=chat.id).update(
-                            ultima_actualizacion=datetime.now())
-
+                # Actualizo la Fecha
+                AlertaUsuario.objects.filter(id=chat.id).update(
+                        ultima_actualizacion=datetime.now())
         # Actualizo para todos el precio del bitcoin
         Alerta.objects.filter(comando=comando).update(
                 ultimo_precio=precio_actual)
