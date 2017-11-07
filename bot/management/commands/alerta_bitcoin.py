@@ -36,11 +36,7 @@ class Command(BaseCommand):
         return ultimo_precio
 
     def validar_alarma(self, comando, chat):
-
-        get_ultimo_precio = Alerta.objects.filter(comando__icontains=comando)
-        ultimo_precio = get_ultimo_precio[0].ultimo_precio \
-                if get_ultimo_precio else 0
-
+        ultimo_precio = chat.ultimo_precio if chat.ultimo_precio else 0
         precio_actual = self.obtener_precio(comando)
 
         if precio_actual > ultimo_precio:
@@ -76,9 +72,10 @@ class Command(BaseCommand):
     def generar_alerta(self, comando):
 
         precio_actual = self.obtener_precio(comando)
+
         lista_de_alertas = AlertaUsuario.objects.filter(
                 alerta__comando=comando, estado="A").exclude(
-                        alerta__ultimo_precio=precio_actual)
+                        ultimo_precio=precio_actual)
 
         for chat in lista_de_alertas:
             enviar, mensaje_a_chat = self.validar_alarma(comando, chat)
@@ -90,10 +87,8 @@ class Command(BaseCommand):
 
                 # Actualizo la Fecha
                 AlertaUsuario.objects.filter(id=chat.id).update(
-                        ultima_actualizacion=datetime.now())
-        # Actualizo para todos el precio del bitcoin
-        Alerta.objects.filter(comando=comando).update(
-                ultimo_precio=precio_actual)
+                        ultima_actualizacion=datetime.now(),
+                        ultimo_precio=precio_actual)
 
     def handle(self, *args, **options):
 

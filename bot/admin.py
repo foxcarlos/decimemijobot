@@ -15,7 +15,7 @@ class UserAdmin(admin.ModelAdmin):
 class AlertaAdmin(admin.ModelAdmin):
     model = Alerta
 
-    list_display = ['comando', 'descripcion', 'ultimo_precio', 'activo', 'pk']
+    list_display = ['comando', 'descripcion', 'activo', 'pk']
     search_fields = ['comando', 'activo']
 
 
@@ -23,7 +23,7 @@ class AlertaUsuarioAdmin(admin.ModelAdmin):
     model = AlertaUsuario
 
     list_display = ['alerta', 'estado', 'frecuencia', 'porcentaje_cambio',
-            'ultima_actualizacion',
+            'ultima_actualizacion', 'ultimo_precio',
             'chat_id', 'chat_username']
     search_fields = ['alerta', 'estado', 'chat_username']
     list_filter = ['alerta']

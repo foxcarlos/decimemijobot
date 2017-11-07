@@ -37,10 +37,17 @@ def usuario_nuevo(update):
         print(E)
     return True
 
+def alarma_bitcoin(bot, update):
+    cadena = ""
+    palabra = ""
+    response = ""
+    parameters = update.message.text
+    user_first_name = update.message.from_user.first_name
+    cadena_sin_el_comando = ' '.join(parameters.split()[1:])
 
 def start(bot, update):
     # print(update.message)
-    bot.sendMessage(update.message.chat_id, text='Que fue mijo como estais!')
+    bot.sendMessage(update.message.chat_id, text='Que fue mijo como estais!, Soy el BOT Maracucho , /help pa que veais lo que puedo hacer')
     usuario_nuevo(update)
 
 
