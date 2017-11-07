@@ -86,9 +86,9 @@ def bitcoin_satoshitango(bot, update):
     # Por peticion de Yanina y Thainelly
     user_first_name = update.message.from_user.first_name
     url = "https://api.satoshitango.com/v2/ticker"
-    get_price_venta = requests.get(url).json().get("data").get("venta").get("usdbtc")
-    get_price_compra = requests.get(url).json().get("data").get("compra").get("usdbtc")
-    response = '{0} El precio del Bitcoin en SatoshiTango es: {1:0,.2f} USD para la Compra y {2:0,.2f} USD para la Venta'.\
+    get_price_venta = requests.get(url).json().get("data").get("venta").get("arsbtc")
+    get_price_compra = requests.get(url).json().get("data").get("compra").get("arsbtc")
+    response = '{0} El precio del Bitcoin en SatoshiTango es: {1:0,.2f} ARG para la Compra y {2:0,.2f} ARG para la Venta'.\
             format(user_first_name, float(get_price_compra), float(get_price_venta))
     bot.sendMessage(update.message.chat_id, text=response)
     usuario_nuevo(update)
