@@ -38,12 +38,41 @@ def usuario_nuevo(update):
     return True
 
 def alarma_bitcoin(bot, update):
+    from collections import namedtuple
+    Bitcoin = namedtuple('Bitcoin', ['estado', 'frecuencia', 'porcentaje'])
+
     cadena = ""
     palabra = ""
     response = ""
     parameters = update.message.text
     user_first_name = update.message.from_user.first_name
     cadena_sin_el_comando = ' '.join(parameters.split()[1:])
+    parametros_crudos = cadena_sin_el_comando.split(",")
+    parametros_listos = []
+
+    def valida_parametros(parametros_crudos):
+        for f in parametros_crudos:
+            try:
+                clave, valor = f.split("=")
+            except Exception as E:
+                continue
+            if clave in ' status estado estat' and valor in 'onoff':
+                parametros_listos.append(valor)
+            if clave in ' minutos min frecuencia frec':
+                valor = valor if valor else '0'
+                parametros_listos.append(valor)
+            if ' porc' in clave:
+                valor = valor if valor else '0'
+                parametros_listos.append(valor)
+        return parametros_listos
+
+    pasar = valida_parametros(parametros_crudos)
+    if len(pasar) != 3:
+        response_text = "Parametros incorrectos"
+    else:
+        named_bitcoin_tuple = Bitcoin(*pasar)
+        bot.sendMessage(update.message.chat_id, text=named_bitcoin_tuple.estado)
+
 
 def start(bot, update):
     # print(update.message)
@@ -162,6 +191,7 @@ def help(bot, update):
 
 
 def panorama_sucesos(bot, update):
+    print(update.message)
     noti = NoticiasPanorama()
     response = noti.sucesos()
 
@@ -191,6 +221,7 @@ def main():
 
     dp.add_handler(CommandHandler("bitcoin", bitcoin))
     dp.add_handler(CommandHandler("satoshitango", bitcoin_satoshitango))
+    dp.add_handler(CommandHandler("alarmabitcoin", alarma_bitcoin))
     dp.add_handler(CommandHandler("calcular", calcular))
     dp.add_handler(CommandHandler("dolartoday", dolartoday))
     dp.add_handler(CommandHandler("panorama", panorama_sucesos))
