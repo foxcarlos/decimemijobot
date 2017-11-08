@@ -57,8 +57,8 @@ class Command(BaseCommand):
                 paso = True
 
         if chat.porcentaje_cambio:
-            if precio_actual >= ultimo_precio + (ultimo_precio * (porc_cambio / 100)) or \
-                    ultimo_precio <= (ultimo_precio - (ultimo_precio * (porc_cambio / 100))):
+            if precio_actual >= (ultimo_precio + (ultimo_precio * (porc_cambio / 100))) or \
+                    precio_actual <= (ultimo_precio - (ultimo_precio * (porc_cambio / 100))):
                 paso = True
 
         mensaje_a_chat = "El precio del {0} {1} a: {2}".format(
