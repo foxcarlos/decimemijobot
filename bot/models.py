@@ -1,7 +1,7 @@
 from __future__ import unicode_literals
 
 from django.db import models
-from datetime import timedelta
+from datetime import timedelta, datetime
 
 # Create your models here.
 
@@ -49,15 +49,15 @@ class AlertaUsuario(models.Model):
                 ('I', 'Off')
                 ),)
 
-    chat_id = models.IntegerField(default=0)
+    chat_id = models.IntegerField(blank=True, null=False)
     chat_username = models.CharField(max_length=100, blank=True, null=True)
-    frecuencia = models.IntegerField(default=1200,
-            verbose_name="frecuencia de notificacion de alertas en segundos",
+    frecuencia = models.IntegerField(default=120,
+            verbose_name="frecuencia de notificacion de alertas en minutos",
             help_text="Tiempo en segundos")
     porcentaje_cambio = models.IntegerField(default=0,
             verbose_name="Porcentaje de cambio en la tasa",
             help_text="Numero entero")
-    ultima_actualizacion = models.DateTimeField()
+    ultima_actualizacion = models.DateTimeField(default=datetime.now(), blank=True, null=True)
     ultimo_precio = models.FloatField(default=0.0)
 
     def __str__(self):

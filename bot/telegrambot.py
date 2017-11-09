@@ -37,68 +37,76 @@ def usuario_nuevo(update):
         print(E)
     return True
 
-def alarma_bitcoin(bot, update):
-    from collections import namedtuple
-    Bitcoin = namedtuple('Bitcoin', ['estado', 'frecuencia', 'porcentaje'])
 
-    cadena = ""
-    palabra = ""
+def set_alarma_bitcoin(bot, update):
     response = ""
     parameters = update.message.text
-    user_first_name = update.message.from_user.first_name
+    username = update.message.from_user.username
+    chat_id = update.message.from_user.id
     cadena_sin_el_comando = ' '.join(parameters.split()[1:])
-    parametros_crudos = cadena_sin_el_comando.split(",")
-    parametros_listos = []
+    bitcoin = Alerta.objects.get(comando__icontains="bitcoin")
+    buscar_o_crear = AlertaUsuario.objects.get_or_create(alerta=bitcoin, chat_id=chat_id)[0]
 
-    def valida_parametros(parametros_crudos):
-        for f in parametros_crudos:
-            try:
-                clave, valor = f.split("=")
-            except Exception as E:
-                continue
-            if clave in ' status estado estat' and valor in 'onoff':
-                parametros_listos.append(valor)
-            if clave in ' minutos min frecuencia frec':
-                valor = valor if valor else '0'
-                parametros_listos.append(valor)
-            if ' porc' in clave:
-                valor = valor if valor else '0'
-                parametros_listos.append(valor)
-        return parametros_listos
+    if cadena_sin_el_comando.upper() in 'ON OFF':
+        if cadena_sin_el_comando.upper() == 'ON':
+            estado = 'A'
+        elif cadena_sin_el_comando.upper() == 'OFF':
+            estado = 'I'
 
-    pasar = valida_parametros(parametros_crudos)
-    if len(pasar) != 3:
-        response_text = "Parametros incorrectos"
-    else:
-        named_bitcoin_tuple = Bitcoin(*pasar)
-        bot.sendMessage(update.message.chat_id, text=named_bitcoin_tuple.estado)
+        buscar_o_crear.estado = estado
+        buscar_o_crear.chat_username = username
+        buscar_o_crear.save()
+        response = "Alarma activada {}".\
+                format(cadena_sin_el_comando.upper())
+
+    if len(cadena_sin_el_comando.upper().split("MIN")) >= 2:
+        minutos = cadena_sin_el_comando.upper().split("MIN")[0]
+        if minutos:
+            buscar_o_crear.frecuencia = minutos
+            response = "Notificacion de Alarma cambiada a cada  {} minutos".\
+                    format(minutos)
+
+    if len(cadena_sin_el_comando.upper().split("%")) >= 2:
+        cantidad_porcentaje = cadena_sin_el_comando.upper().split("%")[0]
+        if cantidad_porcentaje:
+            buscar_o_crear.porcentaje_cambio = cantidad_porcentaje
+            response = "Alarma se enviara cuando el precio suba mas de {}%".\
+                    format(cantidad_porcentaje)
+
+    bot.sendMessage(update.message.chat_id, text=response)
 
 
 def start(bot, update):
     # print(update.message)
-    bot.sendMessage(update.message.chat_id, text='Que fue mijo como estais!, Soy el BOT Maracucho , /help pa que veais lo que puedo hacer')
+    bot.sendMessage(update.message.chat_id,
+            text='Que fue mijo como estais!, Soy el BOT Maracucho , /help pa que veais lo que puedo hacer')
     usuario_nuevo(update)
 
 
 def startgroup(bot, update):
     print(update.message)
-    bot.sendMessage(update.message.chat_id, text='Que fue mijos como estan! , /help para que vean lo que puedo hacer')
+    bot.sendMessage(update.message.chat_id,
+            text='Que fue mijos como estan! , /help para que vean lo que puedo hacer')
     usuario_nuevo(update)
 
 
 def me(bot, update):
     print(update.message)
-    bot.sendMessage(update.message.chat_id, text='Tu informacion:\n{}'.format(update.effective_user))
+    bot.sendMessage(update.message.chat_id,
+            text='Tu informacion:\n{}'.format(update.effective_user))
 
 
 def chat(bot, update):
     print(update.message)
-    bot.sendMessage(update.message.chat_id, text='This chat information:\n {}'.format(update.effective_chat))
+    bot.sendMessage(update.message.chat_id,
+            text='This chat information:\n {}'.format(update.effective_chat))
 
 
 def forwarded(bot, update):
     print(update.message)
-    bot.sendMessage(update.message.chat_id, text='This msg forwaded information:\n {}'.format(update.effective_message))
+    bot.sendMessage(update.message.chat_id,
+            text='This msg forwaded information:\n {}'.\
+                    format(update.effective_message))
 
 
 def bitcoin(bot, update):
@@ -106,7 +114,8 @@ def bitcoin(bot, update):
     user_first_name = update.message.from_user.first_name
     url = "https://api.coinbase.com/v2/exchange-rates?currency=BTC"
     get_price = requests.get(url).json().get("data").get("rates").get("USD")
-    response = '{0} El precio del Bitcoin es: {1:0,.2f} USD'.format(user_first_name, float(get_price))
+    response = '{0} El precio del Bitcoin es: {1:0,.2f} USD'.\
+            format(user_first_name, float(get_price))
     bot.sendMessage(update.message.chat_id, text=response)
     usuario_nuevo(update)
 
@@ -221,7 +230,7 @@ def main():
 
     dp.add_handler(CommandHandler("bitcoin", bitcoin))
     dp.add_handler(CommandHandler("satoshitango", bitcoin_satoshitango))
-    dp.add_handler(CommandHandler("alarmabitcoin", alarma_bitcoin))
+    dp.add_handler(CommandHandler("alarmabitcoin", set_alarma_bitcoin))
     dp.add_handler(CommandHandler("calcular", calcular))
     dp.add_handler(CommandHandler("dolartoday", dolartoday))
     dp.add_handler(CommandHandler("panorama", panorama_sucesos))
