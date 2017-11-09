@@ -70,7 +70,7 @@ def set_alarma_bitcoin(bot, update):
         cantidad_porcentaje = cadena_sin_el_comando.upper().split("%")[0]
         if cantidad_porcentaje:
             buscar_o_crear.porcentaje_cambio = cantidad_porcentaje
-            response = "Alarma se enviara cuando el precio suba mas de {}%".\
+            response = "Alarma se enviara cuando el precio suba o baje mas de {}%".\
                     format(cantidad_porcentaje)
 
     bot.sendMessage(update.message.chat_id, text=response)
@@ -230,7 +230,7 @@ def main():
 
     dp.add_handler(CommandHandler("bitcoin", bitcoin))
     dp.add_handler(CommandHandler("satoshitango", bitcoin_satoshitango))
-    dp.add_handler(CommandHandler("alarmabitcoin", set_alarma_bitcoin))
+    dp.add_handler(CommandHandler("set_alarma_bitcoin", set_alarma_bitcoin))
     dp.add_handler(CommandHandler("calcular", calcular))
     dp.add_handler(CommandHandler("dolartoday", dolartoday))
     dp.add_handler(CommandHandler("panorama", panorama_sucesos))
