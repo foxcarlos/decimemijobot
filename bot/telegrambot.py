@@ -41,6 +41,156 @@ def usuario_nuevo(update):
     return True
 
 
+def autor(bot, update):
+    url = "https://gitlab.com/foxcarlos"
+    response = """
+    Realizado por:
+
+    {0}""".format(url)
+    bot.sendMessage(update.message.chat_id, text=response)
+
+
+def bitcoin(bot, update):
+    # print(update.message)
+    user_first_name = update.message.from_user.first_name
+    url = "https://api.coinbase.com/v2/exchange-rates?currency=BTC"
+    get_price = requests.get(url).json().get("data").get("rates").get("USD")
+    response = '{0} El precio del Bitcoin es: {1:0,.2f} USD'.\
+            format(user_first_name, float(get_price))
+    bot.sendMessage(update.message.chat_id, text=response)
+    usuario_nuevo(update)
+
+
+def bitcoin_satoshitango(bot, update):
+    # Por peticion de Yanina y Thainelly
+    user_first_name = update.message.from_user.first_name
+    url = "https://api.satoshitango.com/v2/ticker"
+    get_price_venta = requests.get(url).json().get("data").get("venta").get("arsbtc")
+    get_price_compra = requests.get(url).json().get("data").get("compra").get("arsbtc")
+    response = '{0} El precio del Bitcoin en SatoshiTango es: {1:0,.2f} ARG para la Compra y {2:0,.2f} ARG para la Venta'.\
+            format(user_first_name, float(get_price_compra), float(get_price_venta))
+    bot.sendMessage(update.message.chat_id, text=response)
+    usuario_nuevo(update)
+
+
+def calcular(bot, update):
+    print(update.message)
+    parameters = update.message.text
+    user_first_name = update.message.from_user.first_name
+    cadena_sin_el_comando = ' '.join(parameters.split()[1:])
+    cadena = ""
+    palabra = ""
+    response = ""
+
+    try:
+        # TODO: Esto se puede hacer en una linea con lista por comprension lo
+        # dejo asi por ahora para que se entienda un poco mejor
+        for palabra in cadena_sin_el_comando.split():
+            if palabra.find("[", 0, len(palabra)) >= 0:
+                cadena += str(eval(palabra.replace("[", "").replace("]", ""))) + " "
+            else:
+                cadena += palabra+" "
+
+        if not cadena:
+            cadena = 'Teneis que indicar un calculo entre [ ] Ej: /calcular [2+2]'
+
+        response = '{0} Dice: {1} '.format(user_first_name, cadena)
+    except Exception as inst:
+        total_cal = inst
+        response = 'verga paso algo..! {0}, aqui esta el error {1} deja de invertar hace algo mas facil'.format(user_first_name, total_cal)
+
+    bot.sendMessage(update.message.chat_id, text=response)
+    usuario_nuevo(update)
+
+
+def chat(bot, update):
+    print(update.message)
+    bot.sendMessage(update.message.chat_id,
+            text='This chat information:\n {}'.format(update.effective_chat))
+
+
+def dolartoday(bot, update):
+    print(update.message)
+    user_first_name = update.message.from_user.first_name
+    rq = requests.get('https://s3.amazonaws.com/dolartoday/data.json')
+    devuelto = rq.json()
+    msg_response = devuelto['USD']['transferencia']
+
+    response = '{0} El precio del paralelo en Vzla es: {1:0,.2f}'
+    bot.sendMessage(update.message.chat_id, response.format(user_first_name, float(msg_response)))
+    usuario_nuevo(update)
+
+
+def echo(bot, update):
+    print(update.message)
+    update.message.reply_text(update.message.text)
+
+
+def enviar_mensajes_todos(bot, update):
+    print(update.message)
+    parameters = update.message.text
+    cadena_sin_el_comando = ' '.join(parameters.split()[1:])
+    root = UserDjango.objects.filter(username__icontains="foxcarlos")
+    me_id = update.message.chat_id
+
+    if root[0] and root[0].first_name == str(me_id):
+        users = User.objects.values('chat_id').annotate(dcount=Count('chat_id'))
+        for user in users if cadena_sin_el_comando else '':
+            try:
+                bot.sendMessage(user.get("chat_id"), text=cadena_sin_el_comando)
+                print(user.get("chat_id ", cadena_sin_el_comando))
+            except Exception as E:
+                print(E)
+            sleep(3)
+
+
+def error(bot, update, error):
+    logger.warn('Update "%s" caused error "%s"' % (update, error))
+
+
+def forwarded(bot, update):
+    print(update.message)
+    bot.sendMessage(update.message.chat_id,
+            text='This msg forwaded information:\n {}'.\
+                    format(update.effective_message))
+
+
+def help(bot, update):
+    msg_response = """
+    Lista de Comandos:
+
+    /bitcoin
+    /calcular  La suma de 2 mas  es [2+2] y 3 por 3 es [3*3]
+    /dolartoday
+    /set_alarma_bitcoin
+    /help
+    /panorama
+    """
+    user_first_name = update.message.from_user.first_name
+    response = 'Ey..! {0} aqui teneis tu ayuda, {1}'.format(user_first_name, msg_response)
+
+    bot.sendMessage(update.message.chat_id, text=response)
+
+
+def me(bot, update):
+    print(update.message)
+    bot.sendMessage(update.message.chat_id,
+            text='Tu informacion:\n{}'.format(update.effective_user))
+
+
+def panorama_sucesos(bot, update):
+    print(update.message)
+    noti = NoticiasPanorama()
+    response = noti.sucesos()
+
+    bot.sendMessage(update.message.chat_id, text=response)
+
+
+def porno(bot, update):
+    response = "Uhmmm! no se que intentais buscar, googlealo mejor mijo"
+    bot.sendMessage(update.message.chat_id, text=response)
+
+
 def set_alarma_bitcoin(bot, update):
     response = ""
     parameters = update.message.text
@@ -134,145 +284,6 @@ def startgroup(bot, update):
     usuario_nuevo(update)
 
 
-def me(bot, update):
-    print(update.message)
-    bot.sendMessage(update.message.chat_id,
-            text='Tu informacion:\n{}'.format(update.effective_user))
-
-
-def chat(bot, update):
-    print(update.message)
-    bot.sendMessage(update.message.chat_id,
-            text='This chat information:\n {}'.format(update.effective_chat))
-
-
-def forwarded(bot, update):
-    print(update.message)
-    bot.sendMessage(update.message.chat_id,
-            text='This msg forwaded information:\n {}'.\
-                    format(update.effective_message))
-
-
-def bitcoin(bot, update):
-    # print(update.message)
-    user_first_name = update.message.from_user.first_name
-    url = "https://api.coinbase.com/v2/exchange-rates?currency=BTC"
-    get_price = requests.get(url).json().get("data").get("rates").get("USD")
-    response = '{0} El precio del Bitcoin es: {1:0,.2f} USD'.\
-            format(user_first_name, float(get_price))
-    bot.sendMessage(update.message.chat_id, text=response)
-    usuario_nuevo(update)
-
-
-def bitcoin_satoshitango(bot, update):
-    # Por peticion de Yanina y Thainelly
-    user_first_name = update.message.from_user.first_name
-    url = "https://api.satoshitango.com/v2/ticker"
-    get_price_venta = requests.get(url).json().get("data").get("venta").get("arsbtc")
-    get_price_compra = requests.get(url).json().get("data").get("compra").get("arsbtc")
-    response = '{0} El precio del Bitcoin en SatoshiTango es: {1:0,.2f} ARG para la Compra y {2:0,.2f} ARG para la Venta'.\
-            format(user_first_name, float(get_price_compra), float(get_price_venta))
-    bot.sendMessage(update.message.chat_id, text=response)
-    usuario_nuevo(update)
-
-
-def calcular(bot, update):
-    print(update.message)
-    parameters = update.message.text
-    user_first_name = update.message.from_user.first_name
-    cadena_sin_el_comando = ' '.join(parameters.split()[1:])
-    cadena = ""
-    palabra = ""
-    response = ""
-
-    try:
-        # TODO: Esto se puede hacer en una linea con lista por comprension lo
-        # dejo asi por ahora para que se entienda un poco mejor
-        for palabra in cadena_sin_el_comando.split():
-            if palabra.find("[", 0, len(palabra)) >= 0:
-                cadena += str(eval(palabra.replace("[", "").replace("]", ""))) + " "
-            else:
-                cadena += palabra+" "
-
-        if not cadena:
-            cadena = 'Teneis que indicar un calculo entre [ ] Ej: /calcular [2+2]'
-
-        response = '{0} Dice: {1} '.format(user_first_name, cadena)
-    except Exception as inst:
-        total_cal = inst
-        response = 'verga paso algo..! {0}, aqui esta el error {1} deja de invertar hace algo mas facil'.format(user_first_name, total_cal)
-
-    bot.sendMessage(update.message.chat_id, text=response)
-    usuario_nuevo(update)
-
-
-def dolartoday(bot, update):
-    print(update.message)
-    user_first_name = update.message.from_user.first_name
-    rq = requests.get('https://s3.amazonaws.com/dolartoday/data.json')
-    devuelto = rq.json()
-    msg_response = devuelto['USD']['transferencia']
-
-    response = '{0} El precio del paralelo en Vzla es: {1:0,.2f}'
-    bot.sendMessage(update.message.chat_id, response.format(user_first_name, float(msg_response)))
-    usuario_nuevo(update)
-
-
-def echo(bot, update):
-    print(update.message)
-    update.message.reply_text(update.message.text)
-
-def enviar_mensajes_todos(bot, update):
-    print(update.message)
-    parameters = update.message.text
-    cadena_sin_el_comando = ' '.join(parameters.split()[1:])
-    root = UserDjango.objects.filter(username__icontains="foxcarlos")
-    me_id = update.message.chat_id
-
-    if root[0] and root[0].first_name == str(me_id):
-        users = User.objects.values('chat_id').annotate(dcount=Count('chat_id'))
-        for user in users:
-            print(user.get("chat_id ", cadena_sin_el_comando))
-            try:
-                bot.sendMessage(user.get("chat_id"), text=cadena_sin_el_comando)
-            except Exception as E:
-                print(E)
-            sleep(5)
-
-
-def error(bot, update, error):
-    logger.warn('Update "%s" caused error "%s"' % (update, error))
-
-
-def help(bot, update):
-    msg_response = """
-    Lista de Comandos:
-
-    /bitcoin
-    /calcular  La suma de 2 mas  es [2+2] y 3 por 3 es [3*3]
-    /dolartoday
-    /help
-    /panorama
-    """
-    user_first_name = update.message.from_user.first_name
-    response = 'Ey..! {0} aqui teneis tu ayuda, {1}'.format(user_first_name, msg_response)
-
-    bot.sendMessage(update.message.chat_id, text=response)
-
-
-def panorama_sucesos(bot, update):
-    print(update.message)
-    noti = NoticiasPanorama()
-    response = noti.sucesos()
-
-    bot.sendMessage(update.message.chat_id, text=response)
-
-
-def porno(bot, update):
-    response = "Uhmmm! no se que intentais buscar, googlealo mejor mijo"
-    bot.sendMessage(update.message.chat_id, text=response)
-
-
 def main():
     logger.info("Loading handlers for telegram bot")
 
@@ -297,6 +308,7 @@ def main():
     dp.add_handler(CommandHandler("panorama", panorama_sucesos))
     dp.add_handler(CommandHandler("masivo", enviar_mensajes_todos))
     dp.add_handler(CommandHandler("porno", porno))
+    dp.add_handler(CommandHandler("autor", autor))
 
     dp.add_handler(CommandHandler("startgroup", startgroup))
     dp.add_handler(CommandHandler("me", me))
