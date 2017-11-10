@@ -47,31 +47,71 @@ def set_alarma_bitcoin(bot, update):
     bitcoin = Alerta.objects.get(comando__icontains="bitcoin")
     buscar_o_crear = AlertaUsuario.objects.get_or_create(alerta=bitcoin, chat_id=chat_id)[0]
 
-    if cadena_sin_el_comando.upper() in 'ON OFF':
-        if cadena_sin_el_comando.upper() == 'ON':
-            estado = 'A'
-        elif cadena_sin_el_comando.upper() == 'OFF':
-            estado = 'I'
+    if cadena_sin_el_comando == "?":
+        response = """
+        Tu configuracion actual es:
 
-        buscar_o_crear.estado = estado
+        Estado:{0}
+        Frecuencia en minutos:{1}
+        Porcentaje de subida o bajada:{2}
+
+        Si quieres mas ayuda escribe /set_alarma_bitcoin sin parametros
+
+        """.format('ON' if buscar_o_crear.estado=="A" else 'OFF',
+                buscar_o_crear.frecuencia,
+                buscar_o_crear.porcentaje_cambio)
+
+    elif cadena_sin_el_comando.upper() == 'ON':
+        buscar_o_crear.estado = 'A'
         buscar_o_crear.chat_username = username
         buscar_o_crear.save()
-        response = "Alarma activada {}".\
-                format(cadena_sin_el_comando.upper())
+        response = "Alarma activada {}".format(cadena_sin_el_comando.upper())
 
-    if len(cadena_sin_el_comando.upper().split("MIN")) >= 2:
+    elif cadena_sin_el_comando.upper() == 'OFF':
+        buscar_o_crear.estado = 'I'
+        buscar_o_crear.chat_username = username
+        buscar_o_crear.save()
+        response = "Alarma activada {}".format(cadena_sin_el_comando.upper())
+
+    elif len(cadena_sin_el_comando.upper().split("MIN")) >= 2:
         minutos = cadena_sin_el_comando.upper().split("MIN")[0]
         if minutos:
             buscar_o_crear.frecuencia = minutos
-            response = "Notificacion de Alarma cambiada a cada  {} minutos".\
+            buscar_o_crear.save()
+            response = "Notificacion de Alarma cambiada a cada {} minutos".\
                     format(minutos)
+        else:
+            response = "El comando es xxMin Ejemplo: 60min"
 
-    if len(cadena_sin_el_comando.upper().split("%")) >= 2:
+    elif len(cadena_sin_el_comando.upper().split("%")) >= 2:
         cantidad_porcentaje = cadena_sin_el_comando.upper().split("%")[0]
         if cantidad_porcentaje:
             buscar_o_crear.porcentaje_cambio = cantidad_porcentaje
-            response = "Alarma se enviara cuando el precio suba o baje mas de {}%".\
+            buscar_o_crear.save()
+            response = "Alarma se enviara cuando el precio sea mayor o menor a {}%".\
                     format(cantidad_porcentaje)
+        else:
+            response = "El Comando es xx% , Ejemplo 5%"
+    else:
+        response = """
+        Que haceis mijo, no aprendeis, aqui te doy una mano con eso:
+        - para ver tu configuracion actual:
+            /set_alarma_bitcoin ?
+
+        - Para activar o desactivar la alarma:
+            /set_alarma_bitcoin on
+            /set_alarma_bitcoin off
+
+        - Para que la alarma te envie notificacion cada ciertos minutos:
+            /set_alarma_bitcoin 30min
+
+        - Para que te envie una notificacion cuando el precio suba o baje un determinado porcentaje:
+            /set_alarma_bitcoin  5%
+
+        Nota: Una buena opcion podria ser activar ambas condiciones, te envie un mensaje siempre y cuando se cumplan cualquiera de las 2 opciones, es decir cuando pasen algunos minutos u horas o el precio suba o baje, en este caso podrias  hacer lo siguiente:
+            /set_alarma_bitcoin 30min
+            /set_alarma_bitcoin 2%
+        """
 
     bot.sendMessage(update.message.chat_id, text=response)
 
