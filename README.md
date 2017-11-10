@@ -48,6 +48,17 @@ $ python setup.py install
 $ pip install -r requirements.txt
 ```
 
+#### Run BOT
+
+```sh
+$ python manage.py botpolling --username=DecimeMijobot
+```
+
+#### Run Alertas from Crontab
+
+python /home/foxcarlos/desarrollo/python/decimemijobot/manage.py alerta_bitcoin dolartoday
+python /home/foxcarlos/desarrollo/python/decimemijobot/manage.py alerta_bitcoin bitcoin
+
 ### Todos
 
  - Write MORE Tests
