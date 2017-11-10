@@ -1,0 +1,6 @@
+bitcoin - Precio actual del Bitcoin
+calcular - Indique entre [ ] el calculo, Ej: [2+2]
+dolartoday - Precio actual del Dolar Venezuela
+set_alarma_bitcoin - Activa notificaciones cuando ocurra un evento
+help - Lista de comandos disponibles
+panorama - Lista noticas de sucesos en Mcbo

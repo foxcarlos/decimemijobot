@@ -8,8 +8,11 @@ import requests
 import logging
 logger = logging.getLogger(__name__)
 
+from django.db.models import Count
+from django.contrib.auth.models import User as UserDjango
 from bot.scrapy import NoticiasPanorama
 from bot.models import Alerta, AlertaUsuario, User
+from time import sleep
 
 
 # Define a few command handlers. These usually take the two arguments bot and
@@ -218,6 +221,23 @@ def echo(bot, update):
     print(update.message)
     update.message.reply_text(update.message.text)
 
+def enviar_mensajes_todos(bot, update):
+    print(update.message)
+    parameters = update.message.text
+    cadena_sin_el_comando = ' '.join(parameters.split()[1:])
+    root = UserDjango.objects.filter(username__icontains="foxcarlos")
+    me_id = update.message.chat_id
+
+    if root[0] and root[0].first_name == str(me_id):
+        users = User.objects.values('chat_id').annotate(dcount=Count('chat_id'))
+        for user in users:
+            print(user.get("chat_id ", cadena_sin_el_comando))
+            try:
+                bot.sendMessage(user.get("chat_id"), text=cadena_sin_el_comando)
+            except Exception as E:
+                print(E)
+            sleep(5)
+
 
 def error(bot, update, error):
     logger.warn('Update "%s" caused error "%s"' % (update, error))
@@ -274,6 +294,7 @@ def main():
     dp.add_handler(CommandHandler("calcular", calcular))
     dp.add_handler(CommandHandler("dolartoday", dolartoday))
     dp.add_handler(CommandHandler("panorama", panorama_sucesos))
+    dp.add_handler(CommandHandler("masivo", enviar_mensajes_todos))
     dp.add_handler(CommandHandler("porno", porno))
 
     dp.add_handler(CommandHandler("startgroup", startgroup))
