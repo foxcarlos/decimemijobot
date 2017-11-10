@@ -5,7 +5,7 @@ Estas son las funciones que realiza el Bot
 
   - Hola
   - Chao
-  
+
 
 ### Installation
 
@@ -56,8 +56,10 @@ $ python manage.py botpolling --username=DecimeMijobot
 
 #### Run Alertas from Crontab
 
+```sh
 python /home/foxcarlos/desarrollo/python/decimemijobot/manage.py alerta_bitcoin dolartoday
 python /home/foxcarlos/desarrollo/python/decimemijobot/manage.py alerta_bitcoin bitcoin
+```
 
 ### Todos
 
