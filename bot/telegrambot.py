@@ -97,7 +97,8 @@ def set_alarma_bitcoin(bot, update):
             response = "El Comando es xx% , Ejemplo 5%"
     else:
         response = """
-        Que haceis mijo, no aprendeis, aqui te doy una mano con eso:
+        Te doy una mano con eso:
+
         - para ver tu configuracion actual:
             /set_alarma_bitcoin ?
 
