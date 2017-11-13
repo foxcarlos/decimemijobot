@@ -130,10 +130,8 @@ def enviar_mensajes_todos(bot, update):
     print(update.message)
     parameters = update.message.text
     cadena_sin_el_comando = ' '.join(parameters.split()[1:])
-    root = UserDjango.objects.filter(username__icontains="foxcarlos")
-    me_id = update.message.chat_id
 
-    if root[0] and root[0].first_name == str(me_id):
+    if valida_root(update):
         users = User.objects.values('chat_id').annotate(dcount=Count('chat_id'))
         for user in users if cadena_sin_el_comando else '':
             try:
@@ -282,6 +280,15 @@ def startgroup(bot, update):
     bot.sendMessage(update.message.chat_id,
             text='Que fue mijos como estan! , /help para que vean lo que puedo hacer')
     usuario_nuevo(update)
+
+
+def valida_root(update):
+    print(update.message)
+    root = UserDjango.objects.filter(username__icontains="foxcarlos")
+    me_id = update.message.chat_id
+
+    if root[0] and root[0].first_name == str(me_id):
+        return True
 
 
 def main():
