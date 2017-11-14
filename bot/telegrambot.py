@@ -1,18 +1,18 @@
 # -*- coding: utf-8 -*-
 # Example code for telegrambot.py module
+import requests
+from time import sleep
+import logging
+
 from telegram.ext import CommandHandler, MessageHandler, Filters
 from django_telegrambot.apps import DjangoTelegramBot
 
-import requests
-
-import logging
 logger = logging.getLogger(__name__)
 
 from django.db.models import Count
 from django.contrib.auth.models import User as UserDjango
 from bot.scrapy import NoticiasPanorama
 from bot.models import Alerta, AlertaUsuario, User
-from time import sleep
 
 
 # Define a few command handlers. These usually take the two arguments bot and
@@ -73,31 +73,31 @@ def bitcoin_satoshitango(bot, update):
     usuario_nuevo(update)
 
 
+def evaluar(palabra):
+    response = ""
+    if '[' and ']' in palabra:
+        try:
+            response = str(eval(palabra.replace("[", "").replace("]", ""))) + " "
+        except Exception as inst:
+            response = 'verga paso algo..! , aqui esta el error {0} deja de invertar hace algo mas facil'.format(inst)
+    else:
+        response = palabra
+    return response
+
+
 def calcular(bot, update):
     print(update.message)
     parameters = update.message.text
     user_first_name = update.message.from_user.first_name
     cadena_sin_el_comando = ' '.join(parameters.split()[1:])
     cadena = ""
-    palabra = ""
     response = ""
 
-    try:
-        # TODO: Esto se puede hacer en una linea con lista por comprension lo
-        # dejo asi por ahora para que se entienda un poco mejor
-        for palabra in cadena_sin_el_comando.split():
-            if palabra.find("[", 0, len(palabra)) >= 0:
-                cadena += str(eval(palabra.replace("[", "").replace("]", ""))) + " "
-            else:
-                cadena += palabra+" "
+    cadena = ' '.join([evaluar(palabra) for palabra in cadena_sin_el_comando.split()])
+    if not cadena:
+        cadena = 'Teneis que indicar un calculo entre [ ] Ej: /calcular [2+2]'
 
-        if not cadena:
-            cadena = 'Teneis que indicar un calculo entre [ ] Ej: /calcular [2+2]'
-
-        response = '{0} Dice: {1} '.format(user_first_name, cadena)
-    except Exception as inst:
-        total_cal = inst
-        response = 'verga paso algo..! {0}, aqui esta el error {1} deja de invertar hace algo mas facil'.format(user_first_name, total_cal)
+    response = '{0} Dice: {1} '.format(user_first_name, cadena)
 
     bot.sendMessage(update.message.chat_id, text=response)
     usuario_nuevo(update)
@@ -208,7 +208,7 @@ def set_alarma_bitcoin(bot, update):
 
         Si quieres mas ayuda escribe /set_alarma_bitcoin sin parametros
 
-        """.format('ON' if buscar_o_crear.estado=="A" else 'OFF',
+        """.format('ON' if buscar_o_crear.estado == "A" else 'OFF',
                 buscar_o_crear.frecuencia,
                 buscar_o_crear.porcentaje_cambio)
 
