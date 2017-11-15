@@ -188,10 +188,15 @@ def help(bot, update):
     msg_response = """
     Lista de Comandos:
 
+    /allcoins - Precios de bitcoin, ethereum, litecoin
     /bitcoin
     /calcular  La suma de 2 mas  es [2+2] y 3 por 3 es [3*3]
     /dolartoday
+    /ethereum - Precio actual del Ethereum
+    /litecoin - Precio actual del LiteCoin
     /set_alarma_bitcoin
+    /set_alarma_ethereum
+    /set_alarma_litecoin
     /help
     /panorama
     """
