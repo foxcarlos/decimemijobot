@@ -18,6 +18,11 @@ from bot.models import Alerta, AlertaUsuario, User
 # Define a few command handlers. These usually take the two arguments bot and
 # update. Error handlers also receive the raised TelegramError object in error.
 
+URL_BTC_USD = "https://api.coinbase.com/v2/exchange-rates?currency=BTC"
+URL_ETH_UDS = "https://api.coinbase.com/v2/exchange-rates?currency=ETH"
+URL_LTC_UDS = "https://api.coinbase.com/v2/exchange-rates?currency=LTC"
+
+
 def usuario_nuevo(update):
     id_user = update.message.from_user.id
     usuario = update.message.from_user.username
@@ -41,6 +46,21 @@ def usuario_nuevo(update):
     return True
 
 
+def get_price(url):
+    return requests.get(url).json().get("data").get("rates").get("USD")
+
+
+def all_coins(bot, update):
+
+    btc = get_price(URL_BTC_USD)
+    eth = get_price(URL_ETH_UDS)
+    ltc = get_price(URL_LTC_UDS)
+    response = """Lista de Precios:\n\nBTC={0:0,.2f}\nETH={1:0,.2f}\nLTC={2:0,.2f}""".format(
+            float(btc), float(eth), float(ltc))
+    bot.sendMessage(update.message.chat_id, text=response)
+    usuario_nuevo(update)
+
+
 def autor(bot, update):
     url = "https://gitlab.com/foxcarlos"
     response = """
@@ -53,10 +73,12 @@ def autor(bot, update):
 def bitcoin(bot, update):
     # print(update.message)
     user_first_name = update.message.from_user.first_name
-    url = "https://api.coinbase.com/v2/exchange-rates?currency=BTC"
-    get_price = requests.get(url).json().get("data").get("rates").get("USD")
+    # url = "https://api.coinbase.com/v2/exchange-rates?currency=BTC"
+    # get_price = requests.get(url).json().get("data").get("rates").get("USD")
+
+    btc = get_price(URL_BTC_USD)
     response = '{0} El precio del Bitcoin es: {1:0,.2f} USD'.\
-            format(user_first_name, float(get_price))
+            format(user_first_name, float(btc))
     bot.sendMessage(update.message.chat_id, text=response)
     usuario_nuevo(update)
 
@@ -69,6 +91,18 @@ def bitcoin_satoshitango(bot, update):
     get_price_compra = requests.get(url).json().get("data").get("compra").get("arsbtc")
     response = '{0} El precio del Bitcoin en SatoshiTango es: {1:0,.2f} ARG para la Compra y {2:0,.2f} ARG para la Venta'.\
             format(user_first_name, float(get_price_compra), float(get_price_venta))
+    bot.sendMessage(update.message.chat_id, text=response)
+    usuario_nuevo(update)
+
+
+def ethereum(bot, update):
+    # print(update.message)
+    user_first_name = update.message.from_user.first_name
+    # url = "https://api.coinbase.com/v2/exchange-rates?currency=ETH"
+    # get_price = requests.get(url).json().get("data").get("rates").get("USD")
+    eth = get_price(URL_ETH_UDS)
+    response = '{0} El precio del Ethereum es: {1:0,.2f} USD'.\
+            format(user_first_name, float(eth))
     bot.sendMessage(update.message.chat_id, text=response)
     usuario_nuevo(update)
 
@@ -170,6 +204,18 @@ def help(bot, update):
     bot.sendMessage(update.message.chat_id, text=response)
 
 
+def litecoin(bot, update):
+    # print(update.message)
+    user_first_name = update.message.from_user.first_name
+    # url = "https://api.coinbase.com/v2/exchange-rates?currency=LTC"
+    # get_price = requests.get(url).json().get("data").get("rates").get("USD")
+    ltc = get_price(URL_LTC_UDS)
+    response = '{0} El precio del LiteCoin es: {1:0,.2f} USD'.\
+            format(user_first_name, float(ltc))
+    bot.sendMessage(update.message.chat_id, text=response)
+    usuario_nuevo(update)
+
+
 def me(bot, update):
     print(update.message)
     bot.sendMessage(update.message.chat_id,
@@ -188,15 +234,23 @@ def porno(bot, update):
     response = "Uhmmm! no se que intentais buscar, googlealo mejor mijo"
     bot.sendMessage(update.message.chat_id, text=response)
 
+def set_alarma_dolartoday(bot, update):
+    set_alarma(bot, update, "dolartoday")
+
 
 def set_alarma_bitcoin(bot, update):
+    set_alarma(bot, update, "bitcoin")
+
+
+def set_alarma(bot, update, alerta):
     response = ""
     parameters = update.message.text
     username = update.message.from_user.username
     chat_id = update.message.from_user.id
     cadena_sin_el_comando = ' '.join(parameters.split()[1:])
-    bitcoin = Alerta.objects.get(comando__icontains="bitcoin")
-    buscar_o_crear = AlertaUsuario.objects.get_or_create(alerta=bitcoin, chat_id=chat_id)[0]
+    obj_alerta = Alerta.objects.get(comando__icontains=alerta)
+    buscar_o_crear = AlertaUsuario.objects.get_or_create(
+            alerta=obj_alerta, chat_id=chat_id)[0]
 
     if cadena_sin_el_comando == "?":
         response = """
@@ -222,7 +276,7 @@ def set_alarma_bitcoin(bot, update):
         buscar_o_crear.estado = 'I'
         buscar_o_crear.chat_username = username
         buscar_o_crear.save()
-        response = "Alarma activada {}".format(cadena_sin_el_comando.upper())
+        response = "Alarma desactivada {}".format(cadena_sin_el_comando.upper())
 
     elif len(cadena_sin_el_comando.upper().split("MIN")) >= 2:
         minutos = cadena_sin_el_comando.upper().split("MIN")[0]
@@ -307,9 +361,13 @@ def main():
     dp.add_handler(CommandHandler("ayuda", help))
     dp.add_handler(CommandHandler("?", help))
 
+    dp.add_handler(CommandHandler("allcoins", all_coins))
+    dp.add_handler(CommandHandler("litecoin", litecoin))
     dp.add_handler(CommandHandler("bitcoin", bitcoin))
+    dp.add_handler(CommandHandler("ethereum", ethereum))
     dp.add_handler(CommandHandler("satoshitango", bitcoin_satoshitango))
     dp.add_handler(CommandHandler("set_alarma_bitcoin", set_alarma_bitcoin))
+    dp.add_handler(CommandHandler("set_alarma_dolartoday", set_alarma_dolartoday))
     dp.add_handler(CommandHandler("calcular", calcular))
     dp.add_handler(CommandHandler("dolartoday", dolartoday))
     dp.add_handler(CommandHandler("panorama", panorama_sucesos))
