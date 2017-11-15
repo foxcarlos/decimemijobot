@@ -6,6 +6,7 @@ import logging
 
 from telegram.ext import CommandHandler, MessageHandler, Filters
 from django_telegrambot.apps import DjangoTelegramBot
+from sampleproject.settings import URL_BTC_USD, URL_ETH_UDS, URL_LTC_UDS
 
 logger = logging.getLogger(__name__)
 
@@ -17,10 +18,6 @@ from bot.models import Alerta, AlertaUsuario, User
 
 # Define a few command handlers. These usually take the two arguments bot and
 # update. Error handlers also receive the raised TelegramError object in error.
-
-URL_BTC_USD = "https://api.coinbase.com/v2/exchange-rates?currency=BTC"
-URL_ETH_UDS = "https://api.coinbase.com/v2/exchange-rates?currency=ETH"
-URL_LTC_UDS = "https://api.coinbase.com/v2/exchange-rates?currency=LTC"
 
 
 def usuario_nuevo(update):
@@ -242,6 +239,14 @@ def set_alarma_bitcoin(bot, update):
     set_alarma(bot, update, "bitcoin")
 
 
+def set_alarma_ethereum(bot, update):
+    set_alarma(bot, update, "ethereum")
+
+
+def set_alarma_litecoin(bot, update):
+    set_alarma(bot, update, "litecoin")
+
+
 def set_alarma(bot, update, alerta):
     response = ""
     parameters = update.message.text
@@ -300,6 +305,15 @@ def set_alarma(bot, update, alerta):
     else:
         response = """
         Te doy una mano con eso:
+
+        - Las Alarmas son:
+
+            - set_alarma_bitcoin
+            - set_alarma_dolartoday
+            - set_alarma_ethereum
+            - set_alarma_litecoin
+
+        Ejemplo para modo de uso:
 
         - para ver tu configuracion actual:
             /set_alarma_bitcoin ?
@@ -368,6 +382,8 @@ def main():
     dp.add_handler(CommandHandler("satoshitango", bitcoin_satoshitango))
     dp.add_handler(CommandHandler("set_alarma_bitcoin", set_alarma_bitcoin))
     dp.add_handler(CommandHandler("set_alarma_dolartoday", set_alarma_dolartoday))
+    dp.add_handler(CommandHandler("set_alarma_ethereum", set_alarma_ethereum))
+    dp.add_handler(CommandHandler("set_alarma_litecoin", set_alarma_litecoin))
     dp.add_handler(CommandHandler("calcular", calcular))
     dp.add_handler(CommandHandler("dolartoday", dolartoday))
     dp.add_handler(CommandHandler("panorama", panorama_sucesos))

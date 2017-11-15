@@ -209,5 +209,10 @@ DJANGO_TELEGRAMBOT = {
 
 }
 
-#################################33
+#################################
+
+URL_BTC_USD = "https://api.coinbase.com/v2/exchange-rates?currency=BTC"
+URL_ETH_UDS =  "https://api.coinbase.com/v2/exchange-rates?currency=ETH"
+URL_LTC_UDS =  "https://api.coinbase.com/v2/exchange-rates?currency=LTC"
+
 

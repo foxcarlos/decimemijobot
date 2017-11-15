@@ -1,5 +1,6 @@
 from django.core.management.base import BaseCommand
 from django_telegrambot.apps import DjangoTelegramBot
+from sampleproject.settings import URL_BTC_USD, URL_ETH_UDS, URL_LTC_UDS
 
 from bot.models import Alerta, AlertaUsuario
 from django.db.models import Q
@@ -14,11 +15,8 @@ class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument('comando', nargs='+', type=str)
 
-    def obtener_precio_bitcoin(self):
-        url = "https://api.coinbase.com/v2/exchange-rates?currency=BTC"
-        get_price = requests.get(url).json().get("data").get("rates").get("USD")
-        response = float(get_price)
-        return response
+    def get_price(self, url):
+        return requests.get(url).json().get("data").get("rates").get("USD")
 
     def obtener_precio_dolar_paralelo_venezuela(self):
         rq = requests.get('https://s3.amazonaws.com/dolartoday/data.json')
@@ -28,9 +26,13 @@ class Command(BaseCommand):
 
     def obtener_precio(self, comando):
         if comando == 'bitcoin':
-            ultimo_precio = self.obtener_precio_bitcoin()
+            ultimo_precio = float(self.get_price(URL_BTC_USD))
         elif comando == 'dolartoday':
             ultimo_precio = self.obtener_precio_dolar_paralelo_venezuela()
+        elif comando == 'ethereum':
+            ultimo_precio = float(self.get_price(URL_ETH_UDS))
+        elif comando == 'litecoin':
+            ultimo_precio = float(self.get_price(URL_LTC_UDS))
         else:
             ultimo_precio = 0
         return ultimo_precio
@@ -96,5 +98,9 @@ class Command(BaseCommand):
             self.generar_alerta('dolartoday')
         elif 'bitcoin' in options.get("comando"):
             self.generar_alerta("bitcoin")
+        elif 'ethereum' in options.get("comando"):
+            self.generar_alerta("ethereum")
+        elif 'litecoin' in options.get("comando"):
+            self.generar_alerta("litecoin")
 
         self.stdout.write('Ejecutando comando')
