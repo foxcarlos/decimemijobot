@@ -69,8 +69,22 @@ def all_coins(bot, update):
     btg = get_price_coinmarketcap(URL_BTG_USD)
     xmr = get_price_coinmarketcap(URL_XMR_USD)
 
-    response = """Cripto Monedas hoy:\n\nBTC={0:0,.2f}\nETH={1:0,.2f}\nLTC={2:0,.2f}\nBCC={3:0,.2f}\nDASH={4:0,.2f}\nBTCGOLD={5:0,.2f}\nMONERO={6:0,.2f}""".format(
-            float(btc), float(eth), float(ltc), float(bcc), float(das), float(btg), float(xmr))
+    response = """Cripto Monedas hoy:\n\n\
+            BTC={0:0,.2f}\n\
+            ETH={1:0,.2f}\n\
+            LTC={2:0,.2f}\n\
+            BCC={3:0,.2f}\n\
+            DASH={4:0,.2f}\n\
+            BTCGOLD={5:0,.2f}\n\
+            MONERO={6:0,.2f}""".format(
+                    float(btc),
+                    float(eth),
+                    float(ltc),
+                    float(bcc),
+                    float(das),
+                    float(btg),
+                    float(xmr)
+                    )
 
     bot.sendMessage(update.message.chat_id, text=response)
     usuario_nuevo(update)
@@ -100,10 +114,17 @@ def bitcoin_satoshitango(bot, update):
     # Por peticion de Yanina y Thainelly
     user_first_name = update.message.from_user.first_name
     url = "https://api.satoshitango.com/v2/ticker"
-    get_price_venta = requests.get(url).json().get("data").get("venta").get("arsbtc")
-    get_price_compra = requests.get(url).json().get("data").get("compra").get("arsbtc")
-    response = '{0} El precio del Bitcoin en SatoshiTango es: {1:0,.2f} ARG para la Compra y {2:0,.2f} ARG para la Venta'.\
-            format(user_first_name, float(get_price_compra), float(get_price_venta))
+    get_price_venta = requests.get(url).json().get("data").get("venta").\
+            get("arsbtc")
+    get_price_compra = requests.get(url).json().get("data").get("compra").\
+            get("arsbtc")
+    response = '{0} El precio del Bitcoin en SatoshiTango es: \
+            {1:0,.2f} ARG para la Compra y {2:0,.2f} ARG para la Venta'.\
+            format(
+                    user_first_name,
+                    float(get_price_compra),
+                    float(get_price_venta))
+
     bot.sendMessage(update.message.chat_id, text=response)
     usuario_nuevo(update)
 
@@ -111,7 +132,7 @@ def bitcoin_satoshitango(bot, update):
 def ethereum(bot, update):
     # print(update.message)
     user_first_name = update.message.from_user.first_name
-    eth = get_price(URL_ETH_UDS)
+    eth = get_price(URL_ETH_USD)
     response = '{0} El precio del Ethereum es: {1:0,.2f} USD'.\
             format(user_first_name, float(eth))
     bot.sendMessage(update.message.chat_id, text=response)
@@ -124,7 +145,8 @@ def evaluar(palabra):
         try:
             response = str(eval(palabra.replace("[", "").replace("]", ""))) + " "
         except Exception as inst:
-            response = 'verga paso algo..! , aqui esta el error {0} deja de invertar hace algo mas facil'.format(inst)
+            response = 'verga paso algo..! ,aqui esta el error {0} \
+                    deja de invertar hace algo mas facil'.format(inst)
     else:
         response = palabra
     return response
@@ -162,7 +184,8 @@ def dolartoday(bot, update):
     msg_response = devuelto['USD']['transferencia']
 
     response = '{0} El precio del paralelo en Vzla es: {1:0,.2f}'
-    bot.sendMessage(update.message.chat_id, response.format(user_first_name, float(msg_response)))
+    bot.sendMessage(update.message.chat_id, response.format(user_first_name,
+        float(msg_response)))
     usuario_nuevo(update)
 
 
@@ -215,7 +238,8 @@ def help(bot, update):
     /panorama
     """
     user_first_name = update.message.from_user.first_name
-    response = 'Ey..! {0} aqui teneis tu ayuda, {1}'.format(user_first_name, msg_response)
+    response = 'Ey..! {0} aqui teneis tu ayuda, {1}'.format(user_first_name,
+            msg_response)
 
     bot.sendMessage(update.message.chat_id, text=response)
 
@@ -223,7 +247,7 @@ def help(bot, update):
 def litecoin(bot, update):
     # print(update.message)
     user_first_name = update.message.from_user.first_name
-    ltc = get_price(URL_LTC_UDS)
+    ltc = get_price(URL_LTC_USD)
     response = '{0} El precio del LiteCoin es: {1:0,.2f} USD'.\
             format(user_first_name, float(ltc))
     bot.sendMessage(update.message.chat_id, text=response)
@@ -247,6 +271,7 @@ def panorama_sucesos(bot, update):
 def porno(bot, update):
     response = "Uhmmm! no se que intentais buscar, googlealo mejor mijo"
     bot.sendMessage(update.message.chat_id, text=response)
+
 
 def set_alarma_dolartoday(bot, update):
     set_alarma(bot, update, "dolartoday")
@@ -356,14 +381,16 @@ def set_alarma(bot, update, alerta):
 def start(bot, update):
     # print(update.message)
     bot.sendMessage(update.message.chat_id,
-            text='Que fue mijo como estais!, Soy el BOT Maracucho , /help pa que veais lo que puedo hacer')
+            text='Que fue mijo como estais!, Soy el BOT Maracucho,\
+            /help pa que veais lo que puedo hacer')
     usuario_nuevo(update)
 
 
 def startgroup(bot, update):
     print(update.message)
     bot.sendMessage(update.message.chat_id,
-            text='Que fue mijos como estan! , /help para que vean lo que puedo hacer')
+            text='Que fue mijos como estan! ,\
+            /help para que vean lo que puedo hacer')
     usuario_nuevo(update)
 
 
