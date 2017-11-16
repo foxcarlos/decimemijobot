@@ -70,8 +70,6 @@ def autor(bot, update):
 def bitcoin(bot, update):
     # print(update.message)
     user_first_name = update.message.from_user.first_name
-    # url = "https://api.coinbase.com/v2/exchange-rates?currency=BTC"
-    # get_price = requests.get(url).json().get("data").get("rates").get("USD")
 
     btc = get_price(URL_BTC_USD)
     response = '{0} El precio del Bitcoin es: {1:0,.2f} USD'.\
@@ -95,8 +93,6 @@ def bitcoin_satoshitango(bot, update):
 def ethereum(bot, update):
     # print(update.message)
     user_first_name = update.message.from_user.first_name
-    # url = "https://api.coinbase.com/v2/exchange-rates?currency=ETH"
-    # get_price = requests.get(url).json().get("data").get("rates").get("USD")
     eth = get_price(URL_ETH_UDS)
     response = '{0} El precio del Ethereum es: {1:0,.2f} USD'.\
             format(user_first_name, float(eth))
@@ -190,13 +186,13 @@ def help(bot, update):
 
     /allcoins - Precios de bitcoin, ethereum, litecoin
     /bitcoin
-    /calcular  La suma de 2 mas  es [2+2] y 3 por 3 es [3*3]
+    /calcular  La suma de 2 mas 2 es [2+2] y 3 por 3 es [3*3]
     /dolartoday
     /ethereum - Precio actual del Ethereum
     /litecoin - Precio actual del LiteCoin
-    /set_alarma_bitcoin
-    /set_alarma_ethereum
-    /set_alarma_litecoin
+    /set_alarma_bitcoin - Configura alertas para esta criptomoneda
+    /set_alarma_ethereum - Configura alertas para esta criptomoneda
+    /set_alarma_litecoin - Configura alertas para esta criptomoneda
     /help
     /panorama
     """
@@ -209,8 +205,6 @@ def help(bot, update):
 def litecoin(bot, update):
     # print(update.message)
     user_first_name = update.message.from_user.first_name
-    # url = "https://api.coinbase.com/v2/exchange-rates?currency=LTC"
-    # get_price = requests.get(url).json().get("data").get("rates").get("USD")
     ltc = get_price(URL_LTC_UDS)
     response = '{0} El precio del LiteCoin es: {1:0,.2f} USD'.\
             format(user_first_name, float(ltc))
