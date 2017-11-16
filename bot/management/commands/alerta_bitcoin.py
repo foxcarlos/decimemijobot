@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand
 from django_telegrambot.apps import DjangoTelegramBot
-from sampleproject.settings import URL_BTC_USD, URL_ETH_UDS, URL_LTC_UDS
+from django.conf import settings
 
 from bot.models import Alerta, AlertaUsuario
 from django.db.models import Q
@@ -8,6 +8,9 @@ from django.db.models import Q
 import requests
 from datetime import datetime, timedelta
 
+URL_BTC_USD = settings.URL_BTC_USD
+URL_ETH_UDS = settings.URL_ETH_UDS
+URL_LTC_UDS = settings.URL_LTC_UDS
 
 class Command(BaseCommand):
     help = "Verifica el precio actual del botcoin, si cambio envia un alerta"
@@ -63,7 +66,7 @@ class Command(BaseCommand):
                     precio_actual <= (ultimo_precio - (ultimo_precio * (porc_cambio / 100))):
                 paso = True
 
-        mensaje_a_chat = "El precio del {0} {1} a: {2}".format(
+        mensaje_a_chat = "El precio del {0} {1} a: {2:0,.2f}".format(
                 comando,
                 alta_o_baja,
                 precio_actual

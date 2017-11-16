@@ -6,7 +6,7 @@ import logging
 
 from telegram.ext import CommandHandler, MessageHandler, Filters
 from django_telegrambot.apps import DjangoTelegramBot
-from sampleproject.settings import URL_BTC_USD, URL_ETH_UDS, URL_LTC_UDS
+from django.conf import settings
 
 logger = logging.getLogger(__name__)
 
@@ -19,6 +19,9 @@ from bot.models import Alerta, AlertaUsuario, User
 # Define a few command handlers. These usually take the two arguments bot and
 # update. Error handlers also receive the raised TelegramError object in error.
 
+URL_BTC_USD = settings.URL_BTC_USD
+URL_ETH_UDS = settings.URL_ETH_UDS
+URL_LTC_UDS = settings.URL_LTC_UDS
 
 def usuario_nuevo(update):
     id_user = update.message.from_user.id
