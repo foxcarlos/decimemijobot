@@ -10,12 +10,12 @@ from datetime import datetime, timedelta
 
 
 URL_BTC_USD = settings.CRIPTO_MONEDAS.get("URL_BTC_USD")
-URL_ETH_UDS = settings.CRIPTO_MONEDAS.get("URL_ETH_UDS")
-URL_LTC_UDS = settings.CRIPTO_MONEDAS.get("URL_LTC_UDS")
+URL_ETH_USD = settings.CRIPTO_MONEDAS.get("URL_ETH_USD")
+URL_LTC_USD = settings.CRIPTO_MONEDAS.get("URL_LTC_USD")
 URL_BCC_USD = settings.CRIPTO_MONEDAS.get("URL_BCC_USD")
-URL_DAS_UDS = settings.CRIPTO_MONEDAS.get("URL_DAS_UDS")
-URL_BTG_UDS = settings.CRIPTO_MONEDAS.get("URL_BTG_UDS")
-URL_XMR_UDS = settings.CRIPTO_MONEDAS.get("URL_XMR_UDS")
+URL_DAS_USD = settings.CRIPTO_MONEDAS.get("URL_DAS_USD")
+URL_BTG_USD = settings.CRIPTO_MONEDAS.get("URL_BTG_USD")
+URL_XMR_USD = settings.CRIPTO_MONEDAS.get("URL_XMR_USD")
 
 
 class Command(BaseCommand):
@@ -39,9 +39,9 @@ class Command(BaseCommand):
         elif comando == 'dolartoday':
             ultimo_precio = self.obtener_precio_dolar_paralelo_venezuela()
         elif comando == 'ethereum':
-            ultimo_precio = float(self.get_price(URL_ETH_UDS))
+            ultimo_precio = float(self.get_price(URL_ETH_USD))
         elif comando == 'litecoin':
-            ultimo_precio = float(self.get_price(URL_LTC_UDS))
+            ultimo_precio = float(self.get_price(URL_LTC_USD))
         else:
             ultimo_precio = 0
         return ultimo_precio

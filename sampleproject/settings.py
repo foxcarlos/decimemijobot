@@ -212,9 +212,9 @@ DJANGO_TELEGRAMBOT = {
 #################################
 CRIPTO_MONEDAS = {
         "URL_BTC_USD": "https://api.coinbase.com/v2/exchange-rates?currency=BTC",
-        "URL_ETH_UDS": "https://api.coinbase.com/v2/exchange-rates?currency=ETH",
-        "URL_LTC_UDS": "https://api.coinbase.com/v2/exchange-rates?currency=LTC",
-        "URL_BCC_UDS": "https://api.coinmarketcap.com/v1/ticker/bitcoin-cash/",
-        "URL_XMR_UDS": "https://api.coinmarketcap.com/v1/ticker/monero/",
-        "URL_DAS_UDS": "https://api.coinmarketcap.com/v1/ticker/dash/",
-        "URL_BTG_UDS": "https://api.coinmarketcap.com/v1/ticker/bitcoin-gold/"}
+        "URL_ETH_USD": "https://api.coinbase.com/v2/exchange-rates?currency=ETH",
+        "URL_LTC_USD": "https://api.coinbase.com/v2/exchange-rates?currency=LTC",
+        "URL_BCC_USD": "https://api.coinmarketcap.com/v1/ticker/bitcoin-cash/",
+        "URL_XMR_USD": "https://api.coinmarketcap.com/v1/ticker/monero/",
+        "URL_DAS_USD": "https://api.coinmarketcap.com/v1/ticker/dash/",
+        "URL_BTG_USD": "https://api.coinmarketcap.com/v1/ticker/bitcoin-gold/"}

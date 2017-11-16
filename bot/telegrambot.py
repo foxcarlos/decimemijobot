@@ -20,12 +20,12 @@ from bot.models import Alerta, AlertaUsuario, User
 # update. Error handlers also receive the raised TelegramError object in error.
 
 URL_BTC_USD = settings.CRIPTO_MONEDAS.get("URL_BTC_USD")
-URL_ETH_UDS = settings.CRIPTO_MONEDAS.get("URL_ETH_UDS")
-URL_LTC_UDS = settings.CRIPTO_MONEDAS.get("URL_LTC_UDS")
+URL_ETH_USD = settings.CRIPTO_MONEDAS.get("URL_ETH_USD")
+URL_LTC_USD = settings.CRIPTO_MONEDAS.get("URL_LTC_USD")
 URL_BCC_USD = settings.CRIPTO_MONEDAS.get("URL_BCC_USD")
-URL_DAS_UDS = settings.CRIPTO_MONEDAS.get("URL_DAS_UDS")
-URL_BTG_UDS = settings.CRIPTO_MONEDAS.get("URL_BTG_UDS")
-URL_XMR_UDS = settings.CRIPTO_MONEDAS.get("URL_XMR_UDS")
+URL_DAS_USD = settings.CRIPTO_MONEDAS.get("URL_DAS_USD")
+URL_BTG_USD = settings.CRIPTO_MONEDAS.get("URL_BTG_USD")
+URL_XMR_USD = settings.CRIPTO_MONEDAS.get("URL_XMR_USD")
 
 
 def usuario_nuevo(update):
@@ -55,13 +55,23 @@ def get_price(url):
     return requests.get(url).json().get("data").get("rates").get("USD")
 
 
+def get_price_coinmarketcap(url):
+    return requests.get(url).json()[0].get("price_usd")
+
+
 def all_coins(bot, update):
 
     btc = get_price(URL_BTC_USD)
-    eth = get_price(URL_ETH_UDS)
-    ltc = get_price(URL_LTC_UDS)
-    response = """Lista de Precios:\n\nBTC={0:0,.2f}\nETH={1:0,.2f}\nLTC={2:0,.2f}""".format(
-            float(btc), float(eth), float(ltc))
+    eth = get_price(URL_ETH_USD)
+    ltc = get_price(URL_LTC_USD)
+    bcc = get_price_coinmarketcap(URL_BCC_USD)
+    das = get_price_coinmarketcap(URL_DAS_USD)
+    btg = get_price_coinmarketcap(URL_BTG_USD)
+    xmr = get_price_coinmarketcap(URL_XMR_USD)
+
+    response = """Cripto Monedas hoy:\n\nBTC={0:0,.2f}\nETH={1:0,.2f}\nLTC={2:0,.2f}\nBCC={3:0,.2f}\nDASH={4:0,.2f}\nBTCGOLD={5:0,.2f}\nMONERO={6:0,.2f}""".format(
+            float(btc), float(eth), float(ltc), float(bcc), float(das), float(btg), float(xmr))
+
     bot.sendMessage(update.message.chat_id, text=response)
     usuario_nuevo(update)
 
