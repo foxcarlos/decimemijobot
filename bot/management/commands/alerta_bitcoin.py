@@ -8,9 +8,15 @@ from django.db.models import Q
 import requests
 from datetime import datetime, timedelta
 
-URL_BTC_USD = settings.URL_BTC_USD
-URL_ETH_UDS = settings.URL_ETH_UDS
-URL_LTC_UDS = settings.URL_LTC_UDS
+
+URL_BTC_USD = settings.CRIPTO_MONEDAS.get("URL_BTC_USD")
+URL_ETH_UDS = settings.CRIPTO_MONEDAS.get("URL_ETH_UDS")
+URL_LTC_UDS = settings.CRIPTO_MONEDAS.get("URL_LTC_UDS")
+URL_BCC_USD = settings.CRIPTO_MONEDAS.get("URL_BCC_USD")
+URL_DAS_UDS = settings.CRIPTO_MONEDAS.get("URL_DAS_UDS")
+URL_BTG_UDS = settings.CRIPTO_MONEDAS.get("URL_BTG_UDS")
+URL_XMR_UDS = settings.CRIPTO_MONEDAS.get("URL_XMR_UDS")
+
 
 class Command(BaseCommand):
     help = "Verifica el precio actual del botcoin, si cambio envia un alerta"

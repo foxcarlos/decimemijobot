@@ -19,9 +19,14 @@ from bot.models import Alerta, AlertaUsuario, User
 # Define a few command handlers. These usually take the two arguments bot and
 # update. Error handlers also receive the raised TelegramError object in error.
 
-URL_BTC_USD = settings.URL_BTC_USD
-URL_ETH_UDS = settings.URL_ETH_UDS
-URL_LTC_UDS = settings.URL_LTC_UDS
+URL_BTC_USD = settings.CRIPTO_MONEDAS.get("URL_BTC_USD")
+URL_ETH_UDS = settings.CRIPTO_MONEDAS.get("URL_ETH_UDS")
+URL_LTC_UDS = settings.CRIPTO_MONEDAS.get("URL_LTC_UDS")
+URL_BCC_USD = settings.CRIPTO_MONEDAS.get("URL_BCC_USD")
+URL_DAS_UDS = settings.CRIPTO_MONEDAS.get("URL_DAS_UDS")
+URL_BTG_UDS = settings.CRIPTO_MONEDAS.get("URL_BTG_UDS")
+URL_XMR_UDS = settings.CRIPTO_MONEDAS.get("URL_XMR_UDS")
+
 
 def usuario_nuevo(update):
     id_user = update.message.from_user.id
