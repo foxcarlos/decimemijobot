@@ -4,11 +4,16 @@ Bot Telegram funciones varias
 Estas son las funciones que realiza el Bot
 
   - autor - Acerca de
+  - help - Lista de comandos disponibles
+  - allcoins - Precio de algunas las cripto monedas
   - bitcoin - Precio actual del Bitcoin
   - calcular - Indique entre [ ] el calculo, Ej: [2+2]
   - dolartoday - Precio actual del Dolar Venezuela
-  - help - Lista de comandos disponibles
+  - ethereum - Precio actual del Ethereum
+  - litecoin - Precio actual del LiteCoin
   - set_alarma_bitcoin - Activa notificaciones cuando ocurra un evento
+  - set_alarma_ethereum - Activa notificaciones cuando ocurra un evento
+  - set_alarma_litecoin - Activa notificaciones cuando ocurra un evento
   - panorama - Lista noticas de sucesos en Mcbo
 
 ### Installation
