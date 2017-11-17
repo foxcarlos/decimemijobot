@@ -11,6 +11,7 @@ Estas son las funciones que realiza el Bot
   - dolartoday - Precio actual del Dolar Venezuela
   - ethereum - Precio actual del Ethereum
   - litecoin - Precio actual del LiteCoin
+  - masivo - Envia un mensaje a todos los usuarios del Bot
   - set_alarma_bitcoin - Activa notificaciones cuando ocurra un evento
   - set_alarma_ethereum - Activa notificaciones cuando ocurra un evento
   - set_alarma_litecoin - Activa notificaciones cuando ocurra un evento
