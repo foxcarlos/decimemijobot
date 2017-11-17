@@ -10,3 +10,22 @@ set_alarma_bitcoin - Activa notificaciones cuando ocurra un evento
 set_alarma_ethereum - Activa notificaciones cuando ocurra un evento
 set_alarma_litecoin - Activa notificaciones cuando ocurra un evento
 panorama - Lista noticas de sucesos en Mcbo
+
+
+import os
+frome time import sleep
+
+while True:
+    comando = "python /home/foxcarlos/desarrollo/python/decimemijobot/manage.py alerta_bitcoin bitcoin"
+    os.system(comando)
+    sleep(30)
+    comando2 = "python /home/foxcarlos/desarrollo/python/decimemijobot/manage.py alerta_bitcoin dolartoday"
+    os.system(comando2)
+    sleep(30)
+    comando3 = "python /home/foxcarlos/desarrollo/python/decimemijobot/manage.py alerta_bitcoin ethereum"
+    os.system(comando3)
+    sleep(30)
+    comando4 = "python /home/foxcarlos/desarrollo/python/decimemijobot/manage.py alerta_bitcoin litecoin"
+    os.system(comando4)
+    sleep(30)
+
