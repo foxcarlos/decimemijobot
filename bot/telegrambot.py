@@ -22,10 +22,11 @@ from bot.models import Alerta, AlertaUsuario, User
 URL_BTC_USD = settings.CRIPTO_MONEDAS.get("URL_BTC_USD")
 URL_ETH_USD = settings.CRIPTO_MONEDAS.get("URL_ETH_USD")
 URL_LTC_USD = settings.CRIPTO_MONEDAS.get("URL_LTC_USD")
-URL_BCC_USD = settings.CRIPTO_MONEDAS.get("URL_BCC_USD")
+URL_BCH_USD = settings.CRIPTO_MONEDAS.get("URL_BCH_USD")
 URL_DAS_USD = settings.CRIPTO_MONEDAS.get("URL_DAS_USD")
 URL_BTG_USD = settings.CRIPTO_MONEDAS.get("URL_BTG_USD")
 URL_XMR_USD = settings.CRIPTO_MONEDAS.get("URL_XMR_USD")
+URL_XRP_USD = settings.CRIPTO_MONEDAS.get("URL_XRP_USD")
 
 
 def usuario_nuevo(update):
@@ -64,25 +65,28 @@ def all_coins(bot, update):
     btc = get_price(URL_BTC_USD)
     eth = get_price(URL_ETH_USD)
     ltc = get_price(URL_LTC_USD)
-    bcc = get_price_coinmarketcap(URL_BCC_USD)
+    bcc = get_price_coinmarketcap(URL_BCH_USD)
     das = get_price_coinmarketcap(URL_DAS_USD)
     btg = get_price_coinmarketcap(URL_BTG_USD)
     xmr = get_price_coinmarketcap(URL_XMR_USD)
+    xrp = get_price_coinmarketcap(URL_XRP_USD)
 
     response = """Cripto Monedas hoy:\n\n\
             BTC={0:0,.2f}\n\
             ETH={1:0,.2f}\n\
             LTC={2:0,.2f}\n\
-            BCC={3:0,.2f}\n\
+            BTCASH={3:0,.2f}\n\
             DASH={4:0,.2f}\n\
-            BTCGOLD={5:0,.2f}\n\
-            MONERO={6:0,.2f}""".format(
+            BTGOLD={5:0,.2f}\n\
+            RIPPLE={6:0,.2f}\n\
+            MONERO={7:0,.2f}""".format(
                     float(btc),
                     float(eth),
                     float(ltc),
                     float(bcc),
                     float(das),
                     float(btg),
+                    float(xrp),
                     float(xmr)
                     )
 

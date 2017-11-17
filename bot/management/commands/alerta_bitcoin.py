@@ -12,11 +12,11 @@ from datetime import datetime, timedelta
 URL_BTC_USD = settings.CRIPTO_MONEDAS.get("URL_BTC_USD")
 URL_ETH_USD = settings.CRIPTO_MONEDAS.get("URL_ETH_USD")
 URL_LTC_USD = settings.CRIPTO_MONEDAS.get("URL_LTC_USD")
-URL_BCC_USD = settings.CRIPTO_MONEDAS.get("URL_BCC_USD")
+URL_BCH_USD = settings.CRIPTO_MONEDAS.get("URL_BCH_USD")
 URL_DAS_USD = settings.CRIPTO_MONEDAS.get("URL_DAS_USD")
 URL_BTG_USD = settings.CRIPTO_MONEDAS.get("URL_BTG_USD")
 URL_XMR_USD = settings.CRIPTO_MONEDAS.get("URL_XMR_USD")
-
+URL_XRP_USD = settings.CRIPTO_MONEDAS.get("URL_XRP_USD")
 
 class Command(BaseCommand):
     help = "Verifica el precio actual del botcoin, si cambio envia un alerta"

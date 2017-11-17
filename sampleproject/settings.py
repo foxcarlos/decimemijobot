@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'bot',
     'django_telegrambot',
+    'djcelery',
 ]
 
 MIDDLEWARE = [
@@ -52,6 +53,14 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'sampleproject.urls'
+
+
+BROKER_URL = 'redis://localhost:6379'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+
 
 TEMPLATES = [
     {
@@ -214,7 +223,8 @@ CRIPTO_MONEDAS = {
         "URL_BTC_USD": "https://api.coinbase.com/v2/exchange-rates?currency=BTC",
         "URL_ETH_USD": "https://api.coinbase.com/v2/exchange-rates?currency=ETH",
         "URL_LTC_USD": "https://api.coinbase.com/v2/exchange-rates?currency=LTC",
-        "URL_BCC_USD": "https://api.coinmarketcap.com/v1/ticker/bitcoin-cash/",
+        "URL_BCH_USD": "https://api.coinmarketcap.com/v1/ticker/bitcoin-cash/",
         "URL_XMR_USD": "https://api.coinmarketcap.com/v1/ticker/monero/",
         "URL_DAS_USD": "https://api.coinmarketcap.com/v1/ticker/dash/",
-        "URL_BTG_USD": "https://api.coinmarketcap.com/v1/ticker/bitcoin-gold/"}
+        "URL_BTG_USD": "https://api.coinmarketcap.com/v1/ticker/bitcoin-gold/",
+        "URL_XRP_USD": "https://api.coinmarketcap.com/v1/ticker/ripple/"}

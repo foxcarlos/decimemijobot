@@ -4,3 +4,6 @@ pyTelegramBotAPI==3.2.1
 requests
 selenium==3.6.0
 django-telegrambot
+django-celery==3.2.2
+ipython-genutils==0.2.0
+redis==2.10.6
