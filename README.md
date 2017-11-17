@@ -70,6 +70,11 @@ python /home/foxcarlos/desarrollo/python/decimemijobot/manage.py alerta_bitcoin 
 python /home/foxcarlos/desarrollo/python/decimemijobot/manage.py alerta_bitcoin bitcoin
 ```
 
+#### Run Celery Workers
+```sh
+python manage.py celery worker -A sampleproject.celery --loglevel=info
+```
+
 ### Todos
 
  - Write MORE Tests
