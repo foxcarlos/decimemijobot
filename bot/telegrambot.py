@@ -14,7 +14,7 @@ from django.db.models import Count
 from django.contrib.auth.models import User as UserDjango
 from bot.scrapy import NoticiasPanorama
 from bot.models import Alerta, AlertaUsuario, User
-
+from bot.task import pool_message
 
 # Define a few command handlers. These usually take the two arguments bot and
 # update. Error handlers also receive the raised TelegramError object in error.
@@ -205,13 +205,7 @@ def enviar_mensajes_todos(bot, update):
 
     if valida_root(update):
         users = User.objects.values('chat_id').annotate(dcount=Count('chat_id'))
-        for user in users if cadena_sin_el_comando else '':
-            try:
-                bot.sendMessage(user.get("chat_id"), text=cadena_sin_el_comando)
-                print(user.get("chat_id ", cadena_sin_el_comando))
-            except Exception as E:
-                print(E)
-            sleep(3)
+        response = pool_message.delay(users, cadena_sin_el_comando)
 
 
 def error(bot, update, error):
@@ -423,6 +417,7 @@ def main():
     dp.add_handler(CommandHandler("ayuda", help))
     dp.add_handler(CommandHandler("?", help))
 
+    dp.add_handler(CommandHandler("prueba", prueba))
     dp.add_handler(CommandHandler("allcoins", all_coins))
     dp.add_handler(CommandHandler("litecoin", litecoin))
     dp.add_handler(CommandHandler("bitcoin", bitcoin))
