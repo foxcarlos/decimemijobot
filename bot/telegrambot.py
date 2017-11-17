@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 # Example code for telegrambot.py module
 import requests
-from time import sleep
 import logging
 
 from telegram.ext import CommandHandler, MessageHandler, Filters
@@ -149,7 +148,7 @@ def evaluar(palabra):
         try:
             response = str(eval(palabra.replace("[", "").replace("]", ""))) + " "
         except Exception as inst:
-            response = 'verga paso algo..! ,aqui esta el error {0} \
+            response = 'Paso algo..! ,aqui esta el error {0} \
                     deja de invertar hace algo mas facil'.format(inst)
     else:
         response = palabra
@@ -166,7 +165,7 @@ def calcular(bot, update):
 
     cadena = ' '.join([evaluar(palabra) for palabra in cadena_sin_el_comando.split()])
     if not cadena:
-        cadena = 'Teneis que indicar un calculo entre [ ] Ej: /calcular [2+2]'
+        cadena = 'Tienes que indicar un calculo entre [ ] Ej: /calcular [2+2]'
 
     response = '{0} Dice: {1} '.format(user_first_name, cadena)
 
@@ -205,7 +204,7 @@ def enviar_mensajes_todos(bot, update):
 
     if valida_root(update):
         users = User.objects.values('chat_id').annotate(dcount=Count('chat_id'))
-        response = pool_message.delay(users, cadena_sin_el_comando)
+        pool_message.delay(users, cadena_sin_el_comando)
 
 
 def error(bot, update, error):
@@ -236,7 +235,7 @@ def help(bot, update):
     /panorama
     """
     user_first_name = update.message.from_user.first_name
-    response = 'Ey..! {0} aqui teneis tu ayuda, {1}'.format(user_first_name,
+    response = 'Ey..! {0} aqui tiene la ayuda, {1}'.format(user_first_name,
             msg_response)
 
     bot.sendMessage(update.message.chat_id, text=response)
@@ -267,7 +266,7 @@ def panorama_sucesos(bot, update):
 
 
 def porno(bot, update):
-    response = "Uhmmm! no se que intentais buscar, googlealo mejor mijo"
+    response = "Uhmmm! no se que intentas buscar, googlealo mejor"
     bot.sendMessage(update.message.chat_id, text=response)
 
 
@@ -417,7 +416,6 @@ def main():
     dp.add_handler(CommandHandler("ayuda", help))
     dp.add_handler(CommandHandler("?", help))
 
-    dp.add_handler(CommandHandler("prueba", prueba))
     dp.add_handler(CommandHandler("allcoins", all_coins))
     dp.add_handler(CommandHandler("litecoin", litecoin))
     dp.add_handler(CommandHandler("bitcoin", bitcoin))
