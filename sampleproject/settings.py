@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'bot',
     'django_telegrambot',
-    'djcelery',
+    # 'djcelery',
 ]
 
 MIDDLEWARE = [
@@ -55,11 +55,11 @@ MIDDLEWARE = [
 ROOT_URLCONF = 'sampleproject.urls'
 
 
-BROKER_URL = 'redis://localhost:6379'
-CELERY_RESULT_BACKEND = 'redis://localhost:6379'
-CELERY_ACCEPT_CONTENT = ['application/json']
-CELERY_TASK_SERIALIZER = 'json'
-CELERY_RESULT_SERIALIZER = 'json'
+# BROKER_URL = 'redis://localhost:6379'
+# CELERY_RESULT_BACKEND = 'redis://localhost:6379'
+# CELERY_ACCEPT_CONTENT = ['application/json']
+# CELERY_TASK_SERIALIZER = 'json'
+# CELERY_RESULT_SERIALIZER = 'json'
 
 
 TEMPLATES = [
@@ -175,7 +175,7 @@ DJANGO_TELEGRAMBOT = {
 
 	'BOTS' : [
         {
-            'TOKEN': '336382255:AAHwrdIgN0j3gIet0xnJfCKs78ojp1dm28s', #Your bot token.
+            'TOKEN': '336382255:AAFUWCzL7MKz_ZHFuJczzUR_oMYxp0yPRZI', #Your bot token.
 
 		   #'ALLOWED_UPDATES':(Optional[list[str]]), # List the types of
 						   #updates you want your bot to receive. For example, specify

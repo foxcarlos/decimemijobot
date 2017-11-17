@@ -57,7 +57,7 @@ class AlertaUsuario(models.Model):
     porcentaje_cambio = models.IntegerField(default=0,
             verbose_name="Porcentaje de cambio en la tasa",
             help_text="Numero entero")
-    ultima_actualizacion = models.DateTimeField(default=datetime.now(), blank=True, null=True)
+    ultima_actualizacion = models.DateTimeField(blank=True, null=True)
     ultimo_precio = models.FloatField(default=0.0)
 
     def __str__(self):
