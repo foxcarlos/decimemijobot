@@ -60,7 +60,7 @@ def get_price_coinmarketcap(url):
 
 
 def all_coins(bot, update):
-
+    bot.sendMessage(update.message.chat_id, text="Consultando... En un momento te muestro la informacion...!")
     btc = get_price(URL_BTC_USD)
     eth = get_price(URL_ETH_USD)
     ltc = get_price(URL_LTC_USD)
@@ -261,6 +261,7 @@ def me(bot, update):
 
 def panorama_sucesos(bot, update):
     print(update.message)
+    bot.sendMessage(update.message.chat_id, text="En un momento te muestro la informacion...!")
     noti = NoticiasPanorama()
     response = noti.sucesos()
 
