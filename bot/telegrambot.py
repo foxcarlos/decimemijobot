@@ -13,7 +13,7 @@ from django.db.models import Count
 from django.contrib.auth.models import User as UserDjango
 from bot.scrapy import NoticiasPanorama
 from bot.models import Alerta, AlertaUsuario, User
-from bot.task import pool_message
+# from bot.task import pool_message
 
 # Define a few command handlers. These usually take the two arguments bot and
 # update. Error handlers also receive the raised TelegramError object in error.
@@ -197,6 +197,7 @@ def echo(bot, update):
     update.message.reply_text(update.message.text)
 
 
+"""
 def enviar_mensajes_todos(bot, update):
     print(update.message)
     parameters = update.message.text
@@ -205,9 +206,10 @@ def enviar_mensajes_todos(bot, update):
     if valida_root(update):
         users = User.objects.values('chat_id').annotate(dcount=Count('chat_id'))
         pool_message.delay(users, cadena_sin_el_comando)
-
+"""
 
 def error(bot, update, error):
+    print(error)
     logger.warn('Update "%s" caused error "%s"' % (update, error))
 
 
@@ -428,10 +430,9 @@ def main():
     dp.add_handler(CommandHandler("calcular", calcular))
     dp.add_handler(CommandHandler("dolartoday", dolartoday))
     dp.add_handler(CommandHandler("panorama", panorama_sucesos))
-    dp.add_handler(CommandHandler("masivo", enviar_mensajes_todos))
+    # dp.add_handler(CommandHandler("masivo", enviar_mensajes_todos))
     dp.add_handler(CommandHandler("porno", porno))
     dp.add_handler(CommandHandler("autor", autor))
-
     dp.add_handler(CommandHandler("startgroup", startgroup))
     dp.add_handler(CommandHandler("me", me))
     dp.add_handler(CommandHandler("chat", chat))

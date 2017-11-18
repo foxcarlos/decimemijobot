@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'bot',
     'django_telegrambot',
-    # 'djcelery',
+    'djcelery',
 ]
 
 MIDDLEWARE = [
