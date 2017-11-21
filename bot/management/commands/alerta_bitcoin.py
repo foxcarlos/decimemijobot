@@ -47,6 +47,7 @@ class Command(BaseCommand):
         return ultimo_precio
 
     def validar_alarma(self, comando, chat):
+        print(chat.id, chat)
         ultimo_precio = chat.ultimo_precio if chat.ultimo_precio else 0
         precio_actual = self.obtener_precio(comando)
 
