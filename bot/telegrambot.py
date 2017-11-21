@@ -26,6 +26,7 @@ URL_DAS_USD = settings.CRIPTO_MONEDAS.get("URL_DAS_USD")
 URL_BTG_USD = settings.CRIPTO_MONEDAS.get("URL_BTG_USD")
 URL_XMR_USD = settings.CRIPTO_MONEDAS.get("URL_XMR_USD")
 URL_XRP_USD = settings.CRIPTO_MONEDAS.get("URL_XRP_USD")
+URL_BTC_ALL_EXC = settings.CRIPTO_MONEDAS.get("URL_BTC_ALL_EXC")
 
 
 def usuario_nuevo(update):
@@ -88,6 +89,41 @@ def all_coins(bot, update):
                     float(xrp),
                     float(xmr)
                     )
+
+    bot.sendMessage(update.message.chat_id, text=response)
+    usuario_nuevo(update)
+
+
+def all_exchange(bot, update):
+    bot.sendMessage(update.message.chat_id, text="Consultando... En un momento te muestro la informacion en USD...!")
+    exchanges_btc = requests.get(URL_BTC_ALL_EXC).json().get("Data").\
+            get("Exchanges")
+
+    response = ""
+    for exchange in exchanges_btc:
+        moneda = exchange.get('TOSYMBOL')
+        market = exchange.get('MARKET')
+        precio = exchange.get('PRICE')
+        h24h = exchange.get('HIGH24HOUR')
+        h24l = exchange.get('LOW24HOUR')
+        open24h = exchange.get('OPEN24HOUR')
+        volumen = exchange.get('VOLUME24HOUR')
+
+        if market.lower() in ['coinbase', 'bitfinex', 'localbitcoins', 'bitTrex', 'poloniex', 'bitstamp', 'kraken']:
+            response += """\n\u2b50\
+                    Market:{1}\n\
+                    Precio:{2:0,.2f}\n\
+                    24h High:{3:0,.2f}\n\
+                    24h Low:{4:0,.2f}\n\
+                    Volumen:{6:0,.2f}
+                    """.format(
+                            moneda,
+                            market,
+                            float(precio),
+                            float(h24h),
+                            float(h24l),
+                            float(open24h),
+                            float(volumen))
 
     bot.sendMessage(update.message.chat_id, text=response)
     usuario_nuevo(update)
@@ -207,6 +243,7 @@ def enviar_mensajes_todos(bot, update):
         users = User.objects.values('chat_id').annotate(dcount=Count('chat_id'))
         pool_message.delay(users, cadena_sin_el_comando)
 """
+
 
 def error(bot, update, error):
     print(error)
@@ -420,6 +457,7 @@ def main():
     dp.add_handler(CommandHandler("?", help))
 
     dp.add_handler(CommandHandler("allcoins", all_coins))
+    dp.add_handler(CommandHandler("price", all_exchange))
     dp.add_handler(CommandHandler("litecoin", litecoin))
     dp.add_handler(CommandHandler("bitcoin", bitcoin))
     dp.add_handler(CommandHandler("ethereum", ethereum))
