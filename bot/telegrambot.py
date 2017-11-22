@@ -99,7 +99,10 @@ def all_exchange(bot, update):
     exchanges_btc = requests.get(URL_BTC_ALL_EXC).json().get("Data").\
             get("Exchanges")
 
+    exchanges = ['coinbase', 'bitfinex', 'localbitcoins',
+            'bitTrex', 'poloniex', 'bitstamp', 'kraken']
     response = ""
+
     for exchange in exchanges_btc:
         moneda = exchange.get('TOSYMBOL')
         market = exchange.get('MARKET')
@@ -109,13 +112,13 @@ def all_exchange(bot, update):
         open24h = exchange.get('OPEN24HOUR')
         volumen = exchange.get('VOLUME24HOUR')
 
-        if market.lower() in ['coinbase', 'bitfinex', 'localbitcoins', 'bitTrex', 'poloniex', 'bitstamp', 'kraken']:
-            response += """\n\u2b50\
-                    Market:{1}\n\
+        if market.lower() in exchanges:
+            response += """\n
+                    \u2b50\Market:{1}\n\
                     Precio:{2:0,.2f}\n\
-                    24h High:{3:0,.2f}\n\
-                    24h Low:{4:0,.2f}\n\
-                    Volumen:{6:0,.2f}
+                    24h H:{3:0,.2f}\n\
+                    24h L:{4:0,.2f}\n\
+                    Volum:{6:0,.2f}
                     """.format(
                             moneda,
                             market,

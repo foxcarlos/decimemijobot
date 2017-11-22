@@ -93,9 +93,12 @@ class Command(BaseCommand):
             enviar, mensaje_a_chat = self.validar_alarma(comando, chat)
             if enviar:
                 # Envio el Alerta
-                DjangoTelegramBot.dispatcher.bot.sendMessage(
-                        chat.chat_id,
-                        mensaje_a_chat)
+                try:
+                    DjangoTelegramBot.dispatcher.bot.sendMessage(
+                            chat.chat_id,
+                            mensaje_a_chat)
+                except Exceptions as E:
+                    continue
 
                 # Actualizo la Fecha
                 AlertaUsuario.objects.filter(id=chat.id).update(
