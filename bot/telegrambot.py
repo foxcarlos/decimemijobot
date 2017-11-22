@@ -102,8 +102,9 @@ def price(bot, update):
     coin_ticker = "?fsym={0}&tsym=USD".format(cadena_sin_el_comando.strip())
     url = "{0}{1}".format(URL_PRICE_USD, coin_ticker)
 
-    exchanges_btc = requests.get(url).json().get("Data").\
-            get("Exchanges")
+    inf_btc = requests.get(url).json().get("Data")
+    exchanges_btc = inf_btc.get("Exchanges")
+
 
     if not cadena_sin_el_comando:
         response = "{0} Debes indicar /precio y moneda Ej: /precio btc ".format(":question:",
@@ -118,7 +119,15 @@ def price(bot, update):
 
     exchanges = ['coinbase', 'bitfinex', 'localbitcoins',
             'bittrex', 'poloniex', 'bitstamp', 'kraken']
-    response = ":orange_book: CriptoMoneda:{0}:".format(cadena_sin_el_comando.upper())
+
+    bloques = :inf_btc.get("BlockNumber")
+    hash_seg = inf_btc.get("NetHashesPerSecond")
+    total_minado = inf_btc.get("TotalCoinsMined")
+
+    response = ":orange_book: CriptoMoneda:{0}:\nBloq:{1}".format(
+            cadena_sin_el_comando.upper(),
+            bloques
+            )
     icon = ":bar_chart:"
 
     for exchange in exchanges_btc:
