@@ -97,7 +97,7 @@ class Command(BaseCommand):
                     DjangoTelegramBot.dispatcher.bot.sendMessage(
                             chat.chat_id,
                             mensaje_a_chat)
-                except Exceptions as E:
+                except Exception as E:
                     continue
 
                 # Actualizo la Fecha
