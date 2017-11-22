@@ -95,13 +95,12 @@ def all_coins(bot, update):
 
 
 def all_exchange(bot, update):
-    bot.sendMessage(update.message.chat_id, text="Consultando... En un momento te muestro la informacion en USD...!")
     exchanges_btc = requests.get(URL_BTC_ALL_EXC).json().get("Data").\
             get("Exchanges")
 
     exchanges = ['coinbase', 'bitfinex', 'localbitcoins',
             'bitTrex', 'poloniex', 'bitstamp', 'kraken']
-    response = ""
+    response = "Lista de Precios:"
 
     for exchange in exchanges_btc:
         moneda = exchange.get('TOSYMBOL')
@@ -113,8 +112,8 @@ def all_exchange(bot, update):
         volumen = exchange.get('VOLUME24HOUR')
 
         if market.lower() in exchanges:
-            response += """\n
-                    \u2b50\Market:{1}\n\
+            response += """\n\
+                    \u2b50 {1}\n\
                     Precio:{2:0,.2f}\n\
                     24h H:{3:0,.2f}\n\
                     24h L:{4:0,.2f}\n\
