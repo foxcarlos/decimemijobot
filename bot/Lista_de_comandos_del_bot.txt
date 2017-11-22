@@ -1,31 +1,10 @@
 autor - Acerca de
 help - Lista de comandos disponibles
+precio - Muestra el precio de la cripto moneda pasadas por parametro
 allcoins - Precio de algunas las cripto monedas
 bitcoin - Precio actual del Bitcoin
 calcular - Indique entre [ ] el calculo, Ej: [2+2]
 dolartoday - Precio actual del Dolar Venezuela
-ethereum - Precio actual del Ethereum
-litecoin - Precio actual del LiteCoin
 set_alarma_bitcoin - Activa notificaciones cuando ocurra un evento
 set_alarma_ethereum - Activa notificaciones cuando ocurra un evento
 set_alarma_litecoin - Activa notificaciones cuando ocurra un evento
-panorama - Lista noticas de sucesos en Mcbo
-
-
-import os
-frome time import sleep
-
-while True:
-    comando = "python /home/foxcarlos/desarrollo/python/decimemijobot/manage.py alerta_bitcoin bitcoin"
-    os.system(comando)
-    sleep(30)
-    comando2 = "python /home/foxcarlos/desarrollo/python/decimemijobot/manage.py alerta_bitcoin dolartoday"
-    os.system(comando2)
-    sleep(30)
-    comando3 = "python /home/foxcarlos/desarrollo/python/decimemijobot/manage.py alerta_bitcoin ethereum"
-    os.system(comando3)
-    sleep(30)
-    comando4 = "python /home/foxcarlos/desarrollo/python/decimemijobot/manage.py alerta_bitcoin litecoin"
-    os.system(comando4)
-    sleep(30)
-

@@ -145,7 +145,8 @@ def price(bot, update):
                             float(h24l),
                             float(volumen))
 
-    bot.sendMessage(update.message.chat_id, text=emojize(response, use_aliases=True))
+    bot.sendMessage(update.message.chat_id, text=emojize(response,
+        use_aliases=True))
     usuario_nuevo(update)
 
 
@@ -184,16 +185,6 @@ def bitcoin_satoshitango(bot, update):
                     float(get_price_compra),
                     float(get_price_venta))
 
-    bot.sendMessage(update.message.chat_id, text=response)
-    usuario_nuevo(update)
-
-
-def ethereum(bot, update):
-    # print(update.message)
-    user_first_name = update.message.from_user.first_name
-    eth = get_price(URL_ETH_USD)
-    response = '{0} El precio del Ethereum es: {1:0,.2f} USD'.\
-            format(user_first_name, float(eth))
     bot.sendMessage(update.message.chat_id, text=response)
     usuario_nuevo(update)
 
@@ -281,33 +272,22 @@ def help(bot, update):
     msg_response = """
     Lista de Comandos:
 
-    /allcoins - Precios de bitcoin, ethereum, litecoin
-    /bitcoin
+    /allcoins - Precios de varias criptomonedas
+    /bitcoin - Muestra de forma rapida el precio
     /calcular  La suma de 2 mas 2 es [2+2] y 3 por 3 es [3*3]
     /dolartoday
-    /ethereum - Precio actual del Ethereum
-    /litecoin - Precio actual del LiteCoin
     /set_alarma_bitcoin - Configura alertas para esta criptomoneda
     /set_alarma_ethereum - Configura alertas para esta criptomoneda
     /set_alarma_litecoin - Configura alertas para esta criptomoneda
     /help
-    /panorama
+    /precio - Criptomoneda a consultar Ej: /precio btc
+
     """
     user_first_name = update.message.from_user.first_name
-    response = 'Ey..! {0} aqui tiene la ayuda, {1}'.format(user_first_name,
+    response = '{0} - {1}'.format(user_first_name,
             msg_response)
 
     bot.sendMessage(update.message.chat_id, text=response)
-
-
-def litecoin(bot, update):
-    # print(update.message)
-    user_first_name = update.message.from_user.first_name
-    ltc = get_price(URL_LTC_USD)
-    response = '{0} El precio del LiteCoin es: {1:0,.2f} USD'.\
-            format(user_first_name, float(ltc))
-    bot.sendMessage(update.message.chat_id, text=response)
-    usuario_nuevo(update)
 
 
 def me(bot, update):
@@ -482,9 +462,7 @@ def main():
 
     dp.add_handler(CommandHandler("allcoins", all_coins))
     dp.add_handler(CommandHandler("precio", price))
-    dp.add_handler(CommandHandler("litecoin", litecoin))
     dp.add_handler(CommandHandler("bitcoin", bitcoin))
-    dp.add_handler(CommandHandler("ethereum", ethereum))
     dp.add_handler(CommandHandler("satoshitango", bitcoin_satoshitango))
     dp.add_handler(CommandHandler("set_alarma_bitcoin", set_alarma_bitcoin))
     dp.add_handler(CommandHandler("set_alarma_dolartoday", set_alarma_dolartoday))
@@ -492,9 +470,7 @@ def main():
     dp.add_handler(CommandHandler("set_alarma_litecoin", set_alarma_litecoin))
     dp.add_handler(CommandHandler("calcular", calcular))
     dp.add_handler(CommandHandler("dolartoday", dolartoday))
-    dp.add_handler(CommandHandler("panorama", panorama_sucesos))
     # dp.add_handler(CommandHandler("masivo", enviar_mensajes_todos))
-    dp.add_handler(CommandHandler("porno", porno))
     dp.add_handler(CommandHandler("autor", autor))
     dp.add_handler(CommandHandler("startgroup", startgroup))
     dp.add_handler(CommandHandler("me", me))
