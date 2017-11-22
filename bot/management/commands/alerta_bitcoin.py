@@ -18,6 +18,7 @@ URL_BTG_USD = settings.CRIPTO_MONEDAS.get("URL_BTG_USD")
 URL_XMR_USD = settings.CRIPTO_MONEDAS.get("URL_XMR_USD")
 URL_XRP_USD = settings.CRIPTO_MONEDAS.get("URL_XRP_USD")
 
+
 class Command(BaseCommand):
     help = "Verifica el precio actual del botcoin, si cambio envia un alerta"
 
@@ -52,9 +53,9 @@ class Command(BaseCommand):
         precio_actual = self.obtener_precio(comando)
 
         if precio_actual > ultimo_precio:
-            alta_o_baja = "Subio"
+            alta_o_baja = "\u1F53C"
         elif precio_actual < ultimo_precio:
-            alta_o_baja = "bajo"
+            alta_o_baja = "\u1F53D"
         else:
             alta_o_baja = "Se mantuvo"
 

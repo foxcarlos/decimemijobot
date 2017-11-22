@@ -113,7 +113,7 @@ def all_exchange(bot, update):
 
         if market.lower() in exchanges:
             response += """\n\
-                    \u2b50 {1}\n\
+                    \u1F4C8 {1}\n\
                     Precio:{2:0,.2f}\n\
                     24h H:{3:0,.2f}\n\
                     24h L:{4:0,.2f}\n\
