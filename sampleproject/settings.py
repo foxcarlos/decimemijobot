@@ -228,4 +228,5 @@ CRIPTO_MONEDAS = {
         "URL_DAS_USD": "https://api.coinmarketcap.com/v1/ticker/dash/",
         "URL_BTG_USD": "https://api.coinmarketcap.com/v1/ticker/bitcoin-gold/",
         "URL_XRP_USD": "https://api.coinmarketcap.com/v1/ticker/ripple/",
-        "URL_BTC_ALL_EXC": "https://www.cryptocompare.com/api/data/coinsnapshot/?fsym=BTC&tsym=USD"}
+        "URL_BTC_ALL_EXC": "https://www.cryptocompare.com/api/data/coinsnapshot/?fsym=BTC&tsym=USD",
+        "URL_PRICE_USD": "https://www.cryptocompare.com/api/data/coinsnapshot/"}

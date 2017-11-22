@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 from django.core.management.base import BaseCommand
 from django_telegrambot.apps import DjangoTelegramBot
 from django.conf import settings
@@ -7,6 +10,7 @@ from django.db.models import Q
 
 import requests
 from datetime import datetime, timedelta
+from emoji import emojize
 
 
 URL_BTC_USD = settings.CRIPTO_MONEDAS.get("URL_BTC_USD")
@@ -17,6 +21,7 @@ URL_DAS_USD = settings.CRIPTO_MONEDAS.get("URL_DAS_USD")
 URL_BTG_USD = settings.CRIPTO_MONEDAS.get("URL_BTG_USD")
 URL_XMR_USD = settings.CRIPTO_MONEDAS.get("URL_XMR_USD")
 URL_XRP_USD = settings.CRIPTO_MONEDAS.get("URL_XRP_USD")
+URL_PRICE_USD = settings.CRIPTO_MONEDAS.get("URL_PRICE_USD")
 
 
 class Command(BaseCommand):
@@ -53,9 +58,9 @@ class Command(BaseCommand):
         precio_actual = self.obtener_precio(comando)
 
         if precio_actual > ultimo_precio:
-            alta_o_baja = "\u1F53C"
+            alta_o_baja = ":arrow_up:"
         elif precio_actual < ultimo_precio:
-            alta_o_baja = "\u1F53D"
+            alta_o_baja = ":arrow_down:"
         else:
             alta_o_baja = "Se mantuvo"
 
@@ -74,11 +79,12 @@ class Command(BaseCommand):
                     precio_actual <= (ultimo_precio - (ultimo_precio * (porc_cambio / 100))):
                 paso = True
 
-        mensaje_a_chat = "El precio del {0} {1} a: {2:0,.2f}".format(
+        preparar_mensaje = "El precio del {0} {1} a: {2:0,.2f}".format(
                 comando,
                 alta_o_baja,
                 precio_actual
                 )
+        mensaje_a_chat = emojize(preparar_mensaje, use_aliases=True)
 
         return paso, mensaje_a_chat
 

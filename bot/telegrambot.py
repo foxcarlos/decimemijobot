@@ -1,7 +1,9 @@
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # Example code for telegrambot.py module
 import requests
 import logging
+from emoji import emojize
 
 from telegram.ext import CommandHandler, MessageHandler, Filters
 from django_telegrambot.apps import DjangoTelegramBot
@@ -26,7 +28,7 @@ URL_DAS_USD = settings.CRIPTO_MONEDAS.get("URL_DAS_USD")
 URL_BTG_USD = settings.CRIPTO_MONEDAS.get("URL_BTG_USD")
 URL_XMR_USD = settings.CRIPTO_MONEDAS.get("URL_XMR_USD")
 URL_XRP_USD = settings.CRIPTO_MONEDAS.get("URL_XRP_USD")
-URL_BTC_ALL_EXC = settings.CRIPTO_MONEDAS.get("URL_BTC_ALL_EXC")
+URL_PRICE_USD = settings.CRIPTO_MONEDAS.get("URL_PRICE_USD")
 
 
 def usuario_nuevo(update):
@@ -95,12 +97,22 @@ def all_coins(bot, update):
 
 
 def all_exchange(bot, update):
-    exchanges_btc = requests.get(URL_BTC_ALL_EXC).json().get("Data").\
+    import ipdb;ipdb.set_trace()
+    parameters = update.message.text
+    cadena_sin_el_comando = ' '.join(parameters.split()[1:])
+    coin_ticker = "?fsym={0}&tsym=USD".format(cadena_sin_el_comando.strip())
+    url = "{0}{1}".format(URL_PRICE_USD, coin_ticker)
+
+    exchanges_btc = requests.get(url).json().get("Data").\
             get("Exchanges")
 
+    if not exchanges_btc:
+        bot.sendMessage(update.message.chat_id, text=emojize(response, use_aliases=True))
+
     exchanges = ['coinbase', 'bitfinex', 'localbitcoins',
-            'bitTrex', 'poloniex', 'bitstamp', 'kraken']
+            'bittrex', 'poloniex', 'bitstamp', 'kraken']
     response = "Lista de Precios:"
+    icon = ":bar_chart:"
 
     for exchange in exchanges_btc:
         moneda = exchange.get('TOSYMBOL')
@@ -112,22 +124,21 @@ def all_exchange(bot, update):
         volumen = exchange.get('VOLUME24HOUR')
 
         if market.lower() in exchanges:
-            response += """\n\
-                    \u1F4C8 {1}\n\
-                    Precio:{2:0,.2f}\n\
+            response += """
+                    {0} {1}\n\
+                    USD:{2:0,.2f}\n\
                     24h H:{3:0,.2f}\n\
                     24h L:{4:0,.2f}\n\
-                    Volum:{6:0,.2f}
+                    Volum:{5:0,.2f}
                     """.format(
-                            moneda,
+                            icon,
                             market,
                             float(precio),
                             float(h24h),
                             float(h24l),
-                            float(open24h),
                             float(volumen))
 
-    bot.sendMessage(update.message.chat_id, text=response)
+    bot.sendMessage(update.message.chat_id, text=emojize(response, use_aliases=True))
     usuario_nuevo(update)
 
 
@@ -442,6 +453,10 @@ def valida_root(update):
         return True
 
 
+def unknown(bot, update):
+    bot.send_message(chat_id=update.message.chat_id, text="Lo siento, No reconozco ese comando.")
+
+
 def main():
     logger.info("Loading handlers for telegram bot")
 
@@ -479,6 +494,7 @@ def main():
     dp.add_handler(CommandHandler("chat", chat))
     dp.add_handler(MessageHandler(Filters.forwarded, forwarded))
 
+    dp.add_handler(MessageHandler(Filters.command, unknown))
     # on noncommand i.e message - echo the message on Telegram
     dp.add_handler(MessageHandler(Filters.text, echo))
 

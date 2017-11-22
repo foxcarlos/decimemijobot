@@ -76,9 +76,8 @@ python /home/foxcarlos/desarrollo/python/decimemijobot/manage.py alerta_bitcoin 
 $ python manage.py celery worker -A sampleproject.celery --loglevel=info
 ```
 
-### Todos
+### Notas:
 
- - Write MORE Tests
- - Add Night Mode
+ - Lista de nombre de emojis https://www.webpagefx.com/tools/emoji-cheat-sheet/
 
 ### readme.md Creado con https://dillinger.io/
