@@ -120,7 +120,7 @@ def price(bot, update):
     exchanges = ['coinbase', 'bitfinex', 'localbitcoins',
             'bittrex', 'poloniex', 'bitstamp', 'kraken']
 
-    bloques = :inf_btc.get("BlockNumber")
+    bloques = inf_btc.get("BlockNumber")
     hash_seg = inf_btc.get("NetHashesPerSecond")
     total_minado = inf_btc.get("TotalCoinsMined")
 
