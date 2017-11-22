@@ -124,9 +124,11 @@ def price(bot, update):
     hash_seg = inf_btc.get("NetHashesPerSecond")
     total_minado = inf_btc.get("TotalCoinsMined")
 
-    response = ":orange_book: CriptoMoneda:{0}:\nBloq:{1}".format(
+    response = ":orange_book: CriptoMoneda:{0}:\nBloq:{1}\nHash por Seg:{2}\nTotal Minado:{3}".format(
             cadena_sin_el_comando.upper(),
-            bloques
+            bloques,
+            hash_seg,
+            total_minado
             )
     icon = ":bar_chart:"
 
