@@ -96,8 +96,7 @@ def all_coins(bot, update):
     usuario_nuevo(update)
 
 
-def all_exchange(bot, update):
-    import ipdb;ipdb.set_trace()
+def price(bot, update):
     parameters = update.message.text
     cadena_sin_el_comando = ' '.join(parameters.split()[1:])
     coin_ticker = "?fsym={0}&tsym=USD".format(cadena_sin_el_comando.strip())
@@ -106,12 +105,20 @@ def all_exchange(bot, update):
     exchanges_btc = requests.get(url).json().get("Data").\
             get("Exchanges")
 
-    if not exchanges_btc:
+    if not cadena_sin_el_comando:
+        response = "{0} Debes indicar /precio y moneda Ej: /precio btc ".format(":question:",
+                cadena_sin_el_comando.upper())
         bot.sendMessage(update.message.chat_id, text=emojize(response, use_aliases=True))
+        return False
+
+    if not exchanges_btc:
+        response = "{0} Moneda '{1}' no encontrada ".format(":x:", cadena_sin_el_comando.upper())
+        bot.sendMessage(update.message.chat_id, text=emojize(response, use_aliases=True))
+        return False
 
     exchanges = ['coinbase', 'bitfinex', 'localbitcoins',
             'bittrex', 'poloniex', 'bitstamp', 'kraken']
-    response = "Lista de Precios:"
+    response = ":orange_book: CriptoMoneda:{0}:".format(cadena_sin_el_comando.upper())
     icon = ":bar_chart:"
 
     for exchange in exchanges_btc:
@@ -474,7 +481,7 @@ def main():
     dp.add_handler(CommandHandler("?", help))
 
     dp.add_handler(CommandHandler("allcoins", all_coins))
-    dp.add_handler(CommandHandler("price", all_exchange))
+    dp.add_handler(CommandHandler("precio", price))
     dp.add_handler(CommandHandler("litecoin", litecoin))
     dp.add_handler(CommandHandler("bitcoin", bitcoin))
     dp.add_handler(CommandHandler("ethereum", ethereum))
