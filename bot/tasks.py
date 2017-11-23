@@ -11,7 +11,7 @@ from time import sleep
 def pool_message(users, cadena_sin_el_comando):
     for user in users if cadena_sin_el_comando else '':
         try:
-            DjangoTelegramBot.dispatcher.bot.sendMessage(user.get("chat_id"), text=cadena_sin_el_comando)
+            # DjangoTelegramBot.dispatcher.bot.sendMessage(user.get("chat_id"), text=cadena_sin_el_comando)
             print(user.get("chat_id ", cadena_sin_el_comando))
         except Exception as E:
             print(E)
