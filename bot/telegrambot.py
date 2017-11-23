@@ -475,6 +475,7 @@ def main():
 
     dp.add_handler(CommandHandler("allcoins", all_coins))
     dp.add_handler(CommandHandler("precio", price))
+    dp.add_handler(CommandHandler("p", price))
     dp.add_handler(CommandHandler("bitcoin", bitcoin))
     dp.add_handler(CommandHandler("satoshitango", bitcoin_satoshitango))
     dp.add_handler(CommandHandler("set_alarma_bitcoin", set_alarma_bitcoin))
