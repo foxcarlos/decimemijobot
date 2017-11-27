@@ -9,21 +9,12 @@ from time import sleep
 
 @app.task
 def pool_message(users, cadena_sin_el_comando):
-    # import ipdb;ipdb.set_trace()
-    
-    for f in users if cadena_sin_el_comando else []:
-      print(f)
-      sleep(50)
-      
-    """   
-    for user in users if cadena_sin_el_comando else '':
+    for user in users if cadena_sin_el_comando else []:
         try:
             # DjangoTelegramBot.dispatcher.bot.sendMessage(user.get("chat_id"), text=cadena_sin_el_comando)
             # print(user.get("chat_id ", cadena_sin_el_comando))
             print("Entro")
         except Exception as E:
-            pass
-            # print(E)
+            print(E)
         sleep(3)
-    """
 
