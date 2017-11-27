@@ -262,9 +262,9 @@ def enviar_mensajes_todos(bot, update):
     parameters = update.message.text
     cadena_sin_el_comando = ' '.join(parameters.split()[1:])
 
-    # if valida_root(update):
-    users = User.objects.values('chat_id').annotate(dcount=Count('chat_id'))
-    pool_message.delay(users, cadena_sin_el_comando)
+    if valida_root(update):
+      users = User.objects.values('chat_id').annotate(dcount=Count('chat_id'))
+      pool_message.delay(users, cadena_sin_el_comando)
 
 
 def error(bot, update, error):
