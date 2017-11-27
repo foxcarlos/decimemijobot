@@ -99,12 +99,13 @@ def all_coins(bot, update):
 def price(bot, update):
     parameters = update.message.text
     cadena_sin_el_comando = ' '.join(parameters.split()[1:])
-    coin_ticker = "?fsym={0}&tsym=USD".format(cadena_sin_el_comando.strip())
-    url = "{0}{1}".format(URL_PRICE_USD, coin_ticker)
 
-    import ipdb;ipdb.set_trace()
-    inf_btc = requests.get(url).json().get("Data")
-    exchanges_btc = inf_btc.get("Exchanges")
+    if cadena_sin_el_comando:
+        coin_ticker = "?fsym={0}&tsym=USD".format(cadena_sin_el_comando.strip())
+        url = "{0}{1}".format(URL_PRICE_USD, coin_ticker)
+
+        inf_btc = requests.get(url).json().get("Data")
+        exchanges_btc = inf_btc.get("Exchanges")
 
 
     if not cadena_sin_el_comando:
