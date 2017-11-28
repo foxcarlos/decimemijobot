@@ -73,15 +73,15 @@ def all_coins(bot, update):
     xmr = get_price_coinmarketcap(URL_XMR_USD)
     xrp = get_price_coinmarketcap(URL_XRP_USD)
 
-    response = """Cripto Monedas hoy:\n\n\
-            BTC={0:0,.2f}\n\
-            ETH={1:0,.2f}\n\
-            LTC={2:0,.2f}\n\
-            BTCASH={3:0,.2f}\n\
-            DASH={4:0,.2f}\n\
-            BTGOLD={5:0,.2f}\n\
-            RIPPLE={6:0,.2f}\n\
-            MONERO={7:0,.2f}""".format(
+    response = """:speaker: Cripto Monedas hoy (Coinbase ):\n\n\
+            :dollar: BTC={0:0,.2f}\n\
+            :dollar: ETH={1:0,.2f}\n\
+            :dollar: LTC={2:0,.2f}\n\
+            :dollar: BTCASH={3:0,.2f}\n\
+            :dollar: DASH={4:0,.2f}\n\
+            :dollar: BTGOLD={5:0,.2f}\n\
+            :dollar: RIPPLE={6:0,.2f}\n\
+            :dollar: MONERO={7:0,.2f}""".format(
                     float(btc),
                     float(eth),
                     float(ltc),
