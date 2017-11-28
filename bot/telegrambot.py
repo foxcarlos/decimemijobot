@@ -110,11 +110,11 @@ def calc(bot, update):
     moneda, monto =  cadena_sin_el_comando.split()
 
     data = get_price_usd_eur(moneda, market)
-    total_euros, total_dolar = [symbol*monto for symbol in  data.values()]
-    total_vef = monto * float(get_dolartoday())
+    total_euros, total_dolar = [float(symbol)*float(monto) for symbol in  data.values()]
+    total_vef = float(monto) * float(get_dolartoday())
 
-    response = """:moneybag: El calculo es:\n\n:dollar: Dolar:{0}\n:euro: Euro:{1}\n:small_orange_diamond::small_blue_diamond::small_red_diamond: Bsf:{2}\n """.formar(
-            total_dolar, total_euros, total_vef)
+    response = """:moneybag: El calculo de {3} es:\n\n:dollar: Dolar:{0}\n:euro: Euro:{1}\n:small_orange_diamond:  Bsf:{2}\n """.format(
+            total_dolar, total_euros, total_vef, monto)
 
     bot.sendMessage(update.message.chat_id, text=emojize(response,
         use_aliases=True))
@@ -506,6 +506,7 @@ def main():
     dp.add_handler(CommandHandler("allcoins", all_coins))
     dp.add_handler(CommandHandler("precio", price))
     dp.add_handler(CommandHandler("p", price))
+    dp.add_handler(CommandHandler("calc", calc))
     dp.add_handler(CommandHandler("bitcoin", bitcoin))
     dp.add_handler(CommandHandler("satoshitango", bitcoin_satoshitango))
     dp.add_handler(CommandHandler("set_alarma_bitcoin", set_alarma_bitcoin))
