@@ -113,8 +113,8 @@ def calc(bot, update):
     total_dolar, total_euros = [float(symbol)*float(monto) for symbol in  data.values()]
     total_vef = float(monto) * (data.get("USD") * get_dolartoday())
 
-    response = """:moneybag: El calculo de {3} es :\n\n:dollar: Dolar: {0:,.2f}\n:euro: Euro: {1:,.2f}\n:small_orange_diamond:  Bsf: {2:,.2f}\n """.format(
-            total_dolar, total_euros, total_vef, monto)
+    response = """:moneybag: El calculo de {3} es :\n\n:dollar: Dolar: {0:,.2f}\n:euro: Euro: {1:,.2f}\n:small_orange_diamond:  Bsf: {2:,.2f}\n\nNota: Precios basados en: {4} y Bsf en (DolarToday) """.format(
+            total_dolar, total_euros, total_vef, monto, market.capitalize())
 
     bot.sendMessage(update.message.chat_id, text=emojize(response,
         use_aliases=True))
