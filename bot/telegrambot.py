@@ -97,24 +97,33 @@ def all_coins(bot, update):
     usuario_nuevo(update)
 
 
-def get_price_usd_eur(coin_ticker, market):
+def get_price_usd_eur(coin_ticker, market='coinbase'):
     url = URL_PRICE_USD_EUR_MARKET.format(coin_ticker.upper(), market)
-    data = requests.get(url).json()
-    return data
+    data = requests.get(url)
+    response = data.json() if data else ''
+    return response
 
 
 def calc(bot, update):
     market = 'coinbase'
     parameters = update.message.text
     cadena_sin_el_comando = ' '.join(parameters.split()[1:])
-    moneda, monto =  cadena_sin_el_comando.split()
+    moneda, monto = cadena_sin_el_comando.split()
 
     data = get_price_usd_eur(moneda, market)
-    total_dolar, total_euros = [float(symbol)*float(monto) for symbol in  data.values()]
-    total_vef = float(monto) * (data.get("USD") * get_dolartoday())
+    if data:
+        total_dolar, total_euros = [float(symbol)*float(monto) for symbol in data.values()]
+        total_vef = float(monto) * (data.get("USD") * get_dolartoday())
+        response = """:moneybag: El calculo de {3} es :\n\n:dollar: Dolar: {0:,.2f}\n:euro: Euro: {1:,.2f}\n:small_orange_diamond:  VEF: {2:,.2f}\n\nNota: Precios basados en: {4} y VEF en (DolarToday) """.format(
+                total_dolar, total_euros, total_vef, monto, market.capitalize())
+    elif moneda.upper() == "VEF":
+        total_btc = float(monto) / (data.get("USD") * get_dolartoday())
+        total_dolar = float(monto) * get_dolartoday()
 
-    response = """:moneybag: El calculo de {3} es :\n\n:dollar: Dolar: {0:,.2f}\n:euro: Euro: {1:,.2f}\n:small_orange_diamond:  Bsf: {2:,.2f}\n\nNota: Precios basados en: {4} y Bsf en (DolarToday) """.format(
-            total_dolar, total_euros, total_vef, monto, market.capitalize())
+        response = """:moneybag: El calculo para {0} es de :\n\n:chart_with_downwards_trend: BTC: {1:,.2f}\n:dollar: Dolar: {2:,.2f}\n\nNota: Precios basados en: {3} y VEF en (DolarToday) """.format(
+            monto, total_btc, total_dolar, market.capitalize())
+    else:
+        response = "algo salio mal"
 
     bot.sendMessage(update.message.chat_id, text=emojize(response,
         use_aliases=True))
