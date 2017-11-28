@@ -119,9 +119,9 @@ def calc(bot, update):
     elif moneda.upper() == "VEF":
         data = get_price_usd_eur("btc", market)
         total_btc = float(monto) / (data.get("USD") * get_dolartoday())
-        total_dolar = float(monto) * get_dolartoday()
+        total_dolar = float(monto) / get_dolartoday()
 
-        response = """:moneybag: El calculo para {0} es de :\n\n:chart_with_downwards_trend: BTC: {1:,.2f}\n:dollar: Dolar: {2:,.2f}\n\nNota: Precios basados en: {3} y VEF en (DolarToday) """.format(
+        response = """:moneybag: El calculo para {0} es de :\n\n:chart_with_downwards_trend: BTC: {1:,.9f}\n:dollar: Dolares: {2:,.2f}\n\nNota: Precios basados en: {3} y VEF en (DolarToday) """.format(
             monto, total_btc, total_dolar, market.capitalize())
     else:
         response = "algo salio mal"
