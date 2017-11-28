@@ -29,6 +29,7 @@ URL_BTG_USD = settings.CRIPTO_MONEDAS.get("URL_BTG_USD")
 URL_XMR_USD = settings.CRIPTO_MONEDAS.get("URL_XMR_USD")
 URL_XRP_USD = settings.CRIPTO_MONEDAS.get("URL_XRP_USD")
 URL_PRICE_USD = settings.CRIPTO_MONEDAS.get("URL_PRICE_USD")
+URL_PRICE_USD_EUR_MARKET = settings.CRIPTO_MONEDAS.get("URL_PRICE_USD_EUR_MARKET")
 
 
 def usuario_nuevo(update):
@@ -94,6 +95,30 @@ def all_coins(bot, update):
 
     bot.sendMessage(update.message.chat_id, text=emojize(response, use_aliases=True))
     usuario_nuevo(update)
+
+
+def get_price_usd_eur(coin_ticker, market):
+    url = URL_PRICE_USD_EUR_MARKET.format(coin_ticker.upper(), market)
+    data = requests.get(url).json()
+    return data
+
+
+def calc(bot, update):
+    market = 'coinbase'
+    parameters = update.message.text
+    cadena_sin_el_comando = ' '.join(parameters.split()[1:])
+    moneda, monto =  cadena_sin_el_comando.split()
+
+    data = get_price_usd_eur(moneda, market)
+    total_euros, total_dolar = [symbol*monto for symbol in  data.values()]
+    total_vef = monto * float(get_dolartoday())
+
+    response = """:moneybag: El calculo es:\n\n:dollar: Dolar:{0}\n:euro: Euro:{1}\n:small_orange_diamond::small_blue_diamond::small_red_diamond: Bsf:{2}\n """.formar(
+            total_dolar, total_euros, total_vef)
+
+    bot.sendMessage(update.message.chat_id, text=emojize(response,
+        use_aliases=True))
+    # usuario_nuevo(update)
 
 
 def price(bot, update):
@@ -241,16 +266,19 @@ def chat(bot, update):
             text='This chat information:\n {}'.format(update.effective_chat))
 
 
+def get_dolartoday():
+    rq = requests.get('https://s3.amazonaws.com/dolartoday/data.json').json()
+    msg_response = rq.get('USD').get('transferencia')
+    return msg_response
+
+
 def dolartoday(bot, update):
     print(update.message)
     user_first_name = update.message.from_user.first_name
-    rq = requests.get('https://s3.amazonaws.com/dolartoday/data.json')
-    devuelto = rq.json()
-    msg_response = devuelto['USD']['transferencia']
-
     response = '{0} El precio del paralelo en Vzla es: {1:0,.2f}'
     bot.sendMessage(update.message.chat_id, response.format(user_first_name,
-        float(msg_response)))
+        float(get_dolartoday()))
+        )
     usuario_nuevo(update)
 
 
