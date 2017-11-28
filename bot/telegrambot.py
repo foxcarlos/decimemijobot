@@ -92,7 +92,7 @@ def all_coins(bot, update):
                     float(xmr)
                     )
 
-    bot.sendMessage(update.message.chat_id, text=response)
+    bot.sendMessage(update.message.chat_id, text=emojize(response, use_aliases=True))
     usuario_nuevo(update)
 
 
