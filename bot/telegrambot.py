@@ -108,12 +108,12 @@ def calc(bot, update):
     market = 'coinbase'
     parameters = update.message.text
     cadena_sin_el_comando = ' '.join(parameters.split()[1:])
-    import ipdb; ipdb.set_trace() # BREAKPOINT
+    # import ipdb; ipdb.set_trace() # BREAKPOINT
     params = cadena_sin_el_comando.split() if \
             len(cadena_sin_el_comando.split()) == 2 else []
 
     if not params:
-        response = "Algo salio Mal"
+        response = "{0} Debes indicar /calc coin_ticker monto\n\nEj: /calc btc 0.0002 \n\nSi desea calcular VEF a bitcoin y Dolar ejecute\n\n/calc vef 2500000".format(":question:")
     else:
         moneda, monto = params
         data = get_price_usd_eur(moneda, market)
