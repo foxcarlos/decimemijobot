@@ -110,25 +110,24 @@ def calc(bot, update):
     cadena_sin_el_comando = ' '.join(parameters.split()[1:])
     params = cadena_sin_el_comando.split() if len(cadena_sin_el_comando) == 2 else []
 
-    if params:
-        moneda, monto = moneda, monto
+    if not params:
+        response = "Algo salio Mal"
     else:
-        response = 'Parametros Invalidos'
+        moneda, monto = moneda, monto
+        data = get_price_usd_eur(moneda, market)
+        if data.get('Response') != "Error":
+            total_euros, total_dolar = [float(symbol)*float(monto) for symbol in data.values()]
+            total_vef = float(monto) * (data.get("USD") * get_dolartoday())
+            response = """:moneybag: El calculo de {3} es :\n\n:dollar: Dolar: {0:,.2f}\n:euro: Euro: {1:,.2f}\n:small_orange_diamond:  VEF: {2:,.2f}\n\nNota: Precios basados en: {4} y VEF en (DolarToday) """.format(
+                    total_dolar, total_euros, total_vef, monto, market.capitalize())
 
-    data = get_price_usd_eur(moneda, market)
-    if data.get('Response') != "Error":
-        total_euros, total_dolar = [float(symbol)*float(monto) for symbol in data.values()]
-        total_vef = float(monto) * (data.get("USD") * get_dolartoday())
-        response = """:moneybag: El calculo de {3} es :\n\n:dollar: Dolar: {0:,.2f}\n:euro: Euro: {1:,.2f}\n:small_orange_diamond:  VEF: {2:,.2f}\n\nNota: Precios basados en: {4} y VEF en (DolarToday) """.format(
-                total_dolar, total_euros, total_vef, monto, market.capitalize())
+        if moneda.upper() == "VEF":
+            data = get_price_usd_eur("btc", market)
+            total_btc = float(monto) / (data.get("USD") * get_dolartoday())
+            total_dolar = float(monto) / get_dolartoday()
 
-    if moneda.upper() == "VEF":
-        data = get_price_usd_eur("btc", market)
-        total_btc = float(monto) / (data.get("USD") * get_dolartoday())
-        total_dolar = float(monto) / get_dolartoday()
-
-        response = """:moneybag: El calculo para {0} es de :\n\n:chart_with_downwards_trend: BTC: {1:,.9f}\n:dollar: Dolares: {2:,.2f}\n\nNota: Precios basados en: {3} y VEF en (DolarToday) """.format(
-            monto, total_btc, total_dolar, market.capitalize())
+            response = """:moneybag: El calculo para {0} es de :\n\n:chart_with_downwards_trend: BTC: {1:,.9f}\n:dollar: Dolares: {2:,.2f}\n\nNota: Precios basados en: {3} y VEF en (DolarToday) """.format(
+                monto, total_btc, total_dolar, market.capitalize())
 
     bot.sendMessage(update.message.chat_id, text=emojize(response,
         use_aliases=True))
