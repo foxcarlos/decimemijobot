@@ -133,7 +133,7 @@ def calc(bot, update):
 
     bot.sendMessage(update.message.chat_id, text=emojize(response,
         use_aliases=True))
-    # usuario_nuevo(update)
+    usuario_nuevo(update)
 
 
 def price(bot, update):
@@ -330,8 +330,9 @@ def help(bot, update):
 
     /allcoins - Precios de varias criptomonedas
     /bitcoin - Muestra de forma rapida el precio
-    /calcular  La suma de 2 mas 2 es [2+2] y 3 por 3 es [3*3]
+    /calc - coin_ticker monto Ej: /calc btc 0.000222
     /dolartoday
+    /macro - La suma de 2 mas 2 es [2+2] y 3 por 3 es [3*3]
     /set_alarma_bitcoin - Configura alertas para esta criptomoneda
     /set_alarma_ethereum - Configura alertas para esta criptomoneda
     /set_alarma_litecoin - Configura alertas para esta criptomoneda
@@ -528,7 +529,7 @@ def main():
     dp.add_handler(CommandHandler("set_alarma_dolartoday", set_alarma_dolartoday))
     dp.add_handler(CommandHandler("set_alarma_ethereum", set_alarma_ethereum))
     dp.add_handler(CommandHandler("set_alarma_litecoin", set_alarma_litecoin))
-    dp.add_handler(CommandHandler("calcular", calcular))
+    dp.add_handler(CommandHandler("macro", calcular))
     dp.add_handler(CommandHandler("dolartoday", dolartoday))
     dp.add_handler(CommandHandler("masivo", enviar_mensajes_todos))
     dp.add_handler(CommandHandler("autor", autor))
