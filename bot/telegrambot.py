@@ -115,7 +115,7 @@ def calc(bot, update):
     if not params:
         response = "Algo salio Mal"
     else:
-        moneda, monto = moneda, monto
+        moneda, monto = params
         data = get_price_usd_eur(moneda, market)
         if data.get('Response') != "Error":
             total_euros, total_dolar = [float(symbol)*float(monto) for symbol in data.values()]
