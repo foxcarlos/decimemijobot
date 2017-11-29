@@ -108,7 +108,12 @@ def calc(bot, update):
     market = 'coinbase'
     parameters = update.message.text
     cadena_sin_el_comando = ' '.join(parameters.split()[1:])
-    moneda, monto = cadena_sin_el_comando.split()
+    params = cadena_sin_el_comando.split() if len(cadena_sin_el_comando) == 2 else []
+
+    if params:
+        moneda, monto = moneda, monto
+    else:
+        response = 'Parametros Invalidos'
 
     data = get_price_usd_eur(moneda, market)
     if data.get('Response') != "Error":
@@ -124,8 +129,6 @@ def calc(bot, update):
 
         response = """:moneybag: El calculo para {0} es de :\n\n:chart_with_downwards_trend: BTC: {1:,.9f}\n:dollar: Dolares: {2:,.2f}\n\nNota: Precios basados en: {3} y VEF en (DolarToday) """.format(
             monto, total_btc, total_dolar, market.capitalize())
-    else:
-        response = "algo salio mal"
 
     bot.sendMessage(update.message.chat_id, text=emojize(response,
         use_aliases=True))
