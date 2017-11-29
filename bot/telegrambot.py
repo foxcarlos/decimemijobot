@@ -116,7 +116,8 @@ def calc(bot, update):
         total_vef = float(monto) * (data.get("USD") * get_dolartoday())
         response = """:moneybag: El calculo de {3} es :\n\n:dollar: Dolar: {0:,.2f}\n:euro: Euro: {1:,.2f}\n:small_orange_diamond:  VEF: {2:,.2f}\n\nNota: Precios basados en: {4} y VEF en (DolarToday) """.format(
                 total_dolar, total_euros, total_vef, monto, market.capitalize())
-    elif moneda.upper() == "VEF":
+
+    if moneda.upper() == "VEF":
         data = get_price_usd_eur("btc", market)
         total_btc = float(monto) / (data.get("USD") * get_dolartoday())
         total_dolar = float(monto) / get_dolartoday()
