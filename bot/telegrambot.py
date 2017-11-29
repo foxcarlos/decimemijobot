@@ -108,6 +108,7 @@ def calc(bot, update):
     market = 'coinbase'
     parameters = update.message.text
     cadena_sin_el_comando = ' '.join(parameters.split()[1:])
+    import ipdb; ipdb.set_trace() # BREAKPOINT
     params = cadena_sin_el_comando.split() if len(cadena_sin_el_comando) == 2 else []
 
     if not params:
