@@ -79,7 +79,7 @@ class Command(BaseCommand):
                     precio_actual <= (ultimo_precio - (ultimo_precio * (porc_cambio / 100))):
                 paso = True
 
-        preparar_mensaje = ":bell: Notificacion de Alarma:\n\nEl precio del {0} {1} a: {2:0,.2f}".format(
+        preparar_mensaje = ":bell: {0} {1} a: {2:0,.2f}".format(
                 comando,
                 alta_o_baja,
                 precio_actual
