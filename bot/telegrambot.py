@@ -137,42 +137,24 @@ def calc(bot, update):
     usuario_nuevo(update)
 
 
-def precio2(bot, update):
-    market = 'coinbase'
-    parameters = update.message.text
-    cadena_sin_el_comando = ' '.join(parameters.split()[1:])
-    # Si tiene parametros 2 o 3
-    params = cadena_sin_el_comando.split() if \
-            len(cadena_sin_el_comando.split()) in range(2,4) else []
-
-    if not params:
-        response = "{0} Debes indicar /precio <coin_ticker> <market>\n\nEj: /precio btc bitrex".format(":question:")
-    else:
-        coin_ticker, market = params
-        import ipdb; ipdb.set_trace() # BREAKPOINT
-        data = get_price_usd_eur(coin_ticker, market)
-
-    bot.sendMessage(update.message.chat_id, text=emojize(response,
-        use_aliases=True))
-    # bot.sendMessage(update.message.chat_id, "<b>This</b> <i>is some Text</i>", DjangoTelegramBot.ParseMode.HTML)
-    usuario_nuevo(update)
-
-
-
 def price(bot, update):
     parameters = update.message.text
     cadena_sin_el_comando = ' '.join(parameters.split()[1:])
 
-    if cadena_sin_el_comando:
-        coin_ticker = "?fsym={0}&tsym=USD".format(cadena_sin_el_comando.strip())
-        url = "{0}{1}".format(URL_PRICE_USD, coin_ticker)
+    params = cadena_sin_el_comando.split() if \
+            len(cadena_sin_el_comando.split()) in range(2,4) else []
+
+    if params:
+        coin_ticker, market = params
+        prepare_coin_ticker = "?fsym={0}&tsym=USD".format(coin_ticker)
+        url = "{0}{1}".format(URL_PRICE_USD, prepare_coin_ticker)
 
         inf_btc = requests.get(url).json().get("Data")
         exchanges_btc = inf_btc.get("Exchanges")
 
 
     if not cadena_sin_el_comando:
-        response = "{0} Debes indicar /precio y moneda Ej: /precio btc ".format(":question:",
+        response = "{0} Debes indicar /precio modena y market Ej: /precio btc bitfinex".format(":question:",
                 cadena_sin_el_comando.upper())
         bot.sendMessage(update.message.chat_id, text=emojize(response, use_aliases=True))
         return False
@@ -182,8 +164,7 @@ def price(bot, update):
         bot.sendMessage(update.message.chat_id, text=emojize(response, use_aliases=True))
         return False
 
-    exchanges = ['coinbase', 'bitfinex', 'localbitcoins',
-            'bittrex', 'poloniex', 'bitstamp', 'kraken', 'hitbtc']
+    exchanges = [market] if market else ['coinbase']
 
     bloques = inf_btc.get("BlockNumber")
     hash_seg = inf_btc.get("NetHashesPerSecond")
