@@ -137,6 +137,28 @@ def calc(bot, update):
     usuario_nuevo(update)
 
 
+def precio2(bot, update):
+    market = 'coinbase'
+    parameters = update.message.text
+    cadena_sin_el_comando = ' '.join(parameters.split()[1:])
+    # Si tiene parametros 2 o 3
+    params = cadena_sin_el_comando.split() if \
+            len(cadena_sin_el_comando.split()) in range(2,4) else []
+
+    if not params:
+        response = "{0} Debes indicar /precio <coin_ticker> <market>\n\nEj: /precio btc bitrex".format(":question:")
+    else:
+        coin_ticker, market = params
+        import ipdb; ipdb.set_trace() # BREAKPOINT
+        data = get_price_usd_eur(coin_ticker, market)
+
+    bot.sendMessage(update.message.chat_id, text=emojize(response,
+        use_aliases=True))
+    # bot.sendMessage(update.message.chat_id, "<b>This</b> <i>is some Text</i>", DjangoTelegramBot.ParseMode.HTML)
+    usuario_nuevo(update)
+
+
+
 def price(bot, update):
     parameters = update.message.text
     cadena_sin_el_comando = ' '.join(parameters.split()[1:])
@@ -156,7 +178,7 @@ def price(bot, update):
         return False
 
     if not exchanges_btc:
-        response = "{0} Moneda '{1}' no encontrada ".format(":x:", cadena_sin_el_comando.upper())
+        response = "{0} Moneda '{1}' no encontrada, indique las siglas Ej: btc ".format(":x:", cadena_sin_el_comando.upper())
         bot.sendMessage(update.message.chat_id, text=emojize(response, use_aliases=True))
         return False
 
