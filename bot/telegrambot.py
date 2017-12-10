@@ -145,7 +145,7 @@ def price(bot, update):
             len(cadena_sin_el_comando.split()) in range(2,4) else []
 
     if params:
-        coin_ticker, market = params
+        coin_ticker, market = params if len(params)>=2 else params, ''
         prepare_coin_ticker = "?fsym={0}&tsym=USD".format(coin_ticker)
         url = "{0}{1}".format(URL_PRICE_USD, prepare_coin_ticker)
 
