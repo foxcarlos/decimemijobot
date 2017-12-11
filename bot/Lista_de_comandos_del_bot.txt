@@ -1,11 +1,11 @@
 autor - Acerca de
 help - Lista de comandos disponibles
-precio - <coin_ticker> Muestra el precio de la cripto moneda pasada
+precio - <coin_ticker> <Market> Ej: /precio btc coinbase
 calc - <coin_ticker> <monto> - Calcula el valor del BTC de un monto of coin pasado
 allcoins - Precio de algunas las cripto monedas
 bitcoin - Precio actual del Bitcoin
 macro - Indique entre [ ] el calculo, Ej: [2+2]
 dolartoday - Precio actual del Dolar Venezuela
-set_alarma_bitcoin - Activa notificaciones cuando ocurra un evento
-set_alarma_ethereum - Activa notificaciones cuando ocurra un evento
-set_alarma_litecoin - Activa notificaciones cuando ocurra un evento
+set_alarma_bitcoin - <estado> Ej: /set_alarma_bitcoin on
+set_alarma_ethereum - <estado> Ej: /set_alarma_ethereum on
+set_alarma_litecoin - <estado> Ej: /set_alarma_litecoin on
