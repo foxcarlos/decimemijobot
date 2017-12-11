@@ -105,6 +105,7 @@ def get_price_usd_eur(coin_ticker, market='coinbase'):
 
 
 def calc(bot, update):
+    print(update.message)
     market = 'coinbase'
     parameters = update.message.text
     cadena_sin_el_comando = ' '.join(parameters.split()[1:])
@@ -138,29 +139,34 @@ def calc(bot, update):
 
 
 def price(bot, update):
+    print(update.message)
     parameters = update.message.text
     cadena_sin_el_comando = ' '.join(parameters.split()[1:])
 
-    if cadena_sin_el_comando:
-        coin_ticker = "?fsym={0}&tsym=USD".format(cadena_sin_el_comando.strip())
-        url = "{0}{1}".format(URL_PRICE_USD, coin_ticker)
+    params = cadena_sin_el_comando.split() if \
+            len(cadena_sin_el_comando.split()) in range(1,3) else []
+
+    if params:
+        coin_ticker, market = params if len(params)>=2 else (''.join(params), '')
+        prepare_coin_ticker = "?fsym={0}&tsym=USD".format(coin_ticker)
+        url = "{0}{1}".format(URL_PRICE_USD, prepare_coin_ticker)
 
         inf_btc = requests.get(url).json().get("Data")
         exchanges_btc = inf_btc.get("Exchanges")
 
 
     if not cadena_sin_el_comando:
-        response = "{0} Debes indicar /precio y moneda Ej: /precio btc ".format(":question:",
+        response = "{0} Debes indicar /precio modena y market Ej: /precio btc bitfinex".format(":question:",
                 cadena_sin_el_comando.upper())
         bot.sendMessage(update.message.chat_id, text=emojize(response, use_aliases=True))
         return False
 
     if not exchanges_btc:
-        response = "{0} Moneda '{1}' no encontrada ".format(":x:", cadena_sin_el_comando.upper())
+        response = "{0} Moneda '{1}' no encontrada, indique las siglas Ej: btc ".format(":x:", cadena_sin_el_comando.upper())
         bot.sendMessage(update.message.chat_id, text=emojize(response, use_aliases=True))
         return False
 
-    exchanges = ['coinbase', 'bitfinex', 'localbitcoins',
+    exchanges = [market] if market else ['coinbase', 'bitfinex', 'localbitcoins',
             'bittrex', 'poloniex', 'bitstamp', 'kraken', 'hitbtc']
 
     bloques = inf_btc.get("BlockNumber")
@@ -329,16 +335,17 @@ def help(bot, update):
     msg_response = """
     Lista de Comandos:
 
-    /allcoins - Precios de varias criptomonedas
-    /bitcoin - Muestra de forma rapida el precio
-    /calc - coin_ticker monto Ej: /calc btc 0.000222
+    /allcoins - Precios de varias criptos
+    /bitcoin - Muestra el Precio(segun coinbase)
+    /calc - <coin_ticker> <monto> Ej: /calc btc 0.1
     /dolartoday
-    /macro - La suma de 2 mas 2 es [2+2] y 3 por 3 es [3*3]
-    /set_alarma_bitcoin - Configura alertas para esta criptomoneda
-    /set_alarma_ethereum - Configura alertas para esta criptomoneda
-    /set_alarma_litecoin - Configura alertas para esta criptomoneda
+    /macro - La suma de 2 mas 2 es [2+2]
+    /set_alarma_bitcoin - Configura alertas
+    /set_alarma_ethereum - Configura alertas
+    /set_alarma_litecoin - Configura alertas
     /help
-    /precio - Criptomoneda a consultar Ej: /precio btc
+    /precio <coin_ticker> <market> - Ej: /precio btc coinbase
+    /precio <coin_ticker> - Ej: /precio btc
 
     """
     user_first_name = update.message.from_user.first_name
