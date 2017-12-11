@@ -335,16 +335,17 @@ def help(bot, update):
     msg_response = """
     Lista de Comandos:
 
-    /allcoins - Precios de varias criptomonedas
-    /bitcoin - Muestra de forma rapida el precio
-    /calc - coin_ticker monto Ej: /calc btc 0.000222
+    /allcoins - Precios de varias criptos
+    /bitcoin - Muestra el Precio(segun coinbase)
+    /calc - <coin_ticker> <monto> Ej: /calc btc 0.1
     /dolartoday
-    /macro - La suma de 2 mas 2 es [2+2] y 3 por 3 es [3*3]
-    /set_alarma_bitcoin - Configura alertas para esta criptomoneda
-    /set_alarma_ethereum - Configura alertas para esta criptomoneda
-    /set_alarma_litecoin - Configura alertas para esta criptomoneda
+    /macro - La suma de 2 mas 2 es [2+2]
+    /set_alarma_bitcoin - Configura alertas
+    /set_alarma_ethereum - Configura alertas
+    /set_alarma_litecoin - Configura alertas
     /help
-    /precio - Criptomoneda a consultar Ej: /precio btc
+    /precio <coin_ticker> <market> - Ej: /precio btc coinbase
+    /precio <coin_ticker> - Ej: /precio btc
 
     """
     user_first_name = update.message.from_user.first_name
