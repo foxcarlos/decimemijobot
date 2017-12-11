@@ -105,6 +105,7 @@ def get_price_usd_eur(coin_ticker, market='coinbase'):
 
 
 def calc(bot, update):
+    print(update.message)
     market = 'coinbase'
     parameters = update.message.text
     cadena_sin_el_comando = ' '.join(parameters.split()[1:])
@@ -138,14 +139,15 @@ def calc(bot, update):
 
 
 def price(bot, update):
+    print(update.message)
     parameters = update.message.text
     cadena_sin_el_comando = ' '.join(parameters.split()[1:])
 
     params = cadena_sin_el_comando.split() if \
-            len(cadena_sin_el_comando.split()) in range(2,4) else []
+            len(cadena_sin_el_comando.split()) in range(1,3) else []
 
     if params:
-        coin_ticker, market = params if len(params)>=2 else params, ''
+        coin_ticker, market = params if len(params)>=2 else (''.join(params), '')
         prepare_coin_ticker = "?fsym={0}&tsym=USD".format(coin_ticker)
         url = "{0}{1}".format(URL_PRICE_USD, prepare_coin_ticker)
 
@@ -164,7 +166,8 @@ def price(bot, update):
         bot.sendMessage(update.message.chat_id, text=emojize(response, use_aliases=True))
         return False
 
-    exchanges = [market] if market else ['coinbase']
+    exchanges = [market] if market else ['coinbase', 'bitfinex', 'localbitcoins',
+            'bittrex', 'poloniex', 'bitstamp', 'kraken', 'hitbtc']
 
     bloques = inf_btc.get("BlockNumber")
     hash_seg = inf_btc.get("NetHashesPerSecond")
