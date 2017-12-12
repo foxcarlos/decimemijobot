@@ -334,7 +334,7 @@ def dolartoday(bot, update):
     #bot.sendMessage(update.message.chat_id, response.format(user_first_name,
     #    float(get_dolartoday()))
     #    )
-    bot.sendMessage(update.message.chat_id, get_dolartoday2)
+    bot.sendMessage(update.message.chat_id, get_dolartoday2())
     usuario_nuevo(update)
 
 
