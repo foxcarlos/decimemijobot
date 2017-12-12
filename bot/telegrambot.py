@@ -16,6 +16,7 @@ from django.contrib.auth.models import User as UserDjango
 from bot.scrapy import NoticiasPanorama
 from bot.models import Alerta, AlertaUsuario, User
 from bot.tasks import pool_message
+from datetime import datetime
 
 # Define a few command handlers. These usually take the two arguments bot and
 # update. Error handlers also receive the raised TelegramError object in error.
@@ -30,6 +31,7 @@ URL_XMR_USD = settings.CRIPTO_MONEDAS.get("URL_XMR_USD")
 URL_XRP_USD = settings.CRIPTO_MONEDAS.get("URL_XRP_USD")
 URL_PRICE_USD = settings.CRIPTO_MONEDAS.get("URL_PRICE_USD")
 URL_PRICE_USD_EUR_MARKET = settings.CRIPTO_MONEDAS.get("URL_PRICE_USD_EUR_MARKET")
+URL_DOLARTODAY = settings.CRIPTO_MONEDAS.get("URL_DOLARTODAY")
 
 
 def usuario_nuevo(update):
@@ -294,13 +296,45 @@ def get_dolartoday():
     return msg_response
 
 
+def get_dolartoday2():
+    rq = requests.get(URL_DOLARTODAY).json()
+
+    dolartoday = float(rq.get('USD').get('transferencia'))
+    implicito =  float(rq.get("USD").get("efectivo"))
+    dicom = float(rq.get("USD").get("sicad2"))
+    cucuta = float(rq.get("USD").get("efectivo_cucuta"))
+    localbitcoin = float(rq.get("USD").get("localbitcoin_ref"))
+    barril = float(rq.get("MISC").get("petroleo").replace(",", ".") )
+    oro = float(rq.get("GOLD").get("rate"))
+    fecha = datetime.now().strftime("%d-%m-%Y")
+
+    response = """:speaker: DolarToday hoy: {0}:\n\n\
+            :dollar: DolarToday={1:0,.2f}\n\
+            :dollar: Implicito={2:0,.2f}\n\
+            :dollar: Dicom={3:0,.2f}\n\
+            :dollar: Cucuta={4:0,.2f}\n\
+            :dollar: LocalBitcoin={5:0,.2f}\n\n\
+            :fuelpump: Petroleo={6:0,.2f}\n\
+            :moneybag: Oro={7:0,.2f}\n\
+            """.format(fecha,
+                    dolartoday,
+                    implicito,
+                    dicom,
+                    cucuta,
+                    localbitcoin,
+                    barril,
+                    oro)
+    return response
+
+
 def dolartoday(bot, update):
     print(update.message)
     user_first_name = update.message.from_user.first_name
-    response = '{0} El precio del paralelo en Vzla es: {1:0,.2f}'
-    bot.sendMessage(update.message.chat_id, response.format(user_first_name,
-        float(get_dolartoday()))
-        )
+    # response = '{0} El precio del paralelo en Vzla es: {1:0,.2f}'
+    #bot.sendMessage(update.message.chat_id, response.format(user_first_name,
+    #    float(get_dolartoday()))
+    #    )
+    bot.sendMessage(update.message.chat_id, get_dolartoday2)
     usuario_nuevo(update)
 
 
