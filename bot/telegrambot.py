@@ -140,6 +140,14 @@ def calc(bot, update):
     usuario_nuevo(update)
 
 
+def historico():
+    url = "https://min-api.cryptocompare.com/data/histoday?fsym=BTC&tsym=USD&limit=60&aggregate=3&e=bitfinex"
+    coin_ticker
+    usd_eur
+    limite
+    market
+
+
 def price(bot, update):
     print(update.message)
     parameters = update.message.text
@@ -330,11 +338,9 @@ def get_dolartoday2():
 def dolartoday(bot, update):
     print(update.message)
     user_first_name = update.message.from_user.first_name
-    # response = '{0} El precio del paralelo en Vzla es: {1:0,.2f}'
-    #bot.sendMessage(update.message.chat_id, response.format(user_first_name,
-    #    float(get_dolartoday()))
-    #    )
-    bot.sendMessage(update.message.chat_id, text=emojize(get_dolartoday2(), use_aliases=True ))
+    bot.sendMessage(update.message.chat_id, text=emojize(get_dolartoday2(),
+        use_aliases=True )
+        )
     usuario_nuevo(update)
 
 
