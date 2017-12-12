@@ -309,13 +309,13 @@ def get_dolartoday2():
     fecha = datetime.now().strftime("%d-%m-%Y")
 
     response = """:speaker: DolarToday hoy: {0}:\n\n\
-            :dollar: DolarToday={1:0,.2f}\n\
-            :dollar: Implicito={2:0,.2f}\n\
-            :dollar: Dicom={3:0,.2f}\n\
-            :dollar: Cucuta={4:0,.2f}\n\
-            :dollar: LocalBitcoin={5:0,.2f}\n\n\
-            :fuelpump: Petroleo={6:0,.2f}\n\
-            :moneybag: Oro={7:0,.2f}\n\
+            :dollar: DolarToday: {1:0,.2f}\n\
+            :dollar: Implicito: {2:0,.2f}\n\
+            :dollar: Dicom: {3:0,.2f}\n\
+            :dollar: Cucuta: {4:0,.2f}\n\
+            :dollar: LocalBitcoin: {5:0,.2f}\n\n\
+            :fuelpump: Petroleo: {6:0,.2f}\n\
+            :moneybag: Oro: {7:0,.2f}\n\
             """.format(fecha,
                     dolartoday,
                     implicito,
