@@ -217,8 +217,12 @@ def historico(bot, update):
         foto = open(file_, "rb")
         bot.sendPhoto(update.message.chat_id, photo=foto)
     else:
-        response = "{0} Ayuda /hist <coin_ticker> <market> <usd o eur> <dias>".format(":question:")
+        response = "{0} Ayuda /grafico <coin_ticker> <market> <usd o eur> <dias>".format(":question:")
         bot.sendMessage(update.message.chat_id, text=emojize(response, use_aliases=True))
+        bot.sendMessage(update.message.chat_id, text=emojize("o tambien puedes graficar", use_aliases=True))
+        response = "{0} Ayuda /grafico <coin_ticker> <market>".format(":question:")
+        bot.sendMessage(update.message.chat_id, text=emojize(response, use_aliases=True))
+
 
 
 def price(bot, update):
