@@ -25,8 +25,7 @@ SECRET_KEY = '2+(!v-t9)skqad%3637&#kj+!04!74q$ja@@ccavtf(h0)%1x!'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-# ALLOWED_HOSTS = ["decimemijobot-foxcarlos756841.codeanyapp.com", "localhost"]
-ALLOWED_HOSTS = ["localhost"]
+ALLOWED_HOSTS = ["decimemijobot-foxcarlos756841.codeanyapp.com", "localhost"]
 
 
 # Application definition
