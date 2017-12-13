@@ -9,3 +9,4 @@ dolartoday - Precio actual del Dolar Venezuela
 set_alarma_bitcoin - <estado> Ej: /set_alarma_bitcoin on
 set_alarma_ethereum - <estado> Ej: /set_alarma_ethereum on
 set_alarma_litecoin - <estado> Ej: /set_alarma_litecoin on
+grafico - <coin_ticker> <market>

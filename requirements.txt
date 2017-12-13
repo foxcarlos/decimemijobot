@@ -8,3 +8,6 @@ django-celery==3.2.2
 ipython-genutils==0.2.0
 redis==2.10.6
 emoji
+matplotlib
+numpy
+

@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # Example code for telegrambot.py module
+import os
 import requests
 import logging
 from emoji import emojize
@@ -17,6 +18,9 @@ from bot.scrapy import NoticiasPanorama
 from bot.models import Alerta, AlertaUsuario, User
 from bot.tasks import pool_message
 from datetime import datetime
+
+import numpy as np
+import matplotlib.pyplot as plt
 
 # Define a few command handlers. These usually take the two arguments bot and
 # update. Error handlers also receive the raised TelegramError object in error.
@@ -138,6 +142,83 @@ def calc(bot, update):
         use_aliases=True))
     # bot.sendMessage(update.message.chat_id, "<b>This</b> <i>is some Text</i>", DjangoTelegramBot.ParseMode.HTML)
     usuario_nuevo(update)
+
+
+def preparar_prametros(cabecera, valor):
+    cabecera = cabecera
+    valores = valor
+    return dict(zip(cabecera, valores))
+
+
+def get_historico(lista_params):
+    msg_response = False
+    if lista_params:
+        cabecera = ["coin_ticker", "market", "usd_eur", "dias"]
+        valores = lista_params
+        params = preparar_prametros(cabecera, valores)
+
+        coin_ticker = params.get("coin_ticker")
+        market = params.get("market")
+        limite = params.get("dias")
+        usd_eur = params.get("usd_eur")
+
+        param0 = "https://min-api.cryptocompare.com/data/histoday?"
+        param1 = "fsym={}".format(coin_ticker.upper() if coin_ticker else "BTC")
+        param2 = "&tsym={}".format(usd_eur.upper() if usd_eur else "USD")
+        param3 = "&limit={}".format(limite if limite else "30")
+        param4 = "&aggregate=3"
+        param5 = "&e={}".format(market if market else "coinbase")
+
+        url = "{0}{1}{2}{3}{4}{5}".format(
+                param0.strip(),
+                param1.strip(),
+                param2.strip(),
+                param3.strip(),
+                param4.strip(),
+                param5.strip())
+        print(url)
+
+        hist = requests.get(url).json()
+        if hist.get("Response").lower() == "Error":
+            msg_response = False  # hist.get("message")
+        else:
+            historial = hist.get("Data")
+            close = [f.get("close") for f in historial]
+            fecha = [datetime.fromtimestamp(f.get("time")) for f in historial]
+            plt.plot(fecha, close)
+            plt.xlabel("Fecha")
+            plt.ylabel("Precio")
+            plt.title("Grafico Coin:{0} Market:{1} Moneda:{2}".format(
+                coin_ticker.upper() if coin_ticker else 'BTC',
+                market.upper() if market else 'coinbase',
+                usd_eur.upper() if usd_eur else 'USD'
+                ))
+            plt.grid(True)
+            plt.savefig('graficos/grafico')
+            # plt.show()
+            msg_response = True
+
+        # /hist <coin_ticker> <market> <usd o eur> <dias>
+        return msg_response
+
+
+def historico(bot, update):
+    print(update.message)
+    parameters = update.message.text
+    cadena_sin_el_comando = ' '.join(parameters.split()[1:])
+
+    params = cadena_sin_el_comando.split() if \
+            cadena_sin_el_comando else []
+
+    if get_historico(params):
+        os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+        file_ = os.path.join(settings.BASE_DIR, 'graficos/grafico.png')
+        foto = open(file_, "rb")
+        bot.sendPhoto(update.message.chat_id, photo=foto)
+    else:
+        response = "{0} Debes indicar /hist <coin_ticker> <market> <usd o eur> <dias>".format(":question:")
+        bot.sendMessage(update.message.chat_id, text=emojize(response, use_aliases=True))
 
 
 def price(bot, update):
@@ -330,11 +411,9 @@ def get_dolartoday2():
 def dolartoday(bot, update):
     print(update.message)
     user_first_name = update.message.from_user.first_name
-    # response = '{0} El precio del paralelo en Vzla es: {1:0,.2f}'
-    #bot.sendMessage(update.message.chat_id, response.format(user_first_name,
-    #    float(get_dolartoday()))
-    #    )
-    bot.sendMessage(update.message.chat_id, text=emojize(get_dolartoday2(), use_aliases=True ))
+    bot.sendMessage(update.message.chat_id, text=emojize(get_dolartoday2(),
+        use_aliases=True )
+        )
     usuario_nuevo(update)
 
 
@@ -374,13 +453,18 @@ def help(bot, update):
     /calc - <coin_ticker> <monto> Ej: /calc btc 0.1
     /dolartoday
     /macro - La suma de 2 mas 2 es [2+2]
+
     /set_alarma_bitcoin - Configura alertas
     /set_alarma_ethereum - Configura alertas
     /set_alarma_litecoin - Configura alertas
+
     /help
     /precio <coin_ticker> <market> - Ej: /precio btc coinbase
     /precio <coin_ticker> - Ej: /precio btc
 
+    /grafico <coin_ticker> <market> <usd o eur> <dias>
+    /grafico <coin_ticker> <market> <usd>
+    /grafico <coin_ticker> <market>
     """
     user_first_name = update.message.from_user.first_name
     response = '{0} - {1}'.format(user_first_name,
@@ -564,6 +648,12 @@ def main():
     dp.add_handler(CommandHandler("allcoins", all_coins))
     dp.add_handler(CommandHandler("precio", price))
     dp.add_handler(CommandHandler("p", price))
+
+    dp.add_handler(CommandHandler("grafico", historico))
+    dp.add_handler(CommandHandler("graf", historico))
+    dp.add_handler(CommandHandler("graph", historico))
+    dp.add_handler(CommandHandler("chart", historico))
+
     dp.add_handler(CommandHandler("calc", calc))
     dp.add_handler(CommandHandler("bitcoin", bitcoin))
     dp.add_handler(CommandHandler("satoshitango", bitcoin_satoshitango))
