@@ -217,7 +217,7 @@ def historico(bot, update):
         foto = open(file_, "rb")
         bot.sendPhoto(update.message.chat_id, photo=foto)
     else:
-        response = "{0} Debes indicar /hist <coin_ticker> <market> <usd o eur> <dias>".format(":question:")
+        response = "{0} Ayuda /hist <coin_ticker> <market> <usd o eur> <dias>".format(":question:")
         bot.sendMessage(update.message.chat_id, text=emojize(response, use_aliases=True))
 
 
