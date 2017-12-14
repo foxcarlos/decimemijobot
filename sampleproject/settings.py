@@ -25,8 +25,8 @@ SECRET_KEY = '2+(!v-t9)skqad%3637&#kj+!04!74q$ja@@ccavtf(h0)%1x!'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["decimemijobot-foxcarlos756841.codeanyapp.com", "localhost"]
-
+ALLOWED_HOSTS = ["*"]
+# ALLOWED_HOSTS = ["decimemijobot-foxcarlos756841.codeanyapp.com", "localhost"]
 
 # Application definition
 
@@ -165,7 +165,7 @@ DJANGO_TELEGRAMBOT = {
                         # NB: if use polling mode you must provide to run
                         # a management command that starts a worker
 
-                        'WEBHOOK_SITE' : 'http://localhost:8000',
+                        'WEBHOOK_SITE' : 'http://localhost:9000',
 	'WEBHOOK_PREFIX' : '/prefix', # (Optional[str]) # If this value is specified,
                                   # a prefix is added to webhook url
 
