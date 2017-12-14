@@ -182,12 +182,16 @@ def get_historico(lista_params):
         if hist.get("Response").lower() == "Error":
             msg_response = False  # hist.get("message")
         else:
+            import ipdb; ipdb.set_trace() # BREAKPOINT
             historial = hist.get("Data")
             close = [f.get("close") for f in historial]
             fecha = [datetime.fromtimestamp(f.get("time")) for f in historial]
-            plt.plot(fecha, close)
-            plt.xlabel("Fecha")
-            plt.ylabel("Precio")
+
+            plt.rcParams['axes.facecolor'] = 'black'
+            lines = plt.plot(fecha, close)
+            plt.setp(lines, color='y', linewidth=2.0)
+            plt.xlabel("Fecha", fontsize=14, color='blue')
+            plt.ylabel("Precio", fontsize=14, color='blue')
             plt.title("Grafico Coin:{0} Market:{1} Moneda:{2}".format(
                 coin_ticker.upper() if coin_ticker else 'BTC',
                 market.upper() if market else 'coinbase',
@@ -195,7 +199,7 @@ def get_historico(lista_params):
                 ))
             plt.grid(True)
             plt.savefig('graficos/grafico')
-            # plt.show()
+            plt.clf()
             msg_response = True
 
         # /hist <coin_ticker> <market> <usd o eur> <dias>
