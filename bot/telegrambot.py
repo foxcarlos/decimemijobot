@@ -182,7 +182,6 @@ def get_historico(lista_params):
         if hist.get("Response").lower() == "Error":
             msg_response = False  # hist.get("message")
         else:
-            import ipdb; ipdb.set_trace() # BREAKPOINT
             historial = hist.get("Data")
             close = [f.get("close") for f in historial]
             fecha = [datetime.fromtimestamp(f.get("time")) for f in historial]
