@@ -6,7 +6,8 @@ import requests
 import logging
 from emoji import emojize
 
-from telegram.ext import CommandHandler, MessageHandler, Filters
+from telegram.ext import CommandHandler, MessageHandler, Filters, CallbackQueryHandler
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 from django_telegrambot.apps import DjangoTelegramBot
 from django.conf import settings
 
@@ -59,6 +60,100 @@ def usuario_nuevo(update):
     except Exception as E:
         print(E)
     return True
+
+
+def pru(bot, update):
+    bot.sendMessage(update.message.chat_id, text="Opcion 1")
+    return True
+
+
+def ban(bot, update):
+    # Cuando banean a alguien
+
+    return True
+
+
+def prueba_boton(bot, update):
+    from telegram import InlineKeyboardButton, InlineKeyboardMarkup
+
+    keyboard = [[InlineKeyboardButton("Option 1", callback_data='1'),
+                 InlineKeyboardButton("Option 2", callback_data='2')],
+                [InlineKeyboardButton("Option 3", callback_data='3')]]
+
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    update.message.reply_text('Seleccione una Opccion:', reply_markup=reply_markup)
+
+
+def button(bot, update):
+    query = update.callback_query
+
+    bot.edit_message_text(text="La opcion fue: {}".format(query.data),
+            chat_id=query.message.chat_id,
+            message_id=query.message.message_id
+            )
+
+def ayuda_set_alarma():
+    response = """
+    Te doy una mano con eso:
+
+    - Las Alarmas son:
+
+        - set_alarma_bitcoin
+        - set_alarma_dolartoday
+        - set_alarma_ethereum
+        - set_alarma_litecoin
+
+    Ejemplo para modo de uso:
+
+    - para ver tu configuracion actual:
+        /set_alarma_bitcoin ?
+
+    - Para activar o desactivar la alarma:
+        /set_alarma_bitcoin on
+        /set_alarma_bitcoin off
+
+    - Para que la alarma te envie notificacion cada ciertos minutos:
+        /set_alarma_bitcoin 30min
+
+    - Para que te envie una notificacion cuando el precio suba o baje un determinado porcentaje:
+        /set_alarma_bitcoin  5%
+
+    Nota: Una buena opcion podria ser activar ambas condiciones, te envie un mensaje siempre y cuando se cumplan cualquiera de las 2 opciones, es decir cuando pasen algunos minutos u horas o el precio suba o baje, en este caso podrias  hacer lo siguiente:
+        /set_alarma_bitcoin 30min
+        /set_alarma_bitcoin 2%
+    """
+    return response
+
+
+def button_alarmas(bot, update):
+    response = ""
+    username = update.callback_query.from_user.username
+    chat_id = update.callback_query.from_user.id
+    texto = update.callback_query.message.text
+    alerta = texto[texto.find("[", 0)+1: texto.find("]", 1)]
+
+    query = update.callback_query
+
+    if query.data == 'Activar':
+        obj_alerta = Alerta.objects.get(comando__icontains=alerta)
+        buscar_o_crear = AlertaUsuario.objects.get_or_create(
+                alerta=obj_alerta, chat_id=chat_id)[0]
+
+        buscar_o_crear.estado = 'A'
+        buscar_o_crear.chat_username = username
+        buscar_o_crear.save()
+
+        response = "Alarma {0} Activada".format(alerta)
+
+    elif query.data == 'Ayuda':
+        response =  ayuda_set_alarma()
+
+    elif query.data == 'Cancelar':
+        response = "Opcion cancelada"
+
+    bot.edit_message_text(text=response,
+            chat_id=query.message.chat_id,
+            message_id=query.message.message_id)
 
 
 def get_price(url):
@@ -115,7 +210,6 @@ def calc(bot, update):
     market = 'coinbase'
     parameters = update.message.text
     cadena_sin_el_comando = ' '.join(parameters.split()[1:])
-    # import ipdb; ipdb.set_trace() # BREAKPOINT
     params = cadena_sin_el_comando.split() if \
             len(cadena_sin_el_comando.split()) == 2 else []
 
@@ -457,7 +551,7 @@ def help(bot, update):
 
     /allcoins - Precios de varias criptos
     /bitcoin - Muestra el Precio(segun coinbase)
-    /calc - <coin_ticker> <monto> Ej: /calc btc 0.1
+    /clc - <coin_ticker> <monto> Ej: /clc btc 0.1
     /dolartoday
     /macro - La suma de 2 mas 2 es [2+2]
 
@@ -572,35 +666,14 @@ def set_alarma(bot, update, alerta):
         else:
             response = "El Comando es xx% , Ejemplo 5%"
     else:
-        response = """
-        Te doy una mano con eso:
+        keyboard = [[InlineKeyboardButton("Activar", callback_data='Activar'),
+                    InlineKeyboardButton("Desactivar", callback_data='Desactivar')],
+                    [InlineKeyboardButton("Ayuda", callback_data='Ayuda'),
+                    InlineKeyboardButton("Regresar", callback_data='Cancelar')]]
 
-        - Las Alarmas son:
-
-            - set_alarma_bitcoin
-            - set_alarma_dolartoday
-            - set_alarma_ethereum
-            - set_alarma_litecoin
-
-        Ejemplo para modo de uso:
-
-        - para ver tu configuracion actual:
-            /set_alarma_bitcoin ?
-
-        - Para activar o desactivar la alarma:
-            /set_alarma_bitcoin on
-            /set_alarma_bitcoin off
-
-        - Para que la alarma te envie notificacion cada ciertos minutos:
-            /set_alarma_bitcoin 30min
-
-        - Para que te envie una notificacion cuando el precio suba o baje un determinado porcentaje:
-            /set_alarma_bitcoin  5%
-
-        Nota: Una buena opcion podria ser activar ambas condiciones, te envie un mensaje siempre y cuando se cumplan cualquiera de las 2 opciones, es decir cuando pasen algunos minutos u horas o el precio suba o baje, en este caso podrias  hacer lo siguiente:
-            /set_alarma_bitcoin 30min
-            /set_alarma_bitcoin 2%
-        """
+        reply_markup = InlineKeyboardMarkup(keyboard)
+        update.message.reply_text('No indicastes ninguna opcion para [{0}], que deseas hacer?:'.format(alerta), reply_markup=reply_markup)
+        return True
 
     bot.sendMessage(update.message.chat_id, text=response)
 
@@ -648,6 +721,9 @@ def main():
     # on different commands - answer in Telegram
     dp.add_handler(CommandHandler("start", start))
 
+    dp.add_handler(CommandHandler("boton", prueba_boton))
+    # dp.add_handler(CallbackQueryHandler(button))
+
     dp.add_handler(CommandHandler("help", help))
     dp.add_handler(CommandHandler("ayuda", help))
     dp.add_handler(CommandHandler("?", help))
@@ -662,9 +738,13 @@ def main():
     dp.add_handler(CommandHandler("chart", historico))
 
     dp.add_handler(CommandHandler("calc", calc))
+    dp.add_handler(CommandHandler("clc", calc))
+
     dp.add_handler(CommandHandler("bitcoin", bitcoin))
     dp.add_handler(CommandHandler("satoshitango", bitcoin_satoshitango))
     dp.add_handler(CommandHandler("set_alarma_bitcoin", set_alarma_bitcoin))
+    dp.add_handler(CallbackQueryHandler(button_alarmas))
+
     dp.add_handler(CommandHandler("set_alarma_dolartoday", set_alarma_dolartoday))
     dp.add_handler(CommandHandler("set_alarma_ethereum", set_alarma_ethereum))
     dp.add_handler(CommandHandler("set_alarma_litecoin", set_alarma_litecoin))

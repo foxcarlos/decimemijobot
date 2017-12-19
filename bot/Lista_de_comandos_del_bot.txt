@@ -2,7 +2,7 @@ autor - Acerca de
 help - Lista de comandos disponibles
 precio - <coin_ticker> <Market> Ej: /precio btc coinbase
 grafico - <coin_ticker> <market>
-calc - <coin_ticker> <monto> - Calcula el valor del BTC de un monto of coin pasado
+clc - <coin_ticker> <monto> - Calcula el valor del BTC de un monto of coin pasado
 allcoins - Precio de algunas las cripto monedas
 bitcoin - Precio actual del Bitcoin
 macro - Indique entre [ ] el calculo, Ej: [2+2]
