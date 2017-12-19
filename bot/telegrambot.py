@@ -134,24 +134,33 @@ def button_alarmas(bot, update):
 
     query = update.callback_query
 
-    if query.data == 'Activar':
+    def activar_desactivar(estado):
         obj_alerta = Alerta.objects.get(comando__icontains=alerta)
         buscar_o_crear = AlertaUsuario.objects.get_or_create(
                 alerta=obj_alerta, chat_id=chat_id)[0]
 
-        buscar_o_crear.estado = 'A'
+        buscar_o_crear.estado = estado
         buscar_o_crear.chat_username = username
         buscar_o_crear.save()
+        response = "{0} Alarma {1} {2}".format(
+                ':bell:' if estado=='A' else ':no_bell:',
+                alerta,
+                'Activada' if estado=='A' else 'Desactivada')
+        return response
 
-        response = "Alarma {0} Activada".format(alerta)
+    if query.data == 'Activar':
+        response = activar_desactivar('A')
+
+    elif query.data == 'Desactivar':
+        response = activar_desactivar('I')
 
     elif query.data == 'Ayuda':
         response =  ayuda_set_alarma()
 
     elif query.data == 'Cancelar':
-        response = "Opcion cancelada"
+        response = "Comando cancelado"
 
-    bot.edit_message_text(text=response,
+    bot.edit_message_text(text=emojize(response, use_aliases=True),
             chat_id=query.message.chat_id,
             message_id=query.message.message_id)
 
