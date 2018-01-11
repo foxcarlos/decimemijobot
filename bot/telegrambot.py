@@ -61,21 +61,38 @@ def usuario_nuevo(update):
         print(E)
     return True
 
+def es_admin(bot, update):
+    es_admin = False
 
-def pru(bot, update):
-    bot.sendMessage(update.message.chat_id, text="Opcion 1")
-    return True
+    # Si se invoco desde un grupo
+    chat_id = update.message.chat.id
+    chat_tipo = update.message.chat.type
+    chat_username = update.message.chat.username
+    chat_first_name = update.message.chat.first_name
+    chat_titulo_grupo = update.message.chat.title
 
+    # Quien Ejecuto el comando
+    user = update.message.from_user
+    id_ = user.id
+    username = user.username
+    cuenta_real = user.name
+
+    if chat_tipo != "private":
+        obj_chat_administradores = bot.get_chat_administrators(chat_id)
+        lista_id_admin = [f.user.id for f in obj_chat_administradores]
+        es_admin = id_ in lista_id_admin
+
+    return es_admin
 
 def ban(bot, update):
     # Cuando banean a alguien
-
     return True
 
 
 def prueba_boton(bot, update):
     from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 
+    chat_administradores = update.message.chat.get_administrators()
     keyboard = [[InlineKeyboardButton("Option 1", callback_data='1'),
                  InlineKeyboardButton("Option 2", callback_data='2')],
                 [InlineKeyboardButton("Option 3", callback_data='3')]]
@@ -135,6 +152,18 @@ def button_alarmas(bot, update):
     query = update.callback_query
 
     def activar_desactivar(estado):
+        if update.callback_query.message.chat.type == 'private':
+            username = update.callback_query.message.chat.username
+            chat_id = update.callback_query.message.chat.id
+
+        elif update.callback_query.message.chat.type == 'group':
+            username = update.callback_query.message.chat.title
+            chat_id = update.callback_query.message.chat.id
+
+        elif update.callback_query.message.chat.type == 'supergroup':
+            username = update.callback_query.message.chat.username
+            chat_id = update.callback_query.message.chat.id
+
         obj_alerta = Alerta.objects.get(comando__icontains=alerta)
         buscar_o_crear = AlertaUsuario.objects.get_or_create(
                 alerta=obj_alerta, chat_id=chat_id)[0]
@@ -291,6 +320,10 @@ def get_historico(lista_params):
 
             plt.rcParams['axes.facecolor'] = 'black'
             lines = plt.plot(fecha, close)
+            labels = [f.strftime("%b %d") for f in fecha]
+            plt.subplots_adjust(bottom=0.25)
+            plt.xticks(fecha, labels, rotation='vertical')
+
             plt.setp(lines, color='y', linewidth=2.0)
             plt.xlabel("Fecha", fontsize=14, color='blue')
             plt.ylabel("Precio", fontsize=14, color='blue')
@@ -341,7 +374,7 @@ def price(bot, update):
 
     if params:
         coin_ticker, market = params if len(params)>=2 else (''.join(params), '')
-        prepare_coin_ticker = "?fsym={0}&tsym=USD".format(coin_ticker)
+        prepare_coin_ticker = "?fsym={0}&tsym=USD".format(coin_ticker.upper())
         url = "{0}{1}".format(URL_PRICE_USD, prepare_coin_ticker)
 
         inf_btc = requests.get(url).json().get("Data")
@@ -565,6 +598,7 @@ def help(bot, update):
     /macro - La suma de 2 mas 2 es [2+2]
 
     /set_alarma_bitcoin - Configura alertas
+    /set_alarma_dolartoday - Configura alertas
     /set_alarma_ethereum - Configura alertas
     /set_alarma_litecoin - Configura alertas
 
@@ -577,10 +611,18 @@ def help(bot, update):
     /grafico <coin_ticker> <market>
     """
     user_first_name = update.message.from_user.first_name
-    response = '{0} - {1}'.format(user_first_name,
-            msg_response)
+    user_chat_id = update.message.from_user.id
 
-    bot.sendMessage(update.message.chat_id, text=response)
+    if valida_permiso_comando(bot, update):
+        user_chat_id = update.message.chat_id
+    else:
+        user_chat_id = update.message.chat_id
+        response = "{0}, Te envie la informacion al privado".format(user_first_name)
+        bot.sendMessage(user_chat_id, text=response)
+        user_chat_id = update.message.from_user.id
+
+    response = '{0} - {1}'.format(user_first_name, msg_response)
+    bot.sendMessage(user_chat_id, text=response)
 
 
 def me(bot, update):
@@ -602,28 +644,52 @@ def porno(bot, update):
     response = "Uhmmm! no se que intentas buscar, googlealo mejor"
     bot.sendMessage(update.message.chat_id, text=response)
 
+def valida_permiso_comando(bot, update):
+    response = False
+    if update.message.chat.type == 'private':
+        response = True
+    else:
+        if es_admin(bot, update):
+            response = True
+        else:
+            texto = ":no_entry_sign: Lo siento, solo los Admin del grupo pueden ejecutar este comando, \n:speaker: Intenta hacerlo en privado al bot"
+            bot.sendMessage(update.message.chat_id, text=emojize(texto, use_aliases=True))
+            response = False
+    return response
 
 def set_alarma_dolartoday(bot, update):
-    set_alarma(bot, update, "dolartoday")
-
+    if valida_permiso_comando(bot, update):
+        set_alarma(bot, update, "dolartoday")
 
 def set_alarma_bitcoin(bot, update):
-    set_alarma(bot, update, "bitcoin")
-
+    if valida_permiso_comando(bot, update):
+        set_alarma(bot, update, "bitcoin")
 
 def set_alarma_ethereum(bot, update):
-    set_alarma(bot, update, "ethereum")
-
+    if valida_permiso_comando(bot, update):
+        set_alarma(bot, update, "ethereum")
 
 def set_alarma_litecoin(bot, update):
-    set_alarma(bot, update, "litecoin")
-
+    if valida_permiso_comando(bot, update):
+        set_alarma(bot, update, "litecoin")
 
 def set_alarma(bot, update, alerta):
     response = ""
     parameters = update.message.text
-    username = update.message.from_user.username
-    chat_id = update.message.from_user.id
+
+    if update.message.chat.type == 'private':
+        username = update.message.from_user.username
+        chat_id = update.message.from_user.id
+
+    elif update.message.chat.type == 'group':
+        username = update.message.chat.title
+        chat_id = update.message.chat.id
+
+    elif update.message.chat.type == 'supergroup':
+        username = update.message.chat.username
+        chat_id = update.message.chat.id
+
+
     cadena_sin_el_comando = ' '.join(parameters.split()[1:])
     obj_alerta = Alerta.objects.get(comando__icontains=alerta)
     buscar_o_crear = AlertaUsuario.objects.get_or_create(

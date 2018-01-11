@@ -4,10 +4,10 @@ precio - <coin_ticker> <Market> Ej: /precio btc coinbase
 grafico - <coin_ticker> <market>
 clc - <coin_ticker> <monto> - Calcula el valor del BTC de un monto of coin pasado
 allcoins - Precio de algunas las cripto monedas
-bitcoin - Precio actual del Bitcoin
+bitcoin - Precio Bitcoin
 macro - Indique entre [ ] el calculo, Ej: [2+2]
-dolartoday - Precio actual del Dolar Venezuela
+dolartoday - Precio del Dolar Venezuela
 set_alarma_bitcoin - <estado> Ej: /set_alarma_bitcoin on
+set_alarma_dolartoday - <estado> Ej: /set_alarma_bitcoin on
 set_alarma_ethereum - <estado> Ej: /set_alarma_ethereum on
 set_alarma_litecoin - <estado> Ej: /set_alarma_litecoin on
-
