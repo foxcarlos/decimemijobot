@@ -86,6 +86,7 @@ def es_admin(bot, update):
 
 def ban(bot, update):
     # Cuando banean a alguien
+    # kickChatMember(chat_id, user_id, tiempo)
     return True
 
 
@@ -623,6 +624,7 @@ def help(bot, update):
 
     response = '{0} - {1}'.format(user_first_name, msg_response)
     bot.sendMessage(user_chat_id, text=response)
+    usuario_nuevo(update)
 
 
 def me(bot, update):
@@ -751,6 +753,7 @@ def set_alarma(bot, update, alerta):
         return True
 
     bot.sendMessage(update.message.chat_id, text=response)
+    usuario_nuevo(update)
 
 
 def start(bot, update):
