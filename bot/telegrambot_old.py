@@ -50,15 +50,15 @@ def usuario_nuevo(update):
             hasattr(update.message.from_user, "language_code") else ""
 
     try:
-        user = User.objects.update_or_create(chat_id=id_user)[0]
-        user.username=usuario
-        user.first_name=nombre
-        user.last_name=apellido
-        user.save()
-
+        User.objects.update_or_create(
+            chat_id=id_user,
+            username=usuario,
+            first_name=nombre,
+            last_name=apellido,
+            language_code=codigo_leng
+            )
     except Exception as E:
         print(E)
-
     return True
 
 def es_admin(bot, update):
@@ -84,39 +84,11 @@ def es_admin(bot, update):
 
     return es_admin
 
-def buscar_usuario_id(nombre):
-    usuario = User.objects.filter(username__icontains=nombre)
-    return usuario.chat_id if usuario else 0
-
 def ban(bot, update):
     # Cuando banean a alguien
     # kickChatMember(chat_id, user_id, tiempo)
-    # unbanChatMember
-    # getChatMembersCount
-    # bot.unban_chat_member(update.message.chat_id, 389701475)
-    parameters = update.message.text
-    cadena_sin_el_comando = ' '.join(parameters.split()[1:])
-    usuario = cadena_sin_el_comando.replace('@','')
-    response = ''
-
-    if es_admin(bot, update):
-        print('Es Administrador')
-        id_usuario = buscar_usuario_id(usuario)
-        if id_usuario:
-            bot.ban_chat_member(update.message.chat_id, id_usuario)
-            response = 'Usuario {0} expulsado por {1}'.format(usuario, update.message.from_user.username)
-        else:
-            response = 'No fue posible expulsar el usuario {0} con el id {1}'.format(usuario, id_usuario)
-    else:
-        response = '_{0}_, Solo los usuarios *Admin* pueden usar este comando'.format(update.message.from_user.username)
-
-    bot.sendMessage(update.message.chat_id, parse_mode="Markdown", text=response)
     return True
 
-def unban(bot, update):
-    # Cuando banean a alguien
-    # kickChatMember(chat_id, user_id, tiempo)
-    return True
 
 def prueba_boton(bot, update):
     from telegram import InlineKeyboardButton, InlineKeyboardMarkup
@@ -144,9 +116,10 @@ def ayuda_set_alarma():
 
     - Las Alarmas son:
 
-    - set_alarma_bitcoin
-    - set_alarma_ethereum
-    - set_alarma_litecoin
+        - set_alarma_bitcoin
+        - set_alarma_dolartoday
+        - set_alarma_ethereum
+        - set_alarma_litecoin
 
     Ejemplo para modo de uso:
 
@@ -199,7 +172,7 @@ def button_alarmas(bot, update):
         buscar_o_crear.estado = estado
         buscar_o_crear.chat_username = username
         buscar_o_crear.save()
-        response = "{0} Alarma *{1}* _{2}_".format(
+        response = "{0} Alarma {1} {2}".format(
                 ':bell:' if estado=='A' else ':no_bell:',
                 alerta,
                 'Activada' if estado=='A' else 'Desactivada')
@@ -217,7 +190,7 @@ def button_alarmas(bot, update):
     elif query.data == 'Cancelar':
         response = "Comando cancelado"
 
-    bot.edit_message_text(parse_mode="Markdown", text=emojize(response, use_aliases=True),
+    bot.edit_message_text(text=emojize(response, use_aliases=True),
             chat_id=query.message.chat_id,
             message_id=query.message.message_id)
 
@@ -242,14 +215,14 @@ def all_coins(bot, update):
     xrp = get_price_coinmarketcap(URL_XRP_USD)
 
     response = """:speaker: Cripto Monedas hoy (Coinbase ):\n\n\
-    :dollar: *BTC*={0:0,.2f}\n\
-    :dollar: *ETH*={1:0,.2f}\n\
-    :dollar: *LTC*={2:0,.2f}\n\
-    :dollar: *BTCASH*={3:0,.2f}\n\
-    :dollar: *DASH*={4:0,.2f}\n\
-    :dollar: *BTGOLD*={5:0,.2f}\n\
-    :dollar: *RIPPLE*={6:0,.2f}\n\
-    :dollar: *MONERO*={7:0,.2f}""".format(
+            :dollar: BTC={0:0,.2f}\n\
+            :dollar: ETH={1:0,.2f}\n\
+            :dollar: LTC={2:0,.2f}\n\
+            :dollar: BTCASH={3:0,.2f}\n\
+            :dollar: DASH={4:0,.2f}\n\
+            :dollar: BTGOLD={5:0,.2f}\n\
+            :dollar: RIPPLE={6:0,.2f}\n\
+            :dollar: MONERO={7:0,.2f}""".format(
                     float(btc),
                     float(eth),
                     float(ltc),
@@ -260,7 +233,7 @@ def all_coins(bot, update):
                     float(xmr)
                     )
 
-    bot.sendMessage(update.message.chat_id, parse_mode="Markdown", text=emojize(response, use_aliases=True))
+    bot.sendMessage(update.message.chat_id, text=emojize(response, use_aliases=True))
     usuario_nuevo(update)
 
 
@@ -280,7 +253,7 @@ def calc(bot, update):
             len(cadena_sin_el_comando.split()) == 2 else []
 
     if not params:
-        response = "*{0}* Debes indicar */clc coin_ticker monto*\n\n_Ej_: /clc btc 0.0002 \n\nSi desea calcular VEF a bitcoin y Dolar ejecute\n\n/clc vef 2500000".format(":question:")
+        response = "{0} Debes indicar /calc coin_ticker monto\n\nEj: /calc btc 0.0002 \n\nSi desea calcular VEF a bitcoin y Dolar ejecute\n\n/calc vef 2500000".format(":question:")
     else:
         moneda, monto = params
         data = get_price_usd_eur(moneda, market)
@@ -298,7 +271,7 @@ def calc(bot, update):
             response = """:moneybag: El calculo para {0} es de :\n\n:chart_with_downwards_trend: BTC: {1:,.9f}\n:dollar: Dolares: {2:,.2f}\n\nNota: Precios basados en: {3} y VEF en (DolarToday) """.format(
                 monto, total_btc, total_dolar, market.capitalize())
 
-    bot.sendMessage(update.message.chat_id, parse_mode="Markdown", text=emojize(response,
+    bot.sendMessage(update.message.chat_id, text=emojize(response,
         use_aliases=True))
     # bot.sendMessage(update.message.chat_id, "<b>This</b> <i>is some Text</i>", DjangoTelegramBot.ParseMode.HTML)
     usuario_nuevo(update)
@@ -410,9 +383,9 @@ def price(bot, update):
 
 
     if not cadena_sin_el_comando:
-        response = "*{0}* Debes indicar _/precio modena y market_ Ej: */precio btc bitfinex*".format(":question:",
+        response = "{0} Debes indicar /precio modena y market Ej: /precio btc bitfinex".format(":question:",
                 cadena_sin_el_comando.upper())
-        bot.sendMessage(update.message.chat_id, parse_mode="Markdown", text=emojize(response, use_aliases=True))
+        bot.sendMessage(update.message.chat_id, text=emojize(response, use_aliases=True))
         return False
 
     if not exchanges_btc:
@@ -448,7 +421,7 @@ def price(bot, update):
 
         if market.lower() in exchanges:
             response += """
-                    {0} *{1}*\n\
+                    {0} {1}\n\
                     USD:{2:0,.2f}\n\
                     24h H:{3:0,.2f}\n\
                     24h L:{4:0,.2f}\n\
@@ -461,7 +434,7 @@ def price(bot, update):
                             float(h24l),
                             float(volumen))
 
-    bot.sendMessage(update.message.chat_id, parse_mode = "Markdown", text=emojize(response,
+    bot.sendMessage(update.message.chat_id, text=emojize(response,
         use_aliases=True))
     usuario_nuevo(update)
 
@@ -480,9 +453,9 @@ def bitcoin(bot, update):
     user_first_name = update.message.from_user.first_name
 
     btc = get_price(URL_BTC_USD)
-    response = '*{0}* El precio del Bitcoin es: *{1:0,.2f}* USD'.\
+    response = '{0} El precio del Bitcoin es: {1:0,.2f} USD'.\
             format(user_first_name, float(btc))
-    bot.sendMessage(update.message.chat_id, parse_mode="Markdown", text=response)
+    bot.sendMessage(update.message.chat_id, text=response)
     usuario_nuevo(update)
 
 
@@ -528,11 +501,11 @@ def calcular(bot, update):
 
     cadena = ' '.join([evaluar(palabra) for palabra in cadena_sin_el_comando.split()])
     if not cadena:
-        cadena = 'Tienes que indicar un calculo entre [ ] *Ej: /macro [2+2]*'
+        cadena = 'Tienes que indicar un calculo entre [ ] Ej: /calcular [2+2]'
 
     response = '{0} Dice: {1} '.format(user_first_name, cadena)
 
-    bot.sendMessage(update.message.chat_id, parse_mode="Markdown", text=response)
+    bot.sendMessage(update.message.chat_id, text=response)
     usuario_nuevo(update)
 
 
@@ -561,14 +534,14 @@ def get_dolartoday2():
     fecha = datetime.now().strftime("%d-%m-%Y")
 
     response = """:speaker: DolarToday hoy: {0}:\n\n\
-    :dollar: *DolarToday*: {1:0,.2f}\n\
-    :dollar: *Implicito*: {2:0,.2f}\n\
-    :dollar: *Dicom*: {3:0,.2f}\n\
-    :dollar: *Cucuta*: {4:0,.2f}\n\
-    :dollar: *LocalBitcoin*: {5:0,.2f}\n\n\
-    :fuelpump: *Petroleo*: {6:0,.2f}\n\
-    :moneybag: *Oro*: {7:0,.2f}\n\
-        """.format(fecha,
+            :dollar: DolarToday: {1:0,.2f}\n\
+            :dollar: Implicito: {2:0,.2f}\n\
+            :dollar: Dicom: {3:0,.2f}\n\
+            :dollar: Cucuta: {4:0,.2f}\n\
+            :dollar: LocalBitcoin: {5:0,.2f}\n\n\
+            :fuelpump: Petroleo: {6:0,.2f}\n\
+            :moneybag: Oro: {7:0,.2f}\n\
+            """.format(fecha,
                     dolartoday,
                     implicito,
                     dicom,
@@ -582,10 +555,15 @@ def get_dolartoday2():
 def dolartoday(bot, update):
     print(update.message)
     user_first_name = update.message.from_user.first_name
-    bot.sendMessage(update.message.chat_id, parse_mode="Markdown", text=emojize(get_dolartoday2(),
+    bot.sendMessage(update.message.chat_id, text=emojize(get_dolartoday2(),
         use_aliases=True )
         )
     usuario_nuevo(update)
+
+
+def echo(bot, update):
+    print(update.message)
+    update.message.reply_text(update.message.text)
 
 
 def enviar_mensajes_todos(bot, update):
@@ -616,20 +594,18 @@ def help(bot, update):
 
     /allcoins - Precios de varias criptos
     /bitcoin - Muestra el Precio(segun coinbase)
+    /clc - <coin_ticker> <monto> Ej: /clc btc 0.1
     /dolartoday
     /macro - La suma de 2 mas 2 es [2+2]
 
     /set_alarma_bitcoin - Configura alertas
+    /set_alarma_dolartoday - Configura alertas
     /set_alarma_ethereum - Configura alertas
     /set_alarma_litecoin - Configura alertas
-    /set_alarma_dolartoday - Configura alertas
-
-    /precio <coin_ticker> <market> - Ej: /precio btc coinbase
-    /precio <coin_ticker> - Ej: /precio btc
 
     /help
-
-    /clc - <coin_ticker> <monto> Ej: /clc btc 0.1
+    /precio <coin_ticker> <market> - Ej: /precio btc coinbase
+    /precio <coin_ticker> - Ej: /precio btc
 
     /grafico <coin_ticker> <market> <usd o eur> <dias>
     /grafico <coin_ticker> <market> <usd>
@@ -642,8 +618,8 @@ def help(bot, update):
         user_chat_id = update.message.chat_id
     else:
         user_chat_id = update.message.chat_id
-        # response = "{0}, Te envie la informacion al privado".format(user_first_name)
-        # bot.sendMessage(user_chat_id, text=response)
+        response = "{0}, Te envie la informacion al privado".format(user_first_name)
+        bot.sendMessage(user_chat_id, text=response)
         user_chat_id = update.message.from_user.id
 
     response = '{0} - {1}'.format(user_first_name, msg_response)
@@ -656,6 +632,20 @@ def me(bot, update):
     bot.sendMessage(update.message.chat_id,
             text='Tu informacion:\n{}'.format(update.effective_user))
 
+
+def panorama_sucesos(bot, update):
+    print(update.message)
+    bot.sendMessage(update.message.chat_id, text="En un momento te muestro la informacion...!")
+    noti = NoticiasPanorama()
+    response = noti.sucesos()
+
+    bot.sendMessage(update.message.chat_id, text=response)
+
+
+def porno(bot, update):
+    response = "Uhmmm! no se que intentas buscar, googlealo mejor"
+    bot.sendMessage(update.message.chat_id, text=response)
+
 def valida_permiso_comando(bot, update):
     response = False
     if update.message.chat.type == 'private':
@@ -664,7 +654,7 @@ def valida_permiso_comando(bot, update):
         if es_admin(bot, update):
             response = True
         else:
-            texto = ":no_entry_sign: Lo siento, solo los Admin del grupo pueden ejecutar este comando, \n:speaker: Intenta hacerlo en privado al bot https://t.me/peru_bot/?start=true"
+            texto = ":no_entry_sign: Lo siento, solo los Admin del grupo pueden ejecutar este comando, \n:speaker: Intenta hacerlo en privado al bot"
             bot.sendMessage(update.message.chat_id, text=emojize(texto, use_aliases=True))
             response = False
     return response
@@ -769,16 +759,16 @@ def set_alarma(bot, update, alerta):
 def start(bot, update):
     # print(update.message)
     bot.sendMessage(update.message.chat_id,
-            text='Bienvenido al grupo, te invito a ejecutar el comando /reglas para conocer las reglas principales del grupo,\
-            /help para obtener mas ayuda')
+            text='Que fue mijo como estais!, Soy el BOT Maracucho,\
+            /help pa que veais lo que puedo hacer')
     usuario_nuevo(update)
 
 
 def startgroup(bot, update):
     print(update.message)
     bot.sendMessage(update.message.chat_id,
-            text='Bienvenido al grupo, te invito a ejecutar /reglas para conocer las reglas principales del grupo,\
-            /help para obtener mas ayuda')
+            text='Que fue mijos como estan! ,\
+            /help para que vean lo que puedo hacer')
     usuario_nuevo(update)
 
 
@@ -792,54 +782,10 @@ def valida_root(update):
     else:
         return False
 
-def reglas(bot, update):
-    bot.send_message(chat_id=update.message.chat_id, text="Lo siento, Aun se definen las reglas del grupo.")
-
-def echo(bot, update):
-    print("Eco")
-    print(update.message)
-    # update.message.reply_text(update.message.text)
-    usuario_nuevo(update)
 
 def unknown(bot, update):
     bot.send_message(chat_id=update.message.chat_id, text="Lo siento, No reconozco ese comando.")
 
-def nuevo_miembro(bot, update):
-    grupo = update.message.chat
-    nuevo_usuario = update.message.new_chat_member
-
-    id_ = nuevo_usuario.id
-    username = nuevo_usuario.username
-    nombre = nuevo_usuario.first_name
-    msg_html = """
-    *Bienvenido {0} al grupo {1}*\n
-    :small_blue_diamond: Id: *{2}*\n
-    :small_blue_diamond: Usuario: *{3}*\n
-    :small_blue_diamond: Nombre: *{4}*\n
-    """.format(username, grupo.title, id_, username, nombre)
-    if not username:
-        msg_html+= "*@{0}* Por politicas del Grupo es necesario que configures un alias\n"
-    bot.send_message(chat_id=update.message.chat_id, parse_mode = "Markdown", text=emojize(msg_html, use_aliases=True))
-
-    usuario_nuevo(update)
-
-def abandono_grupo(bot, update):
-    grupo = update.message.chat
-    nuevo_usuario = update.message.left_chat_member
-
-    id_ = nuevo_usuario.id
-    username = nuevo_usuario.username
-    nombre = nuevo_usuario.first_name
-    msg_html = """
-    <b style="color:red;" >Ups..!  {0} salio del grupo {1} </b>
-
-    <ul style="list-style-type:disc">
-    <li>Id: {0}</li>
-    <li>Usuario: {2}/li>
-    <li>Nombre: {3}</li>
-    </ul> """.format(username, grupo.title, username, nombre)
-
-    bot.send_message(chat_id=update.message.chat_id, parse_mode = "html", text=msg_html)
 
 def main():
     logger.info("Loading handlers for telegram bot")
@@ -852,9 +798,6 @@ def main():
 
     # on different commands - answer in Telegram
     dp.add_handler(CommandHandler("start", start))
-    dp.add_handler(CommandHandler("reglas", reglas))
-    dp.add_handler(CommandHandler("ban", ban))
-    dp.add_handler(CommandHandler("unban", unban))
 
     dp.add_handler(CommandHandler("boton", prueba_boton))
     # dp.add_handler(CallbackQueryHandler(button))
@@ -895,8 +838,6 @@ def main():
     dp.add_handler(MessageHandler(Filters.command, unknown))
     # on noncommand i.e message - echo the message on Telegram
     dp.add_handler(MessageHandler(Filters.text, echo))
-    # dp.add_handler(MessageHandler(Filters.status_update, abandono_grupo))
-    dp.add_handler(MessageHandler(Filters.status_update.new_chat_members, nuevo_miembro))
 
     # log all errors
     dp.add_error_handler(error)

@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 from __future__ import unicode_literals
 
 from django.db import models
@@ -15,7 +18,7 @@ class User(models.Model):
     language_code = models.CharField(max_length=50, blank=True, null=True,)
 
     def __str__(self):
-        return self.username
+        return u'{0}'.format(self.username)
 
     class Meta:
         '''.'''
