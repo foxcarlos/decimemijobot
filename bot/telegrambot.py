@@ -199,7 +199,7 @@ def button_alarmas(bot, update):
         buscar_o_crear.estado = estado
         buscar_o_crear.chat_username = username
         buscar_o_crear.save()
-        response = "{0} Alarma *{1}* _{2}_".format(
+        response = "{0} Alarma <b>{1}</b> <i>{2}</i>".format(
                 ':bell:' if estado=='A' else ':no_bell:',
                 alerta,
                 'Activada' if estado=='A' else 'Desactivada')
@@ -217,7 +217,7 @@ def button_alarmas(bot, update):
     elif query.data == 'Cancelar':
         response = "Comando cancelado"
 
-    bot.edit_message_text(parse_mode="Markdown", text=emojize(response, use_aliases=True),
+    bot.edit_message_text(parse_mode="HTML", text=emojize(response, use_aliases=True),
             chat_id=query.message.chat_id,
             message_id=query.message.message_id)
 
@@ -231,7 +231,9 @@ def get_price_coinmarketcap(url):
 
 
 def all_coins(bot, update):
-    bot.sendMessage(update.message.chat_id, text="Consultando... En un momento te muestro la informacion...!")
+    # bot.sendMessage(update.message.chat_id, text="Consultando... En un momento te muestro la informacion...!")
+    bot.sendChatAction(update.message.chat_id, "upload_document")
+
     btc = get_price(URL_BTC_USD)
     eth = get_price(URL_ETH_USD)
     ltc = get_price(URL_LTC_USD)
