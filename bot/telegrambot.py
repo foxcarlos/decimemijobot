@@ -89,11 +89,7 @@ def buscar_usuario_id(nombre):
     return usuario.chat_id if usuario else 0
 
 def ban(bot, update):
-    # Cuando banean a alguien
-    # kickChatMember(chat_id, user_id, tiempo)
-    # unbanChatMember
-    # getChatMembersCount
-    # bot.unban_chat_member(update.message.chat_id, 389701475)
+    import ipdb; ipdb.set_trace() # BREAKPOINT
     parameters = update.message.text
     cadena_sin_el_comando = ' '.join(parameters.split()[1:])
     usuario = cadena_sin_el_comando.replace('@','')
@@ -103,7 +99,7 @@ def ban(bot, update):
         print('Es Administrador')
         id_usuario = buscar_usuario_id(usuario)
         if id_usuario:
-            bot.ban_chat_member(update.message.chat_id, id_usuario)
+            update.message.chat.kick_member(id_usuario)
             response = 'Usuario {0} expulsado por {1}'.format(usuario, update.message.from_user.username)
         else:
             response = 'No fue posible expulsar el usuario {0} con el id {1}'.format(usuario, id_usuario)
@@ -114,8 +110,24 @@ def ban(bot, update):
     return True
 
 def unban(bot, update):
-    # Cuando banean a alguien
-    # kickChatMember(chat_id, user_id, tiempo)
+    import ipdb; ipdb.set_trace() # BREAKPOINT
+    parameters = update.message.text
+    cadena_sin_el_comando = ' '.join(parameters.split()[1:])
+    usuario = cadena_sin_el_comando.replace('@','')
+    response = ''
+
+    if es_admin(bot, update):
+        print('Es Administrador')
+        id_usuario = buscar_usuario_id(usuario)
+        if id_usuario:
+            update.message.chat.kick_member(id_usuario)
+            response = 'Usuario {0} expulsado por {1}'.format(usuario, update.message.from_user.username)
+        else:
+            response = 'No fue posible desbanear el usuario {0} con el id {1}'.format(usuario, id_usuario)
+    else:
+        response = '_{0}_, Solo los usuarios *Admin* pueden usar este comando'.format(update.message.from_user.username)
+
+    bot.sendMessage(update.message.chat_id, parse_mode="Markdown", text=response)
     return True
 
 def prueba_boton(bot, update):
@@ -820,7 +832,8 @@ def nuevo_miembro(bot, update):
     :small_blue_diamond: Nombre: *{4}*\n
     """.format(username, grupo.title, id_, username, nombre)
     if not username:
-        msg_html+= "*@{0}* Por politicas del Grupo es necesario que configures un alias\n"
+        msg_html+= "*{0}* Por politicas del Grupo es necesario que configures un alias @{1}\n".format(nombre, id_)
+
     bot.send_message(chat_id=update.message.chat_id, parse_mode = "Markdown", text=emojize(msg_html, use_aliases=True))
 
     usuario_nuevo(update)
@@ -833,12 +846,12 @@ def abandono_grupo(bot, update):
     username = nuevo_usuario.username
     nombre = nuevo_usuario.first_name
     msg_html = """
-    <b style="color:red;" >Ups..!  {0} salio del grupo {1} </b>
+    <b>Ups..!  {0} salio del grupo {1} </b>
 
-    <ul style="list-style-type:disc">
-    <li>Id: {0}</li>
-    <li>Usuario: {2}/li>
-    <li>Nombre: {3}</li>
+    <ul>
+        <li>Id: {0}</li>
+        <li>Usuario: {2}/li>
+        <li>Nombre: {3}</li>
     </ul> """.format(username, grupo.title, username, nombre)
 
     bot.send_message(chat_id=update.message.chat_id, parse_mode = "html", text=msg_html)
