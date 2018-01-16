@@ -133,7 +133,7 @@ def unban(bot, update):
 def prueba_boton(bot, update):
     from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 
-    chat_administradores = update.message.chat.get_administrators()
+    # chat_administradores = update.message.chat.get_administrators()
     keyboard = [[InlineKeyboardButton("Option 1", callback_data='1'),
                  InlineKeyboardButton("Option 2", callback_data='2')],
                 [InlineKeyboardButton("Option 3", callback_data='3')]]
@@ -141,14 +141,36 @@ def prueba_boton(bot, update):
     reply_markup = InlineKeyboardMarkup(keyboard)
     update.message.reply_text('Seleccione una Opccion:', reply_markup=reply_markup)
 
-
-def button(bot, update):
+def callback_button(bot, update):
     query = update.callback_query
 
+    import ipdb; ipdb.set_trace() # BREAKPOINT
     bot.edit_message_text(text="La opcion fue: {}".format(query.data),
             chat_id=query.message.chat_id,
             message_id=query.message.message_id
             )
+    if query.data == '2':
+        reply_markup = opcion2_boton(bot, update)
+        # editMessageReplyMarkup
+        query.edit_message_text('Seleccione otra Opccion:', reply_markup=reply_markup)
+    return True
+
+def opcion2_boton(bot, update):
+    from telegram import InlineKeyboardButton, InlineKeyboardMarkup
+
+    # chat_administradores = update.message.chat.get_administrators()
+    keyboard = [[InlineKeyboardButton("Option 2.1", callback_data='2.1'),
+                 InlineKeyboardButton("Option 2.2", callback_data='2.2')],
+                [InlineKeyboardButton("Option 2.3", callback_data='2.3')]]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    return reply_markup
+
+def prueba_forcereply(bot, update):
+    update.message.reply_text('Cual es tu nombre:')
+
+def call_ForceReply(bot, update):
+    query = update.force_reply
+
 
 def ayuda_set_alarma():
     response = """
@@ -521,34 +543,11 @@ def bitcoin_satoshitango(bot, update):
 
 def evaluar(palabra):
     response = ""
-    if '[' and ']' in palabra:
-        try:
-            response = str(eval(palabra.replace("[", "").replace("]", ""))) + " "
-        except Exception as inst:
-            response = 'Paso algo..! ,aqui esta el error {0} \
-                    deja de invertar hace algo mas facil'.format(inst)
-    else:
-        response = palabra
+    try:
+        response = str(eval(palabra.lower().replace('x', '*'))) + " "
+    except Exception as inst:
+        response = ""
     return response
-
-
-def calcular(bot, update):
-    print(update.message)
-    parameters = update.message.text
-    user_first_name = update.message.from_user.first_name
-    cadena_sin_el_comando = ' '.join(parameters.split()[1:])
-    cadena = ""
-    response = ""
-
-    cadena = ' '.join([evaluar(palabra) for palabra in cadena_sin_el_comando.split()])
-    if not cadena:
-        cadena = 'Tienes que indicar un calculo entre [ ] *Ej: /macro [2+2]*'
-
-    response = '{0} Dice: {1} '.format(user_first_name, cadena)
-
-    bot.sendMessage(update.message.chat_id, parse_mode="Markdown", text=response)
-    usuario_nuevo(update)
-
 
 def chat(bot, update):
     print(update.message)
@@ -619,9 +618,9 @@ def error(bot, update, error):
 
 def forwarded(bot, update):
     print(update.message)
-    bot.sendMessage(update.message.chat_id,
-            text='This msg forwaded information:\n {}'.\
-                    format(update.effective_message))
+    #bot.sendMessage(update.message.chat_id,
+    #        text='This msg forwaded information:\n {}'.\
+    #                format(update.effective_message))
 
 
 def help(bot, update):
@@ -812,7 +811,9 @@ def reglas(bot, update):
 def echo(bot, update):
     print("Eco")
     print(update.message)
-    # update.message.reply_text(update.message.text)
+    m = evaluar(update.message.text)
+    if m:
+        update.message.reply_text(m)
     usuario_nuevo(update)
 
 def unknown(bot, update):
@@ -862,7 +863,6 @@ def main():
     # Default dispatcher (this is related to the first bot in settings.TELEGRAM_BOT_TOKENS)
     dp = DjangoTelegramBot.dispatcher
     # To get Dispatcher related to a specific bot
-    # dp = DjangoTelegramBot.getDispatcher('BOT_n_token')     #get by bot token
     # dp = DjangoTelegramBot.getDispatcher('BOT_n_username')  #get by bot username
 
     # on different commands - answer in Telegram
@@ -872,7 +872,7 @@ def main():
     dp.add_handler(CommandHandler("unban", unban))
 
     dp.add_handler(CommandHandler("boton", prueba_boton))
-    # dp.add_handler(CallbackQueryHandler(button))
+    dp.add_handler(CallbackQueryHandler(callback_button))
 
     dp.add_handler(CommandHandler("help", help))
     dp.add_handler(CommandHandler("ayuda", help))
@@ -898,7 +898,6 @@ def main():
     dp.add_handler(CommandHandler("set_alarma_dolartoday", set_alarma_dolartoday))
     dp.add_handler(CommandHandler("set_alarma_ethereum", set_alarma_ethereum))
     dp.add_handler(CommandHandler("set_alarma_litecoin", set_alarma_litecoin))
-    dp.add_handler(CommandHandler("macro", calcular))
     dp.add_handler(CommandHandler("dolartoday", dolartoday))
     dp.add_handler(CommandHandler("masivo", enviar_mensajes_todos))
     dp.add_handler(CommandHandler("autor", autor))
