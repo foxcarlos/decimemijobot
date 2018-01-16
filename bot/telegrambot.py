@@ -89,7 +89,6 @@ def buscar_usuario_id(nombre):
     return usuario.chat_id if usuario else 0
 
 def ban(bot, update):
-    import ipdb; ipdb.set_trace() # BREAKPOINT
     parameters = update.message.text
     cadena_sin_el_comando = ' '.join(parameters.split()[1:])
     usuario = cadena_sin_el_comando.replace('@','')
@@ -110,7 +109,6 @@ def ban(bot, update):
     return True
 
 def unban(bot, update):
-    import ipdb; ipdb.set_trace() # BREAKPOINT
     parameters = update.message.text
     cadena_sin_el_comando = ' '.join(parameters.split()[1:])
     usuario = cadena_sin_el_comando.replace('@','')
@@ -144,7 +142,6 @@ def prueba_boton(bot, update):
 def callback_button(bot, update):
     query = update.callback_query
 
-    import ipdb; ipdb.set_trace() # BREAKPOINT
     bot.edit_message_text(text="La opcion fue: {}".format(query.data),
             chat_id=query.message.chat_id,
             message_id=query.message.message_id
