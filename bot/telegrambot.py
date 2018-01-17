@@ -94,8 +94,8 @@ def ban(bot, update):
     usuario = cadena_sin_el_comando.replace('@','')
 
     if not es_admin(bot, update):
-        response = '_{0}_, Solo los usuarios *Admin* pueden usar este comando'.format(update.message.from_user.username)
-        bot.sendMessage(update.message.chat_id, parse_mode="Markdown", text=response)
+        response = ':no_entry_sign: _{0}_, Solo los usuarios *Admin* pueden usar este comando'.format(update.message.from_user.username)
+        bot.sendMessage(update.message.chat_id, parse_mode="Markdown", text=emojize(response, use_aliases=True))
         return True
 
     if update.message.reply_to_message:
@@ -116,13 +116,13 @@ def ban_from_reply(bot, update):
 
     if id_usuario_ban:
         update.message.chat.kick_member(id_usuario_ban)
-        response = 'Fuistes expulsado del grupo por *{0}*'.format(update.message.from_user.username)
-        bot.sendMessage(id_usuario_ban, parse_mode="Markdown", text=response)
-        response = 'Usuario *{0}* expulsado por _{1}_'.format(username_usuario_ban, update.message.from_user.username)
+        response = ' :rocket: Fuistes expulsado del grupo por *{0}*'.format(update.message.from_user.username)
+        bot.sendMessage(id_usuario_ban, parse_mode="Markdown", text=emojize(response, use_aliases=True ))
+        response = 'Usuario *{0}* expulsado :rocket: por _{1}_ :smiling_imp:'.format(username_usuario_ban, update.message.from_user.username)
     else:
-        response = 'No fue posible expulsar el usuario {0} con el id {1}'.format(username_usuario_ban, id_usuario_ban)
+        response = ':x: No fue posible expulsar el usuario {0} con el id {1}'.format(username_usuario_ban, id_usuario_ban)
 
-    bot.sendMessage(update.message.chat_id, parse_mode="Markdown", text=response)
+    bot.sendMessage(update.message.chat_id, parse_mode="Markdown", text=emojize(response, use_aliases=True))
     return True
 
 def unban(bot, update):

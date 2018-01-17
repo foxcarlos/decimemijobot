@@ -1,17 +1,13 @@
 autor - Acerca de
 donar - Si deseas hacer una donacion
 help - Lista de comandos disponibles
-
 bitcoin - Precio Bitcoin
 dolartoday - Precio del Dolar Venezuela
 allcoins - Precio de algunas las cripto monedas
-
 precio - <coin_ticker> <Market> Ej: /precio btc coinbase
 grafico - <coin_ticker> <market>
-
 clc - <coin_ticker> <monto> - Calcula el valor del BTC de un monto of coin pasado
 ban - banear un usuario del grupo
-
 set_alarma_bitcoin - <estado> Ej: /set_alarma_bitcoin on
 set_alarma_dolartoday - <estado> Ej: /set_alarma_bitcoin on
 set_alarma_ethereum - <estado> Ej: /set_alarma_ethereum on
