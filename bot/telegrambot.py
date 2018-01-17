@@ -92,18 +92,29 @@ def ban(bot, update):
     parameters = update.message.text
     cadena_sin_el_comando = ' '.join(parameters.split()[1:])
     usuario = cadena_sin_el_comando.replace('@','')
-    response = ''
 
-    if es_admin(bot, update):
-        print('Es Administrador')
-        id_usuario = buscar_usuario_id(usuario)
-        if id_usuario:
-            update.message.chat.kick_member(id_usuario)
-            response = 'Usuario {0} expulsado por {1}'.format(usuario, update.message.from_user.username)
-        else:
-            response = 'No fue posible expulsar el usuario {0} con el id {1}'.format(usuario, id_usuario)
-    else:
+    if not es_admin(bot, update):
         response = '_{0}_, Solo los usuarios *Admin* pueden usar este comando'.format(update.message.from_user.username)
+        bot.sendMessage(update.message.chat_id, parse_mode="Markdown", text=response)
+        return True
+
+    if update.message.reply_to_message:
+        ban_from_reply(bot, update)
+        return True
+    else:
+        # Se hizo /ban usuario
+        # ban_directo(bot, update)
+        pass
+
+def ban_from_reply(bot, update):
+    id_usuario_ban = update.message.reply_to_message.from_user.id
+    username_usuario_ban = update.message.reply_to_message.from_user.username
+
+    if id_usuario_ban:
+        update.message.chat.kick_member(id_usuario_ban)
+        response = 'Usuario {0} expulsado por {1}'.format(username_usuario_ban, update.message.from_user.username)
+    else:
+        response = 'No fue posible expulsar el usuario {0} con el id {1}'.format(username_usuario_ban, id_usuario_ban)
 
     bot.sendMessage(update.message.chat_id, parse_mode="Markdown", text=response)
     return True
