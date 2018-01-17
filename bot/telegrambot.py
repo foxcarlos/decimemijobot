@@ -915,7 +915,7 @@ def main():
     dp.add_handler(CommandHandler("dolartoday", dolartoday))
     dp.add_handler(CommandHandler("masivo", enviar_mensajes_todos))
     dp.add_handler(CommandHandler("autor", autor))
-    dp.add_handler(CommandHandler("donar, hacer_donacion))
+    dp.add_handler(CommandHandler("donar", hacer_donacion))
     dp.add_handler(CommandHandler("startgroup", startgroup))
     dp.add_handler(CommandHandler("me", me))
     dp.add_handler(CommandHandler("chat", chat))
