@@ -103,8 +103,12 @@ def ban(bot, update):
         return True
     else:
         # Se hizo /ban usuario
-        # ban_directo(bot, update)
-        pass
+        response = '*{0}*, Haz un reply de un mensaje de la personas que quieres expulsar y como comentario escribes /ban'.format(update.message.from_user.username)
+        bot.sendMessage(update.message.chat_id, parse_mode="Markdown", text=response)
+
+        file_ = open("bot/static/img/ayuda_ban_uso.png", "rb")
+        bot.sendPhoto(update.message.chat_id,  photo=file_, caption="Ejemplo de uso del comando /ban")
+      # ban_directo(bot, update)
 
 def ban_from_reply(bot, update):
     id_usuario_ban = update.message.reply_to_message.from_user.id
@@ -112,7 +116,9 @@ def ban_from_reply(bot, update):
 
     if id_usuario_ban:
         update.message.chat.kick_member(id_usuario_ban)
-        response = 'Usuario {0} expulsado por {1}'.format(username_usuario_ban, update.message.from_user.username)
+        response = 'Fuistes expulsado del grupo por *{0}*'.format(update.message.from_user.username)
+        bot.sendMessage(id_usuario_ban, parse_mode="Markdown", text=response)
+        response = 'Usuario *{0}* expulsado por _{1}_'.format(username_usuario_ban, update.message.from_user.username)
     else:
         response = 'No fue posible expulsar el usuario {0} con el id {1}'.format(username_usuario_ban, id_usuario_ban)
 
@@ -637,7 +643,8 @@ def help(bot, update):
     /precio <coin_ticker> <market> - Ej: /precio btc coinbase
     /precio <coin_ticker> - Ej: /precio btc
 
-    /help
+    /help - Ayuda
+    /donar_satohis - Si deseas hacerme alguna donacion
 
     /clc - <coin_ticker> <monto> Ej: /clc btc 0.1
 
@@ -824,6 +831,10 @@ def abandono_grupo(bot, update):
     </ul> """.format(username, grupo.title, username, nombre)
 
     bot.send_message(chat_id=update.message.chat_id, parse_mode = "html", text=msg_html)
+def hacer_donacion(bot, update):
+    file_ = open("bot/static/img/bitcoin:1EXj4afHxArsPesqFfPwYcr522JkYrPcMq?recv=LocalBitcoins.com.png", "rb")
+    bot.sendPhoto(update.message.chat_id,  photo=file_, caption="Si deseas haer una colaboracion de bitcoin puedes hacerlo a la siguiente direccion del wallet 1EXj4afHxArsPesqFfPwYcr522JkYrPcMq")
+    return True
 
 def start(bot, update):
     # print(update.message)
@@ -843,7 +854,6 @@ def error(bot, update, error):
     logger.warn('Update "%s" caused error "%s"' % (update, error))
 
 def forwarded(bot, update):
-    import ipdb; ipdb.set_trace() # BREAKPOINT
     print(update.message)
     #bot.sendMessage(update.message.chat_id,
     #        text='This msg forwaded information:\n {}'.\
@@ -905,6 +915,7 @@ def main():
     dp.add_handler(CommandHandler("dolartoday", dolartoday))
     dp.add_handler(CommandHandler("masivo", enviar_mensajes_todos))
     dp.add_handler(CommandHandler("autor", autor))
+    dp.add_handler(CommandHandler("donar_satohis", hacer_donacion))
     dp.add_handler(CommandHandler("startgroup", startgroup))
     dp.add_handler(CommandHandler("me", me))
     dp.add_handler(CommandHandler("chat", chat))
