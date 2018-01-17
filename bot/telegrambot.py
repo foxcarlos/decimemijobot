@@ -608,17 +608,6 @@ def enviar_mensajes_todos(bot, update):
         pool_message.delay(list(users), cadena_sin_el_comando)
 
 
-def error(bot, update, error):
-    print(error)
-    logger.warn('Update "%s" caused error "%s"' % (update, error))
-
-
-def forwarded(bot, update):
-    print(update.message)
-    #bot.sendMessage(update.message.chat_id,
-    #        text='This msg forwaded information:\n {}'.\
-    #                format(update.effective_message))
-
 
 def help(bot, update):
     msg_response = """
@@ -775,23 +764,6 @@ def set_alarma(bot, update, alerta):
     bot.sendMessage(update.message.chat_id, text=response)
     usuario_nuevo(update)
 
-
-def start(bot, update):
-    # print(update.message)
-    bot.sendMessage(update.message.chat_id,
-            text='Bienvenido al grupo, te invito a ejecutar el comando /reglas para conocer las reglas principales del grupo,\
-            /help para obtener mas ayuda')
-    usuario_nuevo(update)
-
-
-def startgroup(bot, update):
-    print(update.message)
-    bot.sendMessage(update.message.chat_id,
-            text='Bienvenido al grupo, te invito a ejecutar /reglas para conocer las reglas principales del grupo,\
-            /help para obtener mas ayuda')
-    usuario_nuevo(update)
-
-
 def valida_root(update):
     print(update.message)
     root = UserDjango.objects.filter(username__icontains="foxcarlos")
@@ -804,17 +776,6 @@ def valida_root(update):
 
 def reglas(bot, update):
     bot.send_message(chat_id=update.message.chat_id, text="Lo siento, Aun se definen las reglas del grupo.")
-
-def echo(bot, update):
-    print("Eco")
-    print(update.message)
-    m = evaluar(update.message.text)
-    if m:
-        update.message.reply_text(m)
-    usuario_nuevo(update)
-
-def unknown(bot, update):
-    bot.send_message(chat_id=update.message.chat_id, text="Lo siento, No reconozco ese comando.")
 
 def nuevo_miembro(bot, update):
     grupo = update.message.chat
@@ -833,7 +794,6 @@ def nuevo_miembro(bot, update):
         msg_html+= "*{0}* Por politicas del Grupo es necesario que configures un alias @{1}\n".format(nombre, id_)
 
     bot.send_message(chat_id=update.message.chat_id, parse_mode = "Markdown", text=emojize(msg_html, use_aliases=True))
-
     usuario_nuevo(update)
 
 def abandono_grupo(bot, update):
@@ -853,6 +813,42 @@ def abandono_grupo(bot, update):
     </ul> """.format(username, grupo.title, username, nombre)
 
     bot.send_message(chat_id=update.message.chat_id, parse_mode = "html", text=msg_html)
+
+def start(bot, update):
+    # print(update.message)
+    bot.sendMessage(update.message.chat_id,
+            text='Bienvenido, te invito a ejecutar el comando /help para obtener mas ayuda')
+    usuario_nuevo(update)
+
+def startgroup(bot, update):
+    print(update.message)
+    bot.sendMessage(update.message.chat_id,
+            text='Bienvenido al grupo, te invito a ejecutar /reglas para conocer las reglas principales del grupo,\
+            /help para obtener mas ayuda')
+    usuario_nuevo(update)
+
+def error(bot, update, error):
+    print(error)
+    logger.warn('Update "%s" caused error "%s"' % (update, error))
+
+def forwarded(bot, update):
+    import ipdb; ipdb.set_trace() # BREAKPOINT
+    print(update.message)
+    #bot.sendMessage(update.message.chat_id,
+    #        text='This msg forwaded information:\n {}'.\
+    #                format(update.effective_message))
+
+def echo(bot, update):
+    print("Eco")
+    print(update.message)
+    m = evaluar(update.message.text)
+    if m:
+        update.message.reply_text(m)
+    usuario_nuevo(update)
+
+def unknown(bot, update):
+    bot.send_message(chat_id=update.message.chat_id, text="Lo siento, No reconozco ese comando.")
+
 
 def main():
     logger.info("Loading handlers for telegram bot")
