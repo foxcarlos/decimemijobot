@@ -116,7 +116,7 @@ def ban_from_reply(bot, update):
 
     if id_usuario_ban:
         update.message.chat.kick_member(id_usuario_ban)
-        response = ' :rocket: Fuistes expulsado del grupo por *{0}*'.format(update.message.from_user.username)
+        response = ' :boom: Fuistes expulsado :rocket: del grupo por *{0}*'.format(update.message.from_user.username)
         bot.sendMessage(id_usuario_ban, parse_mode="Markdown", text=emojize(response, use_aliases=True ))
         response = 'Usuario *{0}* expulsado :rocket: por _{1}_ :smiling_imp:'.format(username_usuario_ban, update.message.from_user.username)
     else:
