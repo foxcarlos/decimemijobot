@@ -88,6 +88,44 @@ def buscar_usuario_id(nombre):
     usuario = User.objects.filter(username__icontains=nombre)
     return usuario.chat_id if usuario else 0
 
+def kick(bot, update):
+    parameters = update.message.text
+    cadena_sin_el_comando = ' '.join(parameters.split()[1:])
+    usuario = cadena_sin_el_comando.replace('@','')
+
+    if not es_admin(bot, update):
+        response = ':no_entry_sign: _{0}_, Solo los usuarios *Admin* pueden usar este comando'.format(update.message.from_user.username)
+        bot.sendMessage(update.message.chat_id, parse_mode="Markdown", text=emojize(response, use_aliases=True))
+        return True
+
+    if update.message.reply_to_message:
+        kick_from_reply(bot, update)
+        return True
+    else:
+        # Se hizo /ban usuario
+        response = '*{0}*, Haz un reply de un mensaje de la personas que quieres expulsar y como comentario escribes /kick'.format(update.message.from_user.username)
+        bot.sendMessage(update.message.chat_id, parse_mode="Markdown", text=response)
+
+        file_ = open("bot/static/img/ayuda_ban_uso.png", "rb")
+        bot.sendPhoto(update.message.chat_id,  photo=file_, caption="Ejemplo de uso del comando /kick")
+
+def kick_from_reply(bot, update):
+    id_usuario_ban = update.message.reply_to_message.from_user.id
+    username_usuario_ban = update.message.reply_to_message.from_user.username
+
+    if id_usuario_ban:
+        fecha = datetime.timestamp(datetime.now())+31
+        update.message.chat.kick_member(id_usuario_ban, fecha)
+
+        response = ' :boom: Fuistes expulsado :rocket: del grupo por *{0}*'.format(update.message.from_user.username)
+        bot.sendMessage(id_usuario_ban, parse_mode="Markdown", text=emojize(response, use_aliases=True ))
+        response = 'Usuario *{0}* expulsado :rocket: por _{1}_ :smiling_imp:'.format(username_usuario_ban, update.message.from_user.username)
+    else:
+        response = ':x: No fue posible expulsar el usuario {0} con el id {1}'.format(username_usuario_ban, id_usuario_ban)
+
+    bot.sendMessage(update.message.chat_id, parse_mode="Markdown", text=emojize(response, use_aliases=True))
+    return True
+
 def ban(bot, update):
     parameters = update.message.text
     cadena_sin_el_comando = ' '.join(parameters.split()[1:])
@@ -633,7 +671,6 @@ def help(bot, update):
     /allcoins - Precios de varias criptos
     /bitcoin - Muestra el Precio(segun coinbase)
     /dolartoday
-    /macro - La suma de 2 mas 2 es [2+2]
 
     /set_alarma_bitcoin - Configura alertas
     /set_alarma_ethereum - Configura alertas
@@ -651,6 +688,13 @@ def help(bot, update):
     /grafico <coin_ticker> <market> <usd o eur> <dias>
     /grafico <coin_ticker> <market> <usd>
     /grafico <coin_ticker> <market>
+
+    /ban Expulsa a un usuario sin derecho a regresar
+    /kick Expulsa a un uusario y puede volver cuando lo desee
+
+    Nota: Ahora es posible hacer calculos 
+    con solo escribir directamente 2+2*3
+
     """
     user_first_name = update.message.from_user.first_name
     user_chat_id = update.message.from_user.id
@@ -883,6 +927,7 @@ def main():
     dp.add_handler(CommandHandler("start", start))
     dp.add_handler(CommandHandler("reglas", reglas))
     dp.add_handler(CommandHandler("ban", ban))
+    dp.add_handler(CommandHandler("kick", kick))
     dp.add_handler(CommandHandler("unban", unban))
 
     dp.add_handler(CommandHandler("boton", prueba_boton))
