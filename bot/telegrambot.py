@@ -40,6 +40,8 @@ URL_DOLARTODAY = settings.CRIPTO_MONEDAS.get("URL_DOLARTODAY")
 
 
 def grupo_nuevo(update):
+    if 'private' == update.message.chat.type:
+        return True
     grupo_id = update.message.chat.id
     grupo_titulo = update.message.chat.title
     grupo_tipo = update.message.chat.type
@@ -80,6 +82,9 @@ def usuario_nuevo(update):
     return True
 
 def valida_autorizacion_comando(bot, update):
+    if 'private' == update.message.chat.type:
+        return True
+
     comando = update.message.text
     grupo_id = update.message.chat.id
     es_comando = True if update.message.entities[0].type == 'bot_command' else False
@@ -90,11 +95,11 @@ def valida_autorizacion_comando(bot, update):
         else:
             comando_ejecutado = ''.join(comando.split(" ")[0]).replace('/', "")
 
-        buscar_comando = ComandoEstado.objects.get(
+        buscar_comando = ComandoEstado.objects.filter(grupo_id=grupo_id,
                 comando__nombre=comando_ejecutado)
 
         if buscar_comando:
-            esta_activo = buscar_comando.activo
+            esta_activo = buscar_comando[0].activo
             if not esta_activo:
                 return False
 
@@ -128,6 +133,11 @@ def buscar_usuario_id(nombre):
     return usuario.chat_id if usuario else 0
 
 def kick(bot, update):
+    if not valida_autorizacion_comando(bot, update):
+        # bot.sendMessage(update.message.chat_id, text=emojize("comando desabilitado por el admin", use_aliases=True))
+        print('comando esta desactivado')
+        return True
+
     parameters = update.message.text
     cadena_sin_el_comando = ' '.join(parameters.split()[1:])
     usuario = cadena_sin_el_comando.replace('@','')
@@ -153,7 +163,9 @@ def kick_from_reply(bot, update):
     username_usuario_ban = update.message.reply_to_message.from_user.username
 
     if id_usuario_ban:
+        print(datetime.now())
         fecha = datetime.timestamp(datetime.now())+31
+        print(fecha)
         update.message.chat.kick_member(id_usuario_ban, fecha)
 
         response = ' :boom: Fuistes expulsado :rocket: del grupo por *{0}*'.format(update.message.from_user.username)
@@ -166,6 +178,10 @@ def kick_from_reply(bot, update):
     return True
 
 def ban(bot, update):
+    if not valida_autorizacion_comando(bot, update):
+        # bot.sendMessage(update.message.chat_id, text=emojize("comando desabilitado por el admin", use_aliases=True))
+        return True
+
     parameters = update.message.text
     cadena_sin_el_comando = ' '.join(parameters.split()[1:])
     usuario = cadena_sin_el_comando.replace('@','')
@@ -497,11 +513,9 @@ def get_historico(lista_params):
 
 
 def historico(bot, update):
-    import ipdb; ipdb.set_trace() # BREAKPOINT
     if not valida_autorizacion_comando(bot, update):
-        bot.sendMessage(update.message.chat_id, text=emojize("comando desabilitado por el admin", use_aliases=True))
+        # bot.sendMessage(update.message.chat_id, text=emojize("comando desabilitado por el admin", use_aliases=True))
         return True
-
 
     print(update.message)
     parameters = update.message.text
@@ -770,7 +784,7 @@ def valida_permiso_comando(bot, update):
         if es_admin(bot, update):
             response = True
         else:
-            texto = ":no_entry_sign: Lo siento, solo los Admin del grupo pueden ejecutar este comando, \n:speaker: Intenta hacerlo en privado al bot https://t.me/fox_bot/?start=true"
+            texto = ":no_entry_sign: Lo siento, solo los Admin del grupo pueden ejecutar este comando, \n:speaker: Intenta hacerlo en privado al bot https://t.me/DecimeMijobot/?start=true"
             bot.sendMessage(update.message.chat_id, text=emojize(texto, use_aliases=True))
             response = False
     return response
