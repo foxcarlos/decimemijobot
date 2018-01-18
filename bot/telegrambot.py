@@ -770,7 +770,7 @@ def valida_permiso_comando(bot, update):
         if es_admin(bot, update):
             response = True
         else:
-            texto = ":no_entry_sign: Lo siento, solo los Admin del grupo pueden ejecutar este comando, \n:speaker: Intenta hacerlo en privado al bot https://t.me/peru_bot/?start=true"
+            texto = ":no_entry_sign: Lo siento, solo los Admin del grupo pueden ejecutar este comando, \n:speaker: Intenta hacerlo en privado al bot https://t.me/fox_bot/?start=true"
             bot.sendMessage(update.message.chat_id, text=emojize(texto, use_aliases=True))
             response = False
     return response
