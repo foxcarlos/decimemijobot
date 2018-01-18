@@ -3,7 +3,7 @@ from django.contrib import admin
 # Register your models here.
 from django.contrib import admin
 
-from .models import Alerta, AlertaUsuario, User
+from .models import Alerta, AlertaUsuario, User, Grupo, Comando, ComandoEstado
 
 
 class UserAdmin(admin.ModelAdmin):
@@ -25,10 +25,37 @@ class AlertaUsuarioAdmin(admin.ModelAdmin):
     list_display = ['alerta', 'estado', 'frecuencia', 'porcentaje_cambio',
             'ultima_actualizacion', 'ultimo_precio',
             'chat_id', 'chat_username']
-    search_fields = ['alerta', 'estado', 'chat_username']
-    list_filter = ['alerta']
+    search_fields = ['alerta', 'estado', 'chat_username', 'chat_id']
+    list_filter = ['alerta', 'estado']
+
+
+class GrupoAdmin(admin.ModelAdmin):
+    model = Grupo
+
+    list_display = ['grupo_id', 'descripcion', 'tipo']
+    search_fields = ['grupo_id', 'descripcion', 'tipo']
+    list_filter = ['tipo']
+
+
+class ComandoAdmin(admin.ModelAdmin):
+    model = Comando
+
+    list_display = ["nombre", "descripcion"]
+    search_fields = ["nombre", "descripcion"]
+
+
+class ComandoEstadoAdmin(admin.ModelAdmin):
+    model = ComandoEstado
+
+    list_display = ["grupo_id" , "comando", "activo", "chat_id"]
+    search_fields = ["grupo_id" , "comando", "chat_id"]
+    list_filter = ['activo']
 
 
 admin.site.register(User, UserAdmin)
 admin.site.register(Alerta, AlertaAdmin)
 admin.site.register(AlertaUsuario, AlertaUsuarioAdmin)
+admin.site.register(Grupo, GrupoAdmin)
+admin.site.register(Comando, ComandoAdmin)
+admin.site.register(ComandoEstado, ComandoEstadoAdmin)
+

@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 from django.db.models import Count
 from django.contrib.auth.models import User as UserDjango
 from bot.scrapy import NoticiasPanorama
-from bot.models import Alerta, AlertaUsuario, User
+from bot.models import Alerta, AlertaUsuario, User, Grupo, Comando, ComandoEstado
 from bot.tasks import pool_message
 from datetime import datetime
 
@@ -39,7 +39,23 @@ URL_PRICE_USD_EUR_MARKET = settings.CRIPTO_MONEDAS.get("URL_PRICE_USD_EUR_MARKET
 URL_DOLARTODAY = settings.CRIPTO_MONEDAS.get("URL_DOLARTODAY")
 
 
+def grupo_nuevo(update):
+    grupo_id = update.message.chat.id
+    grupo_titulo = update.message.chat.title
+    grupo_tipo = update.message.chat.type
+
+    try:
+        grupo = Grupo.objects.update_or_create(grupo_id=grupo_id)[0]
+        grupo.descripcion = grupo_titulo
+        grupo.tipo = grupo_tipo
+        grupo.save()
+    except Exception as E:
+        print(E)
+
+    return True
+
 def usuario_nuevo(update):
+    # Datos del usuario
     id_user = update.message.from_user.id
     usuario = update.message.from_user.username
     nombre = update.message.from_user.first_name if \
@@ -48,6 +64,8 @@ def usuario_nuevo(update):
             hasattr(update.message.from_user, "lasta_name") else ""
     codigo_leng = update.message.from_user.language_code if\
             hasattr(update.message.from_user, "language_code") else ""
+
+    grupo_nuevo(update)
 
     try:
         user = User.objects.update_or_create(chat_id=id_user)[0]
@@ -58,6 +76,27 @@ def usuario_nuevo(update):
 
     except Exception as E:
         print(E)
+
+    return True
+
+def valida_autorizacion_comando(bot, update):
+    comando = update.message.text
+    grupo_id = update.message.chat.id
+    es_comando = True if update.message.entities[0].type == 'bot_command' else False
+
+    if es_comando:
+        if '@' in comando:
+            comando_ejecutado = comando[comando.find('/')+1: comando.find('@')]
+        else:
+            comando_ejecutado = ''.join(comando.split(" ")[0]).replace('/', "")
+
+        buscar_comando = ComandoEstado.objects.get(
+                comando__nombre=comando_ejecutado)
+
+        if buscar_comando:
+            esta_activo = buscar_comando.activo
+            if not esta_activo:
+                return False
 
     return True
 
@@ -458,6 +497,12 @@ def get_historico(lista_params):
 
 
 def historico(bot, update):
+    import ipdb; ipdb.set_trace() # BREAKPOINT
+    if not valida_autorizacion_comando(bot, update):
+        bot.sendMessage(update.message.chat_id, text=emojize("comando desabilitado por el admin", use_aliases=True))
+        return True
+
+
     print(update.message)
     parameters = update.message.text
     cadena_sin_el_comando = ' '.join(parameters.split()[1:])

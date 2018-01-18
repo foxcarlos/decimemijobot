@@ -26,6 +26,26 @@ class User(models.Model):
         verbose_name = 'User'
         ordering = ['username']
 
+class Grupo(models.Model):
+    grupo_id = models.IntegerField(default=0)
+    descripcion = models.CharField(max_length=200, blank=True, null=True)
+    tipo = models.CharField(max_length=50, blank=True, null=True)
+
+
+class Comando(models.Model):
+    nombre = models.CharField(max_length=100, blank=False, null=False)
+    descripcion = models.CharField(max_length=200, blank=True, null=True)
+
+    def __str__(self):
+        return self.nombre
+
+
+class ComandoEstado(models.Model):
+    grupo_id = models.IntegerField(default=0)
+    comando = models.ForeignKey(Comando, related_name='Comandos')
+    activo = models.BooleanField(default=True)
+    chat_id = models.IntegerField(default=0)
+
 
 class Alerta(models.Model):
     '''.'''
