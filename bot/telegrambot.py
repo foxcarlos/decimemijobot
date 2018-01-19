@@ -616,7 +616,7 @@ def price(bot, update):
 def autor(bot, update):
     url = "https://gitlab.com/foxcarlos"
     response = """
-    Realizado por:
+    Realizado por @FoxCarlos:
 
     {0}""".format(url)
     bot.sendMessage(update.message.chat_id, text=response)
