@@ -39,6 +39,55 @@ URL_PRICE_USD_EUR_MARKET = settings.CRIPTO_MONEDAS.get("URL_PRICE_USD_EUR_MARKET
 URL_DOLARTODAY = settings.CRIPTO_MONEDAS.get("URL_DOLARTODAY")
 
 
+#############################################################################
+def prueba_boton(bot, update):
+    from telegram import InlineKeyboardButton, InlineKeyboardMarkup
+
+    # chat_administradores = update.message.chat.get_administrators()
+    keyboard = [[InlineKeyboardButton("Comprador", callback_data=update.message.from_user.id),]]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    update.message.reply_text('Presione el boton el comprador:', reply_markup=reply_markup)
+
+
+    keyboard = [[InlineKeyboardButton("Vendedor", callback_data=update.message.from_user.id),],]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    update.message.reply_text('Presione el boton Vendedor:', reply_markup=reply_markup)
+
+    keyboard = [[InlineKeyboardButton("Todo Bien Crear Contrato", callback_data="Cerrado"),],]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    update.message.reply_text('Cerrado:', reply_markup=reply_markup)
+
+def callback_button(bot, update):
+    query = update.callback_query
+
+    bot.edit_message_text(text="Bien, el comprador es: {}".format(query.data),
+            chat_id=query.message.chat_id,
+            message_id=query.message.message_id
+            )
+
+    return True
+
+def vendedor_boton(bot, update):
+    from telegram import InlineKeyboardButton, InlineKeyboardMarkup
+
+    query = update.callback_query
+    keyboard = [[InlineKeyboardButton("Vendedor", callback_data=update.callback_query.from_user.id),],]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    query.edit_message_text('Precione el Vendedor:', reply_markup=reply_markup)
+
+    #contrato_boton(bot, update)
+    return True
+
+def contrato_boton(bot, update):
+    from telegram import InlineKeyboardButton, InlineKeyboardMarkup
+
+    query = update.callback_query
+    keyboard = [[InlineKeyboardButton("Todo Bien Crear Contrato", callback_data="Cerrado"),],]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    query.edit_message_text('Se cerro el trato llame /finalizar :', reply_markup=reply_markup)
+    return True
+
+#############################################################################
 def grupo_nuevo(update):
     if 'private' == update.message.chat.type:
         return True
@@ -238,9 +287,11 @@ def unban(bot, update):
     bot.sendMessage(update.message.chat_id, parse_mode="Markdown", text=response)
     return True
 
+"""
 def prueba_boton(bot, update):
     from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 
+    import ipdb; ipdb.set_trace() # BREAKPOINT
     # chat_administradores = update.message.chat.get_administrators()
     keyboard = [[InlineKeyboardButton("Option 1", callback_data='1'),
                  InlineKeyboardButton("Option 2", callback_data='2')],
@@ -277,7 +328,7 @@ def prueba_forcereply(bot, update):
 
 def call_ForceReply(bot, update):
     query = update.force_reply
-
+"""
 
 def ayuda_set_alarma():
     response = """
