@@ -20,7 +20,11 @@ from bot.models import Alerta, AlertaUsuario, User, Grupo, Comando, ComandoEstad
 from bot.tasks import pool_message
 from datetime import datetime
 
-import numpy as np
+try:
+    import numpy as np
+except:
+    pass
+
 try:
     import matplotlib.pyplot as plt
 except:
@@ -43,51 +47,58 @@ URL_DOLARTODAY = settings.CRIPTO_MONEDAS.get("URL_DOLARTODAY")
 
 
 #############################################################################
-def prueba_boton(bot, update):
+def prueba_contrato(bot, update):
     from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 
-    # chat_administradores = update.message.chat.get_administrators()
-    keyboard = [[InlineKeyboardButton("Comprador", callback_data=update.message.from_user.id),]]
-    reply_markup = InlineKeyboardMarkup(keyboard)
-    update.message.reply_text('Presione el boton el comprador:', reply_markup=reply_markup)
+    global a
+    a = []
 
+    keyboard = [[
+            InlineKeyboardButton("Si", callback_data="aceptar"),
+            InlineKeyboardButton("No", callback_data="cancelar")]]
 
-    keyboard = [[InlineKeyboardButton("Vendedor", callback_data=update.message.from_user.id),],]
     reply_markup = InlineKeyboardMarkup(keyboard)
-    update.message.reply_text('Presione el boton Vendedor:', reply_markup=reply_markup)
-
-    keyboard = [[InlineKeyboardButton("Todo Bien Crear Contrato", callback_data="Cerrado"),],]
-    reply_markup = InlineKeyboardMarkup(keyboard)
-    update.message.reply_text('Cerrado:', reply_markup=reply_markup)
+    update.message.reply_text('Desea crear un contrato de compra venta?:', reply_markup=reply_markup)
 
 def callback_button(bot, update):
     query = update.callback_query
+    from random import randint
 
+    """
     bot.edit_message_text(text="Bien, el comprador es: {}".format(query.data),
             chat_id=query.message.chat_id,
-            message_id=query.message.message_id
-            )
+            message_id=query.message.message_id)"""
 
-    return True
+    if query.data == "aceptar":
+        keyboard = [[InlineKeyboardButton("Soy el Vendedor", callback_data="vendedor"),]]
+        reply_markup = InlineKeyboardMarkup(keyboard)
+        query.edit_message_text('Presione este boton solo el vendedor:', reply_markup=reply_markup)
 
-def vendedor_boton(bot, update):
-    from telegram import InlineKeyboardButton, InlineKeyboardMarkup
+    elif query.data == "vendedor":
+        a.append(query.from_user.username)
+        keyboard = [[InlineKeyboardButton("Soy el Comprador", callback_data="comprador"),],]
+        reply_markup = InlineKeyboardMarkup(keyboard)
 
-    query = update.callback_query
-    keyboard = [[InlineKeyboardButton("Vendedor", callback_data=update.callback_query.from_user.id),],]
-    reply_markup = InlineKeyboardMarkup(keyboard)
-    query.edit_message_text('Precione el Vendedor:', reply_markup=reply_markup)
+        query.bot.sendMessage(query.message.chat.id, text="Vendedor:{0}".format(query.from_user.first_name))
+        query.edit_message_text('Ahora presione este boton el Comprador:', reply_markup=reply_markup)
 
-    #contrato_boton(bot, update)
-    return True
+    elif query.data == "comprador":
+        a.append(query.from_user.username)
+        keyboard = [[
+            InlineKeyboardButton("Generar", callback_data="generar"),
+            InlineKeyboardButton("Cancelar", callback_data="cancelar_generar")]]
+        reply_markup = InlineKeyboardMarkup(keyboard)
+        query.edit_message_text('Presione para generar el contrato compra-venta:', reply_markup=reply_markup)
 
-def contrato_boton(bot, update):
-    from telegram import InlineKeyboardButton, InlineKeyboardMarkup
+    elif query.data == "generar":
+        query.edit_message_text('Se genero el contrato numero: {0} con {1}'.format(randint(0,9796220), a))
 
-    query = update.callback_query
-    keyboard = [[InlineKeyboardButton("Todo Bien Crear Contrato", callback_data="Cerrado"),],]
-    reply_markup = InlineKeyboardMarkup(keyboard)
-    query.edit_message_text('Se cerro el trato llame /finalizar :', reply_markup=reply_markup)
+    elif query.data == "cancelar_generar":
+        query.edit_message_text('Cancelado')
+
+    elif query.data == "cancelar":
+        query.edit_message_text('Contrato cancelado:')
+
     return True
 
 #############################################################################
@@ -1025,7 +1036,8 @@ def echo(bot, update):
     usuario_nuevo(update)
 
 def unknown(bot, update):
-    bot.send_message(chat_id=update.message.chat_id, text="Lo siento, No reconozco ese comando.")
+    # bot.send_message(chat_id=update.message.chat_id, text="Lo siento, No reconozco ese comando.")
+    pass
 
 
 def main():
@@ -1043,7 +1055,7 @@ def main():
     dp.add_handler(CommandHandler("kick", kick))
     dp.add_handler(CommandHandler("unban", unban))
 
-    dp.add_handler(CommandHandler("boton", prueba_boton))
+    dp.add_handler(CommandHandler("crear_compra_venta", prueba_contrato))
     dp.add_handler(CallbackQueryHandler(callback_button))
 
     dp.add_handler(CommandHandler("help", help))
@@ -1087,3 +1099,4 @@ def main():
 
     # log all errors
     dp.add_error_handler(error)
+
