@@ -42,7 +42,7 @@ class Comando(models.Model):
 
 class ComandoEstado(models.Model):
     grupo_id = models.IntegerField(default=0)
-    comando = models.ForeignKey(Comando, related_name='Comandos')
+    comando = models.ForeignKey(Comando, related_name='Comandos', on_delete=models.CASCADE)
     activo = models.BooleanField(default=True)
     chat_id = models.IntegerField(default=0)
 
@@ -65,7 +65,7 @@ class Alerta(models.Model):
 
 class AlertaUsuario(models.Model):
     '''.'''
-    alerta = models.ForeignKey(Alerta, related_name='alertas')
+    alerta = models.ForeignKey(Alerta, related_name='alertas', on_delete=models.CASCADE)
     estado = models.CharField(max_length=3, default="I",\
             choices=(
                 ('A', 'On'),
