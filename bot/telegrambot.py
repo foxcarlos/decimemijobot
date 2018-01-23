@@ -108,6 +108,7 @@ def callback_button(bot, update):
         <b>Status:</b> En Proceso
         """.format(contrato, comprador, vendedor, grupo_titulo)
         # query.bot.sendMessage(query.message.chat.id, text="Grupo:{0}".format(grupo_titulo))
+        import ipdb; ipdb.set_trace() # BREAKPOINT
         query.edit_message_text(parse_mode="html", text=emojize(msg_response, use_aliases=True))
 
     elif query.data == "cancelar_generar":
