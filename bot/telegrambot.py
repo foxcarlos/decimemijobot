@@ -75,7 +75,7 @@ def callback_button(bot, update):
     if query.data == "aceptar":
         # ReplyKeyboardMarkup
         keyboard = [[InlineKeyboardButton("Soy el Vendedor", callback_data="vendedor"),]]
-        reply_markup = InlineKeyboardMarkup(keyboard)
+        reply_markup = ReplyKeyboardMarkup(keyboard)  #InlineKeyboardMarkup(keyboard)
         query.edit_message_text('Presione este boton solo el vendedor:', reply_markup=reply_markup)
 
     elif query.data == "vendedor":
