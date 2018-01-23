@@ -75,9 +75,12 @@ def callback_button(bot, update):
     import ipdb; ipdb.set_trace() # BREAKPOINT
     if query.data == "aceptar":
         # ReplyKeyboardMarkup
-        keyboard = [[InlineKeyboardButton("Cambio Btc-Paypal", callback_data="Cambio Paypal-Btc"),]]
+        keyboard = [[
+            InlineKeyboardButton("compra btc", callback_data="compra_btc"),
+            InlineKeyboardButton("compra paypal", callback_data="compra_paypal")]]
+
         reply_markup = ReplyKeyboardMarkup(keyboard)
-        query.edit_message_text('Seleccione un motivo o escriba otra:', reply_markup=reply_markup)
+        query.message.reply_text('Seleccione un motivo o escriba otro:', reply_markup=reply_markup)
 
         #keyboard = [[InlineKeyboardButton("Soy el Vendedor", callback_data="vendedor"),]]
         #reply_markup = InlineKeyboardMarkup(keyboard)
