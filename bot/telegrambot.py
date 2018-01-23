@@ -58,6 +58,7 @@ def prueba_contrato(bot, update):
             InlineKeyboardButton("No", callback_data="cancelar")]]
 
     reply_markup = InlineKeyboardMarkup(keyboard)
+    import ipdb; ipdb.set_trace() # BREAKPOINT
     update.message.reply_text('Desea crear un contrato de compra venta?:', reply_markup=reply_markup)
 
 def callback_button(bot, update):
@@ -71,7 +72,6 @@ def callback_button(bot, update):
             chat_id=query.message.chat_id,
             message_id=query.message.message_id)"""
 
-    import ipdb; ipdb.set_trace() # BREAKPOINT
     if query.data == "aceptar":
         # ReplyKeyboardMarkup
         keyboard = [[InlineKeyboardButton("Soy el Vendedor", callback_data="vendedor"),]]
@@ -114,7 +114,6 @@ def callback_button(bot, update):
         <b>Status:</b> En Proceso
         """.format(contrato, operacion, comprador, vendedor, grupo_titulo)
         # query.bot.sendMessage(query.message.chat.id, text="Grupo:{0}".format(grupo_titulo))
-        import ipdb; ipdb.set_trace() # BREAKPOINT
         query.edit_message_text(parse_mode="html", text=emojize(msg_response, use_aliases=True))
 
     elif query.data == "cancelar_generar":
