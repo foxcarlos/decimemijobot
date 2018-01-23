@@ -100,8 +100,8 @@ def callback_button(bot, update):
         vendedor =a[0]
 
         msg_response = """
-        :pushpin: <p style="color:Tomato;"><b>Se ha generado un contrato compra-venta:</b></p>\n
-        <b>Ref#:</b> Contrato {0}\n
+        :pushpin: <b style="color:Tomato;">Se ha generado un contrato compra-venta:</b>\n
+        <b>Ref#:</b> Contrato {0}
         <b>Comprador:</b> {1}
         <b>vendedor:</b> {2}
         <b>Grupo:</b> {3}
