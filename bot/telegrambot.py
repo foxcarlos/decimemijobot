@@ -71,7 +71,9 @@ def callback_button(bot, update):
             chat_id=query.message.chat_id,
             message_id=query.message.message_id)"""
 
+    import ipdb; ipdb.set_trace() # BREAKPOINT
     if query.data == "aceptar":
+        # ReplyKeyboardMarkup
         keyboard = [[InlineKeyboardButton("Soy el Vendedor", callback_data="vendedor"),]]
         reply_markup = InlineKeyboardMarkup(keyboard)
         query.edit_message_text('Presione este boton solo el vendedor:', reply_markup=reply_markup)
