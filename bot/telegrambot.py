@@ -1080,7 +1080,7 @@ def main():
     dp.add_handler(CommandHandler("kick", kick))
     dp.add_handler(CommandHandler("unban", unban))
 
-    dp.add_handler(CommandHandler("crear_compra_venta", prueba_contrato))
+    dp.add_handler(CommandHandler("trade", prueba_contrato))
     dp.add_handler(CallbackQueryHandler(callback_button))
 
     dp.add_handler(CommandHandler("help", help))
