@@ -88,6 +88,8 @@ def callback_button(bot, update):
             InlineKeyboardButton("Generar", callback_data="generar"),
             InlineKeyboardButton("Cancelar", callback_data="cancelar_generar")]]
         reply_markup = InlineKeyboardMarkup(keyboard)
+
+        query.bot.sendMessage(query.message.chat.id, text="Comprador:{0}".format(query.from_user.first_name))
         query.edit_message_text('Presione para generar el contrato compra-venta:', reply_markup=reply_markup)
 
     elif query.data == "generar":
