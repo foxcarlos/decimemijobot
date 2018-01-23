@@ -79,7 +79,7 @@ def callback_button(bot, update):
         keyboard = [[InlineKeyboardButton("Soy el Comprador", callback_data="comprador"),],]
         reply_markup = InlineKeyboardMarkup(keyboard)
 
-        query.bot.sendMessage(query.message.chat.id, text="Vendedor:{0}".format(query.from_user.first_name))
+        #query.bot.sendMessage(query.message.chat.id, text="Vendedor:{0}".format(query.from_user.first_name))
         query.edit_message_text('Ahora presione este boton el Comprador:', reply_markup=reply_markup)
 
     elif query.data == "comprador":
@@ -89,15 +89,26 @@ def callback_button(bot, update):
             InlineKeyboardButton("Cancelar", callback_data="cancelar_generar")]]
         reply_markup = InlineKeyboardMarkup(keyboard)
 
-        query.bot.sendMessage(query.message.chat.id, text="Comprador:{0}".format(query.from_user.first_name))
+        #query.bot.sendMessage(query.message.chat.id, text="Comprador:{0}".format(query.from_user.first_name))
         query.edit_message_text('Presione para generar el contrato compra-venta:', reply_markup=reply_markup)
 
     elif query.data == "generar":
         grupo_id = query.message.chat.id
         grupo_titulo = query.message.chat.title
+        contrato = randint(0,9796220)
+        comprador = a[1]
+        vendedor =a[0]
 
-        query.bot.sendMessage(query.message.chat.id, text="Grupo:{0}".format(grupo_titulo))
-        query.edit_message_text('Se genero el contrato numero: {0} con {1}'.format(randint(0,9796220), a))
+        msg_response = """
+        :pushpin: <b>Se ha generado un contrato compra-venta:</b>\n\n
+        <b>Ref#:</b> Contrato {0}\n
+        <b>Comprador:</b> {1}\n
+        <b>vendedor:</b> {2}\n
+        <b>Grupo:</b> {3}\n
+        <b>Status:</b> Abierto\n
+        """.format(contrato, comprador, vendedor, grupo_titulo)
+        # query.bot.sendMessage(query.message.chat.id, text="Grupo:{0}".format(grupo_titulo))
+        query.edit_message_text(parse_mode="html", text=emojize(msg_response, use_aliases=True))
 
     elif query.data == "cancelar_generar":
         query.edit_message_text('Cancelado')
