@@ -58,7 +58,6 @@ def prueba_contrato(bot, update):
             InlineKeyboardButton("No", callback_data="cancelar")]]
 
     reply_markup = InlineKeyboardMarkup(keyboard)
-    import ipdb; ipdb.set_trace() # BREAKPOINT
     update.message.reply_text('Desea crear un contrato de compra venta?:', reply_markup=reply_markup)
 
 def callback_button(bot, update):
@@ -72,11 +71,16 @@ def callback_button(bot, update):
             chat_id=query.message.chat_id,
             message_id=query.message.message_id)"""
 
+    import ipdb; ipdb.set_trace() # BREAKPOINT
     if query.data == "aceptar":
         # ReplyKeyboardMarkup
-        keyboard = [[InlineKeyboardButton("Soy el Vendedor", callback_data="vendedor"),]]
-        reply_markup = ReplyKeyboardMarkup(keyboard)  #InlineKeyboardMarkup(keyboard)
-        query.edit_message_text('Presione este boton solo el vendedor:', reply_markup=reply_markup)
+        keyboard = [[InlineKeyboardButton("Cambio Btc-Paypal", callback_data="Cambio Paypal-Btc"),]]
+        reply_markup = ReplyKeyboardMarkup(keyboard)
+        query.edit_message_text('Seleccione un motivo o escriba otra:', reply_markup=reply_markup)
+
+        #keyboard = [[InlineKeyboardButton("Soy el Vendedor", callback_data="vendedor"),]]
+        #reply_markup = InlineKeyboardMarkup(keyboard)
+        #query.edit_message_text('Presione este boton solo el vendedor:', reply_markup=reply_markup)
 
     elif query.data == "vendedor":
         a.append(query.from_user.username)
