@@ -63,6 +63,7 @@ def prueba_contrato(bot, update):
 def callback_button(bot, update):
     query = update.callback_query
     from random import randint
+    from telegram import InlineKeyboardButton, InlineKeyboardMarkup, ReplyKeyboardMarkup, InlineQuery
     parameters = query.message.text
     cadena_sin_el_comando = ' '.join(parameters.split()[1:])
 
