@@ -100,12 +100,12 @@ def callback_button(bot, update):
         vendedor =a[0]
 
         msg_response = """
-        :pushpin: <b>Se ha generado un contrato compra-venta:</b>\n\n
+        :pushpin: <p style="color:Tomato;"><b>Se ha generado un contrato compra-venta:</b></p>\n
         <b>Ref#:</b> Contrato {0}\n
-        <b>Comprador:</b> {1}\n
-        <b>vendedor:</b> {2}\n
-        <b>Grupo:</b> {3}\n
-        <b>Status:</b> Abierto\n
+        <b>Comprador:</b> {1}
+        <b>vendedor:</b> {2}
+        <b>Grupo:</b> {3}
+        <b>Status:</b> En Proceso
         """.format(contrato, comprador, vendedor, grupo_titulo)
         # query.bot.sendMessage(query.message.chat.id, text="Grupo:{0}".format(grupo_titulo))
         query.edit_message_text(parse_mode="html", text=emojize(msg_response, use_aliases=True))
