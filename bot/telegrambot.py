@@ -49,7 +49,7 @@ URL_DOLARTODAY = settings.CRIPTO_MONEDAS.get("URL_DOLARTODAY")
 #############################################################################
 def prueba_contrato(bot, update):
     from telegram import InlineKeyboardButton, InlineKeyboardMarkup, ReplyKeyboardMarkup, InlineQuery
-    parameters = query.message.text
+    parameters = update.message.message.text
     cadena_sin_el_comando = ' '.join(parameters.split()[1:])
 
     global a
