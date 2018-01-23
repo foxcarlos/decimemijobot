@@ -74,17 +74,9 @@ def callback_button(bot, update):
 
     import ipdb; ipdb.set_trace() # BREAKPOINT
     if query.data == "aceptar":
-        # ReplyKeyboardMarkup
-        keyboard = [[
-            InlineKeyboardButton("compra btc", callback_data="compra_btc"),
-            InlineKeyboardButton("compra paypal", callback_data="compra_paypal")]]
-
-        reply_markup = ReplyKeyboardMarkup(keyboard)
-        query.message.reply_text('Seleccione un motivo o escriba otro:', reply_markup=reply_markup)
-
-        #keyboard = [[InlineKeyboardButton("Soy el Vendedor", callback_data="vendedor"),]]
-        #reply_markup = InlineKeyboardMarkup(keyboard)
-        #query.edit_message_text('Presione este boton solo el vendedor:', reply_markup=reply_markup)
+        keyboard = [[InlineKeyboardButton("Soy el Vendedor", callback_data="vendedor"),]]
+        reply_markup = InlineKeyboardMarkup(keyboard)
+        query.edit_message_text('Presione este boton solo el <b>vendedor</b>:', parse_mode="html",  reply_markup=reply_markup)
 
     elif query.data == "vendedor":
         a.append(query.from_user.username)
