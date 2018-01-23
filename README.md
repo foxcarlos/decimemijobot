@@ -7,7 +7,7 @@ Estas son las funciones que realiza el Bot
   - help - Lista de comandos disponibles
   - allcoins - Precio de algunas las cripto monedas
   - bitcoin - Precio actual del Bitcoin
-  - calcular - Indique entre [ ] el calculo, Ej: [2+2]
+  - ban -banear un usuario
   - dolartoday - Precio actual del Dolar Venezuela
   - ethereum - Precio actual del Ethereum
   - litecoin - Precio actual del LiteCoin
@@ -22,6 +22,7 @@ Estas son las funciones que realiza el Bot
 DecimeMijo requires python v3+ to run.
 ```sh
 $ sudo apt-get install python3 python3-doc
+$ sudo apt-get install redis-server
 ```
 
 = Repo =
