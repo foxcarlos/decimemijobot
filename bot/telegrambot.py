@@ -49,9 +49,14 @@ URL_DOLARTODAY = settings.CRIPTO_MONEDAS.get("URL_DOLARTODAY")
 #############################################################################
 def prueba_contrato(bot, update):
     from telegram import InlineKeyboardButton, InlineKeyboardMarkup, ReplyKeyboardMarkup, InlineQuery
+    parameters = query.message.text
+    cadena_sin_el_comando = ' '.join(parameters.split()[1:])
 
     global a
+    global operacion
     a = []
+    operacion = ""
+    operacion = cadena_sin_el_comando
 
     keyboard = [[
             InlineKeyboardButton("Si", callback_data="aceptar"),
@@ -64,15 +69,12 @@ def callback_button(bot, update):
     query = update.callback_query
     from random import randint
     from telegram import InlineKeyboardButton, InlineKeyboardMarkup, ReplyKeyboardMarkup, InlineQuery
-    parameters = query.message.text
-    cadena_sin_el_comando = ' '.join(parameters.split()[1:])
 
     """
     bot.edit_message_text(text="Bien, el comprador es: {}".format(query.data),
             chat_id=query.message.chat_id,
             message_id=query.message.message_id)"""
 
-    import ipdb; ipdb.set_trace() # BREAKPOINT
     if query.data == "aceptar":
         keyboard = [[InlineKeyboardButton("Soy el Vendedor", callback_data="vendedor"),]]
         reply_markup = InlineKeyboardMarkup(keyboard)
@@ -100,7 +102,7 @@ def callback_button(bot, update):
         grupo_id = query.message.chat.id
         grupo_titulo = query.message.chat.title
         contrato = randint(0,9796220)
-        operacion = cadena_sin_el_comando
+        # operacion = cadena_sin_el_comando
         comprador = a[1]
         vendedor =a[0]
 
