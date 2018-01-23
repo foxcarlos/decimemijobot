@@ -63,6 +63,8 @@ def prueba_contrato(bot, update):
 def callback_button(bot, update):
     query = update.callback_query
     from random import randint
+    parameters = query.message.text
+    cadena_sin_el_comando = ' '.join(parameters.split()[1:])
 
     """
     bot.edit_message_text(text="Bien, el comprador es: {}".format(query.data),
@@ -96,17 +98,19 @@ def callback_button(bot, update):
         grupo_id = query.message.chat.id
         grupo_titulo = query.message.chat.title
         contrato = randint(0,9796220)
+        operacion = cadena_sin_el_comando
         comprador = a[1]
         vendedor =a[0]
 
         msg_response = """
         :pushpin: <code>Se ha generado un contrato compra-venta:</code>\n
-        <b>Ref#:</b> Contrato {0}
-        <b>Comprador:</b> {1}
-        <b>vendedor:</b> {2}
-        <b>Grupo:</b> {3}
+        <b>Contrato:</b><b>{0}</b>
+        <b>Operacion:</b> {1}
+        <b>Comprador:</b> {2}
+        <b>vendedor:</b> {3}
+        <b>Grupo:</b> {4}
         <b>Status:</b> En Proceso
-        """.format(contrato, comprador, vendedor, grupo_titulo)
+        """.format(contrato, operacion, comprador, vendedor, grupo_titulo)
         # query.bot.sendMessage(query.message.chat.id, text="Grupo:{0}".format(grupo_titulo))
         import ipdb; ipdb.set_trace() # BREAKPOINT
         query.edit_message_text(parse_mode="html", text=emojize(msg_response, use_aliases=True))
