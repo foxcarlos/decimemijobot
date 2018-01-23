@@ -93,10 +93,10 @@ def callback_button(bot, update):
         query.edit_message_text('Presione para generar el contrato compra-venta:', reply_markup=reply_markup)
 
     elif query.data == "generar":
-        # grupo_id = update.message.chat.id
-        # grupo_titulo = update.message.chat.title
+        grupo_id = update.message.chat.id
+        grupo_titulo = update.message.chat.title
 
-        query.bot.sendMessage(query.message.chat.id, text="Grupo:{0}".format(query.chat.title))
+        query.bot.sendMessage(query.message.chat.id, text="Grupo:{0}".format(grupo_titulo))
         query.edit_message_text('Se genero el contrato numero: {0} con {1}'.format(randint(0,9796220), a))
 
     elif query.data == "cancelar_generar":
