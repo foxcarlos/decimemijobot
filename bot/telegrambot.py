@@ -9,6 +9,7 @@ from emoji import emojize
 from telegram.ext import CommandHandler, MessageHandler, Filters, CallbackQueryHandler
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, ReplyKeyboardMarkup, InlineQuery
 from django_telegrambot.apps import DjangoTelegramBot
+from random import randint
 
 from django.conf import settings
 
@@ -53,7 +54,6 @@ def cerrar_contrato(bot, update, args):
     parameters = update.message.text
     cadena_sin_el_comando = ' '.join(parameters.split()[1:])
 
-
 def crear_contrato(bot, update):
     from telegram import InlineKeyboardButton, InlineKeyboardMarkup, ReplyKeyboardMarkup, InlineQuery
     parameters = update.message.text
@@ -76,11 +76,6 @@ def callback_button(bot, update):
     query = update.callback_query
     from random import randint
     from telegram import InlineKeyboardButton, InlineKeyboardMarkup, ReplyKeyboardMarkup, InlineQuery
-
-    """
-    bot.edit_message_text(text="Bien, el comprador es: {}".format(query.data),
-            chat_id=query.message.chat_id,
-            message_id=query.message.message_id)"""
 
     if query.data == "aceptar":
         keyboard = [[InlineKeyboardButton("Soy el Vendedor", callback_data="vendedor"),]]
