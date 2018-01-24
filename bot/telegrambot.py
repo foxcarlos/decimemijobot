@@ -48,7 +48,7 @@ URL_DOLARTODAY = settings.CRIPTO_MONEDAS.get("URL_DOLARTODAY")
 
 
 #############################################################################
-def cerrar_contrato(bot, update):
+def cerrar_contrato(bot, update, args):
     import ipdb; ipdb.set_trace() # BREAKPOINT
     parameters = update.message.text
     cadena_sin_el_comando = ' '.join(parameters.split()[1:])
