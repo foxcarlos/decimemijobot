@@ -17,7 +17,8 @@ logger = logging.getLogger(__name__)
 from django.db.models import Count
 from django.contrib.auth.models import User as UserDjango
 from bot.scrapy import NoticiasPanorama
-from bot.models import Alerta, AlertaUsuario, User, Grupo, Comando, ComandoEstado
+from bot.models import Alerta, AlertaUsuario, User, Grupo, Comando, ComandoEstado, Contrato, PersonaContrato
+
 from bot.tasks import pool_message
 from datetime import datetime
 
@@ -55,9 +56,9 @@ def cerrar_contrato(bot, update, args):
 def crear_contrato(bot, update, args):
 
     global buyer_seller
-    global operacion
+    global inf_operacion
     buyer_seller = []
-    operacion = ' '.join(args) if args else ''
+    inf_operacion = ' '.join(args) if args else ''
 
     if not operacion:
         msg_response = ":no_entry_sign: Debes indicar el motivo de la operacion.\n<b>Ej: /trade venta de BTC por USD</b>"
@@ -89,7 +90,6 @@ def callback_button(bot, update):
             callback_data="comprador"),],]
         reply_markup = InlineKeyboardMarkup(keyboard)
 
-        #query.bot.sendMessage(query.message.chat.id, text="Vendedor:{0}".format(query.from_user.first_name))
         query.edit_message_text('Ahora presione este boton el Comprador:',
                 reply_markup=reply_markup)
 
@@ -100,14 +100,13 @@ def callback_button(bot, update):
             InlineKeyboardButton("Cancelar", callback_data="cancelar_generar")]]
         reply_markup = InlineKeyboardMarkup(keyboard)
 
-        #query.bot.sendMessage(query.message.chat.id, text="Comprador:{0}".format(query.from_user.first_name))
         query.edit_message_text('Presione para generar el contrato compra-venta:', reply_markup=reply_markup)
 
     elif query.data == "generar":
-        grupo_id = query.message.chat.id
-        grupo_titulo = query.message.chat.title
-        contrato = randint(0,9796220)
-        # operacion = cadena_sin_el_comando
+        grupo_chat_id = query.message.chat.id
+        grupo_chat_titulo = query.message.chat.title
+        grupo_chat_tipo = query.message.chat.type
+        contrato = Contrato.generar_nro_contrato()
         comprador = buyer_seller[1]
         vendedor = buyer_seller[0]
 
@@ -119,8 +118,13 @@ def callback_button(bot, update):
         <b>vendedor:</b> {3}
         <b>Grupo:</b> {4}
         <b>Status:</b> En Proceso
-        """.format(contrato, operacion, comprador, vendedor, grupo_titulo)
+        """.format(contrato, operacion, comprador, vendedor, grupo_chat_titulo)
 
+        grupo = Grupo.buscar_o_crear(grupo_chat_id, grupo_chat_titulo, grupo_chat_tipo)
+        try:
+            Contrato.object.create(contrato=contrato, grupo=grupo.id, operacion=inf_operacion)
+        except Exception as e:
+            msg_response = "Error al intentar crear el contrato"
         query.edit_message_text(parse_mode="html", text=emojize(msg_response, use_aliases=True))
 
     elif query.data == "cancelar_generar":

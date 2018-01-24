@@ -41,6 +41,13 @@ class Grupo(models.Model):
         verbose_name = 'Grupo'
         ordering = ['descripcion']
 
+    def buscar_o_crear(grupo_chat_id, grupo_descripcion, grupo_tipo):
+        grupo = Grupo.objects.update_or_create(grupo_id=grupo_chat_id)[0]
+        grupo.descripcion = grupo_descripcion
+        grupo.tipo = grupo_tipo
+        grupo.save()
+        return grupo
+
 
 class Comando(models.Model):
     nombre = models.CharField(max_length=100, blank=False, null=False)
@@ -106,7 +113,7 @@ class AlertaUsuario(models.Model):
 class Contrato(models.Model):
     '''.'''
 
-    contrato = models.IntegerField(blank=False, null=False)
+    contrato = models.IntegerField(blank=False, null=False, unique=True)
     status = models.BooleanField(default=True)
     operacion = models.CharField(max_length=100, blank=True, null=True)
     grupo = models.ForeignKey(Grupo, on_delete=models.CASCADE)
@@ -120,6 +127,10 @@ class Contrato(models.Model):
         verbose_name_plural = 'Contratos'
         verbose_name = 'Contrato'
         ordering = ['fecha']
+
+    def generar_nro_contrato():
+        contrato_nro = randint(0,9796220)+datetime.timestamp(datetime.now())
+        return contrato_nro
 
 
 class PersonaContrato(models.Model):
