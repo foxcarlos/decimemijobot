@@ -3,7 +3,7 @@ from django.contrib import admin
 # Register your models here.
 from django.contrib import admin
 
-from .models import Alerta, AlertaUsuario, User, Grupo, Comando, ComandoEstado
+from .models import Alerta, AlertaUsuario, User, Grupo, Comando, ComandoEstado, Contrato, PersonaContrato
 
 
 class UserAdmin(admin.ModelAdmin):
@@ -52,10 +52,28 @@ class ComandoEstadoAdmin(admin.ModelAdmin):
     list_filter = ['activo']
 
 
+class ContratoAdmin(admin.ModelAdmin):
+    model = Contrato
+
+    list_display = ["contrato" , "status", "operacion", "grupo", "fecha"]
+    search_fields = ["contrato" , "status", "grupo"]
+    list_filter = ['status']
+
+
+class PersonaContratoAdmin(admin.ModelAdmin):
+    model = PersonaContrato
+
+    list_display = ["contrato" , "user", "tipo_buyer_seller", "puntuacion", "comentario"]
+    search_fields = ["contrato" , "user"]
+    list_filter = ['tipo_buyer_seller', "puntuacion"]
+
+
 admin.site.register(User, UserAdmin)
 admin.site.register(Alerta, AlertaAdmin)
 admin.site.register(AlertaUsuario, AlertaUsuarioAdmin)
 admin.site.register(Grupo, GrupoAdmin)
 admin.site.register(Comando, ComandoAdmin)
 admin.site.register(ComandoEstado, ComandoEstadoAdmin)
+admin.site.register(Contrato, ContratoAdmin)
+admin.site.register(PersonaContrato, PersonaContratoAdmin)
 

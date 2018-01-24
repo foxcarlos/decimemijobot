@@ -49,47 +49,52 @@ URL_DOLARTODAY = settings.CRIPTO_MONEDAS.get("URL_DOLARTODAY")
 
 #############################################################################
 def cerrar_contrato(bot, update, args):
-    parameters = update.message.text
-    cadena_sin_el_comando = ' '.join(parameters.split()[1:])
+    contrato_id = args[0] if args else []
 
-def crear_contrato(bot, update):
-    from telegram import InlineKeyboardButton, InlineKeyboardMarkup, ReplyKeyboardMarkup, InlineQuery
-    parameters = update.message.text
-    cadena_sin_el_comando = ' '.join(parameters.split()[1:])
 
-    global a
+def crear_contrato(bot, update, args):
+
+    global buyer_seller
     global operacion
-    a = []
-    operacion = ""
-    operacion = cadena_sin_el_comando
+    buyer_seller = []
+    operacion = args[0] if args else []
+
+    if not operacion:
+        msg_response = ":no_entry_sign: Debes indicar el motivo de la operacion.\n<b>Ej: /trade venta de BTC por USD</b>"
+        update.message.reply_text(parse_mode="html",
+                text=emojize(msg_response, use_aliases=True))
+        return True
 
     keyboard = [[
             InlineKeyboardButton("Si", callback_data="aceptar"),
             InlineKeyboardButton("No", callback_data="cancelar")]]
 
     reply_markup = InlineKeyboardMarkup(keyboard)
-    update.message.reply_text('Desea crear un contrato de compra venta?:', reply_markup=reply_markup)
+    update.message.reply_text('Desea crear un contrato de compra venta?:',
+            reply_markup=reply_markup)
+    return True
 
 def callback_button(bot, update):
     query = update.callback_query
-    from random import randint
-    from telegram import InlineKeyboardButton, InlineKeyboardMarkup, ReplyKeyboardMarkup, InlineQuery
 
     if query.data == "aceptar":
         keyboard = [[InlineKeyboardButton("Soy el Vendedor", callback_data="vendedor"),]]
         reply_markup = InlineKeyboardMarkup(keyboard)
-        query.edit_message_text('Presione este boton solo el <b>vendedor</b>:', parse_mode="html",  reply_markup=reply_markup)
+        query.edit_message_text('Presione este boton solo el <b>vendedor</b>:',
+                parse_mode="html",  reply_markup=reply_markup)
 
     elif query.data == "vendedor":
         a.append(query.from_user.username)
-        keyboard = [[InlineKeyboardButton("Soy el Comprador", callback_data="comprador"),],]
+        keyboard = [[InlineKeyboardButton("Soy el Comprador",
+            callback_data="comprador"),],]
         reply_markup = InlineKeyboardMarkup(keyboard)
 
         #query.bot.sendMessage(query.message.chat.id, text="Vendedor:{0}".format(query.from_user.first_name))
-        query.edit_message_text('Ahora presione este boton el Comprador:', reply_markup=reply_markup)
+        query.edit_message_text('Ahora presione este boton el Comprador:',
+                reply_markup=reply_markup)
 
     elif query.data == "comprador":
-        a.append(query.from_user.username)
+        buyer_seller.append(query.from_user.username)
         keyboard = [[
             InlineKeyboardButton("Generar", callback_data="generar"),
             InlineKeyboardButton("Cancelar", callback_data="cancelar_generar")]]
@@ -103,8 +108,8 @@ def callback_button(bot, update):
         grupo_titulo = query.message.chat.title
         contrato = randint(0,9796220)
         # operacion = cadena_sin_el_comando
-        comprador = a[1]
-        vendedor =a[0]
+        comprador = buyer_seller[1]
+        vendedor =buyer_seller[0]
 
         msg_response = """
         :pushpin: <code>Se ha generado un contrato compra-venta:</code>\n
@@ -115,7 +120,7 @@ def callback_button(bot, update):
         <b>Grupo:</b> {4}
         <b>Status:</b> En Proceso
         """.format(contrato, operacion, comprador, vendedor, grupo_titulo)
-        # query.bot.sendMessage(query.message.chat.id, text="Grupo:{0}".format(grupo_titulo))
+
         query.edit_message_text(parse_mode="html", text=emojize(msg_response, use_aliases=True))
 
     elif query.data == "cancelar_generar":
