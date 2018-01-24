@@ -1091,7 +1091,7 @@ def main():
     dp.add_handler(CallbackQueryHandler(callback_button))
 
     dp.add_handler(CommandHandler("tradeclose", cerrar_contrato, pass_args=True))
-    dp.add_handler(InlineQueryHandler(reply_to_query))
+    # dp.add_handler(InlineQueryHandler(reply_to_query))
 
     dp.add_handler(CommandHandler("help", help))
     dp.add_handler(CommandHandler("ayuda", help))
