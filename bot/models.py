@@ -34,6 +34,7 @@ class Grupo(models.Model):
     tipo = models.CharField(max_length=50, blank=True, null=True)
 
     def __str__(self):
+        #return str(self.grupo_id)
         return self.descripcion
 
     class Meta:
@@ -114,14 +115,14 @@ class AlertaUsuario(models.Model):
 class Contrato(models.Model):
     '''.'''
 
-    contrato = models.CharField(max_length=100)
+    contrato = models.CharField(max_length=100, blank=True, null=True)
     status = models.BooleanField(default=True)
     operacion = models.CharField(max_length=100, blank=True, null=True)
     grupo = models.ForeignKey(Grupo, on_delete=models.CASCADE)
     fecha = models.DateTimeField(default=datetime.now())
 
     def __str__(self):
-        return self.cotrato
+        return self.contrato
 
     class Meta:
         '''.'''

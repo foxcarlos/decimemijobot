@@ -55,8 +55,8 @@ class ComandoEstadoAdmin(admin.ModelAdmin):
 class ContratoAdmin(admin.ModelAdmin):
     model = Contrato
 
-    list_display = ["contrato" , "status", "operacion", "grupo", "fecha"]
-    search_fields = ["contrato" , "status", "grupo"]
+    list_display = ["contrato" , "status", "operacion", "fecha", "grupo"]
+    search_fields = ["contrato" , "status" ]
     list_filter = ['status']
 
 
