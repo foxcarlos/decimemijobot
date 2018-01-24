@@ -60,7 +60,7 @@ def crear_contrato(bot, update, args):
     buyer_seller = []
     inf_operacion = ' '.join(args) if args else ''
 
-    if not operacion:
+    if not inf_operacion:
         msg_response = ":no_entry_sign: Debes indicar el motivo de la operacion.\n<b>Ej: /trade venta de BTC por USD</b>"
         update.message.reply_text(parse_mode="html",
                 text=emojize(msg_response, use_aliases=True))
