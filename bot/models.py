@@ -121,7 +121,7 @@ class Contrato(models.Model):
     fecha = models.DateTimeField(default=datetime.now())
 
     def __str__(self):
-        return '{0}'.format(str(self.contrato))
+        return self.contrato
 
     class Meta:
         '''.'''

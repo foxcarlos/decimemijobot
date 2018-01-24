@@ -107,7 +107,7 @@ def callback_button(bot, update):
         grupo_chat_id = query.message.chat.id
         grupo_chat_titulo = query.message.chat.title
         grupo_chat_tipo = query.message.chat.type
-        contrato = Contrato.generar_nro_contrato()
+        contrato = int(Contrato.generar_nro_contrato())
         comprador = buyer_seller[1]
         vendedor = buyer_seller[0]
 
