@@ -7,8 +7,9 @@ import logging
 from emoji import emojize
 
 from telegram.ext import CommandHandler, MessageHandler, Filters, CallbackQueryHandler
-from telegram import InlineKeyboardButton, InlineKeyboardMarkup
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup, ReplyKeyboardMarkup, InlineQuery
 from django_telegrambot.apps import DjangoTelegramBot
+
 from django.conf import settings
 
 logger = logging.getLogger(__name__)
@@ -47,7 +48,13 @@ URL_DOLARTODAY = settings.CRIPTO_MONEDAS.get("URL_DOLARTODAY")
 
 
 #############################################################################
-def prueba_contrato(bot, update):
+def cerrar_contrato(bot, update):
+    import ipdb; ipdb.set_trace() # BREAKPOINT
+    parameters = update.message.text
+    cadena_sin_el_comando = ' '.join(parameters.split()[1:])
+
+
+def crear_contrato(bot, update):
     from telegram import InlineKeyboardButton, InlineKeyboardMarkup, ReplyKeyboardMarkup, InlineQuery
     parameters = update.message.text
     cadena_sin_el_comando = ' '.join(parameters.split()[1:])
@@ -1080,8 +1087,11 @@ def main():
     dp.add_handler(CommandHandler("kick", kick))
     dp.add_handler(CommandHandler("unban", unban))
 
-    dp.add_handler(CommandHandler("trade", prueba_contrato))
+    dp.add_handler(CommandHandler("trade", crear_contrato))
     dp.add_handler(CallbackQueryHandler(callback_button))
+
+    dp.add_handler(CommandHandler("tradeclose", cerrar_contrato, pass_args=True))
+    dp.add_handler(InlineQueryHandler(reply_to_query))
 
     dp.add_handler(CommandHandler("help", help))
     dp.add_handler(CommandHandler("ayuda", help))
