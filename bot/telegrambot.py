@@ -1085,7 +1085,7 @@ def main():
     dp.add_handler(CommandHandler("kick", kick))
     dp.add_handler(CommandHandler("unban", unban))
 
-    dp.add_handler(CommandHandler("trade", crear_contrato))
+    dp.add_handler(CommandHandler("trade", crear_contrato, pass_args=True))
     dp.add_handler(CallbackQueryHandler(callback_button))
 
     dp.add_handler(CommandHandler("tradeclose", cerrar_contrato, pass_args=True))
