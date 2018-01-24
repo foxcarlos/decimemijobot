@@ -103,7 +103,6 @@ def callback_button(bot, update):
         query.edit_message_text('Presione para generar el contrato compra-venta:', reply_markup=reply_markup)
 
     elif query.data == "generar":
-        import ipdb; ipdb.set_trace() # BREAKPOINT
         grupo_chat_id = query.message.chat.id
         grupo_chat_titulo = query.message.chat.title
         grupo_chat_tipo = query.message.chat.type
