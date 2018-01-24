@@ -30,7 +30,7 @@ class User(models.Model):
 
 class Grupo(models.Model):
     grupo_id = models.IntegerField(default=0)
-    descripcion = models.CharField(max_length=200, blank=True, null=True)
+    descripcion = models.CharField(max_length=200, default="Sin Descripcion", blank=True, null=True)
     tipo = models.CharField(max_length=50, blank=True, null=True)
 
     def __str__(self):

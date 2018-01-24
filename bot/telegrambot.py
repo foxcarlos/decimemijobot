@@ -121,10 +121,17 @@ def callback_button(bot, update):
         <b>Status:</b> En Proceso
         """.format(contrato, inf_operacion, comprador, vendedor, grupo_chat_titulo)
 
-        # update.callback_query.message.chat.PRIVATE
+        # Solo para cuando se hacen pruebas desde el chat privado del bot
+        if update.callback_query.message.chat.PRIVATE == "private":
+            grupo_chat_id = 9796220
+            grupo_chat_titulo = "FoxBot"
+            grupo_chat_tipo = "privado"
+
         grupo = Grupo.buscar_o_crear(grupo_chat_id, grupo_chat_titulo, grupo_chat_tipo)
         try:
-            Contrato.objects.create(contrato=contrato, grupo=grupo, operacion=inf_operacion)
+            obj_contrato = Contrato.objects.create(contrato=contrato, grupo=grupo, operacion=inf_operacion)
+            # PersonaContrato.objects.create(contrato=obj_contrato, user=sss, tipo_buyer_seller="")
+
         except Exception as e:
             msg_response = "Error al intentar crear el contrato"
         query.edit_message_text(parse_mode="html", text=emojize(msg_response, use_aliases=True))
