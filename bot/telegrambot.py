@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# Example code for telegrambot.py module
 import os
 import requests
 import logging
@@ -50,7 +49,6 @@ URL_DOLARTODAY = settings.CRIPTO_MONEDAS.get("URL_DOLARTODAY")
 
 #############################################################################
 def cerrar_contrato(bot, update, args):
-    import ipdb; ipdb.set_trace() # BREAKPOINT
     parameters = update.message.text
     cadena_sin_el_comando = ' '.join(parameters.split()[1:])
 
