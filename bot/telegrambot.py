@@ -84,7 +84,7 @@ def callback_button(bot, update):
                 parse_mode="html",  reply_markup=reply_markup)
 
     elif query.data == "vendedor":
-        a.append(query.from_user.username)
+        buyer_seller.append(query.from_user.username)
         keyboard = [[InlineKeyboardButton("Soy el Comprador",
             callback_data="comprador"),],]
         reply_markup = InlineKeyboardMarkup(keyboard)
@@ -109,7 +109,7 @@ def callback_button(bot, update):
         contrato = randint(0,9796220)
         # operacion = cadena_sin_el_comando
         comprador = buyer_seller[1]
-        vendedor =buyer_seller[0]
+        vendedor = buyer_seller[0]
 
         msg_response = """
         :pushpin: <code>Se ha generado un contrato compra-venta:</code>\n
