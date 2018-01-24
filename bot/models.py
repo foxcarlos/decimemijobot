@@ -18,7 +18,7 @@ class User(models.Model):
     language_code = models.CharField(max_length=50, blank=True, null=True,)
 
     def __str__(self):
-        return u'{0}'.format(self.username)
+        return u'{0}-{1}'.format(self.first_name, self.username)
 
     class Meta:
         '''.'''
@@ -26,10 +26,20 @@ class User(models.Model):
         verbose_name = 'User'
         ordering = ['username']
 
+
 class Grupo(models.Model):
     grupo_id = models.IntegerField(default=0)
     descripcion = models.CharField(max_length=200, blank=True, null=True)
     tipo = models.CharField(max_length=50, blank=True, null=True)
+
+    def __str__(self):
+        return self.descripcion
+
+    class Meta:
+        '''.'''
+        verbose_name_plural = 'Grupos'
+        verbose_name = 'Grupo'
+        ordering = ['descripcion']
 
 
 class Comando(models.Model):
@@ -92,4 +102,36 @@ class AlertaUsuario(models.Model):
         verbose_name = 'AlertaUsuario'
         ordering = ['alerta']
 
+
+class Contrato(models.Model):
+    '''.'''
+
+    contrato = models.IntegerField(blank=False, null=False)
+    status = models.BooleanField(default=True)
+    operacion = models.CharField(max_length=100, blank=True, null=True)
+    grupo = models.ForeignKey(Grupo, on_delete=models.CASCADE)
+    fecha = models.DateTimeField(default=datetime.now())
+
+    def __str__(self):
+        return '{0}'.format(str(self.contrato))
+
+    class Meta:
+        '''.'''
+        verbose_name_plural = 'Contratos'
+        verbose_name = 'Contrato'
+        ordering = ['fecha']
+
+
+class PersonaContrato(models.Model):
+    '''.'''
+
+    contrato = models.ForeignKey(Contrato, related_name="contratos", on_delete=models.CASCADE)
+    user = models.ForeignKey(User, related_name="users", on_delete=models.CASCADE)
+    tipo_buyer_seller = models.CharField(max_length=50, blank=True, null=True)
+    puntuacion = models.CharField(max_length=15, default="neu",
+            choices=(
+                ("pos", "Positivo"),
+                ("neg", "Negativo"),
+                ("neu", "Neutral")))
+    comentario = models.CharField(max_length=100, blank=True, null=True)
 
