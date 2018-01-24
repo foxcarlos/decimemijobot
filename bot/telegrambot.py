@@ -107,7 +107,7 @@ def callback_button(bot, update):
         grupo_chat_id = query.message.chat.id
         grupo_chat_titulo = query.message.chat.title
         grupo_chat_tipo = query.message.chat.type
-        contrato = int(Contrato.generar_nro_contrato())
+        contrato = Contrato.generar_nro_contrato()
         comprador = buyer_seller[1]
         vendedor = buyer_seller[0]
 
@@ -124,7 +124,7 @@ def callback_button(bot, update):
         # update.callback_query.message.chat.PRIVATE
         grupo = Grupo.buscar_o_crear(grupo_chat_id, grupo_chat_titulo, grupo_chat_tipo)
         try:
-            Contrato.objects.create(contrato=int(contrato), grupo=grupo, operacion=inf_operacion)
+            Contrato.objects.create(contrato=contrato, grupo=grupo, operacion=inf_operacion)
         except Exception as e:
             msg_response = "Error al intentar crear el contrato"
         query.edit_message_text(parse_mode="html", text=emojize(msg_response, use_aliases=True))

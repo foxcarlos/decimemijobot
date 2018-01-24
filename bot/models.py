@@ -114,14 +114,14 @@ class AlertaUsuario(models.Model):
 class Contrato(models.Model):
     '''.'''
 
-    contrato = models.IntegerField(blank=False, null=False, unique=True)
+    contrato = models.CharField(max_length=100)
     status = models.BooleanField(default=True)
     operacion = models.CharField(max_length=100, blank=True, null=True)
     grupo = models.ForeignKey(Grupo, on_delete=models.CASCADE)
     fecha = models.DateTimeField(default=datetime.now())
 
     def __str__(self):
-        return self.contrato
+        return self.cotrato
 
     class Meta:
         '''.'''
@@ -130,7 +130,7 @@ class Contrato(models.Model):
         ordering = ['fecha']
 
     def generar_nro_contrato():
-        contrato_nro = randint(0,9796220)+datetime.timestamp(datetime.now())
+        contrato_nro = str(int(randint(0,9796220)+datetime.timestamp(datetime.now())))
         return contrato_nro
 
 
@@ -146,4 +146,7 @@ class PersonaContrato(models.Model):
                 ("neg", "Negativo"),
                 ("neu", "Neutral")))
     comentario = models.CharField(max_length=100, blank=True, null=True)
+
+    def __str__(self):
+        return self.cotrato
 
