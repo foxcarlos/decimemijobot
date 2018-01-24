@@ -118,7 +118,7 @@ def callback_button(bot, update):
         <b>vendedor:</b> {3}
         <b>Grupo:</b> {4}
         <b>Status:</b> En Proceso
-        """.format(contrato, operacion, comprador, vendedor, grupo_chat_titulo)
+        """.format(contrato, inf_operacion, comprador, vendedor, grupo_chat_titulo)
 
         grupo = Grupo.buscar_o_crear(grupo_chat_id, grupo_chat_titulo, grupo_chat_tipo)
         try:
