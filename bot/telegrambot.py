@@ -121,7 +121,10 @@ def callback_button(bot, update):
         <b>Comprador:</b> {2}
         <b>vendedor:</b> {3}
         <b>Grupo:</b> {4}
-        <b>Status:</b> En Proceso
+        <b>Status:</b> En Proceso\n
+        :bulb: <b>Tips</b>\b
+        - Guarda el numero contrato
+        - Ejecuta <b>/trade ? para ayuda</b>
         """.format(contrato, inf_operacion, comprador[0], vendedor[0],
                 grupo_chat_titulo)
 
