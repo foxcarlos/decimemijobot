@@ -1086,16 +1086,14 @@ def forwarded(bot, update):
 
 def echo(bot, update):
     print("Eco")
-    print(update.message)
+    print(u'{0}'.format(update.message))
     m = evaluar(update.message.text)
     if m:
         update.message.reply_text(m)
     usuario_nuevo(update)
 
 def unknown(bot, update):
-    # bot.send_message(chat_id=update.message.chat_id, text="Lo siento, No reconozco ese comando.")
-    pass
-
+    bot.send_message(chat_id=update.message.chat_id, text="Lo siento, No reconozco ese comando.")
 
 def main():
     logger.info("Loading handlers for telegram bot")
