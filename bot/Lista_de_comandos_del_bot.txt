@@ -12,4 +12,10 @@ set_alarma_bitcoin - <estado> Ej: /set_alarma_bitcoin on
 set_alarma_dolartoday - <estado> Ej: /set_alarma_bitcoin on
 set_alarma_ethereum - <estado> Ej: /set_alarma_ethereum on
 set_alarma_litecoin - <estado> Ej: /set_alarma_litecoin on
-nota - Puedes hacer calculos escribiendo 2+2
+ban - reply al usuario y esribir /ban
+kick - reply al usuario y esribir /kick
+trade - Crear un contrato compra venta
+tradeb - Buscar Inf Conrato
+tradec - Calificar Conrtato
+traderef - Referencias de usuario
+

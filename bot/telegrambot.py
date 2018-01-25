@@ -56,32 +56,50 @@ def ayuda_trade():
     <b>Ayuda de Comandos</b>\n
     /trade - Crea un contrato
 
-    /calificar - Califica el Contrato
-    Ej /calificar conrtato comentario
+    /tradec - Califica el Contrato
+    Ej /tradec contrato comentario
 
-    /consulta  - Consulta el status
-    Ej /consulta contrato
+    /tradeb  - Busca Inf contrato
+    Ej /tradeb contrato
 
-    /referencia - Busca inf de un usuario
-    Ej /referencia username\n
+    /traderef - Referencias de usuario
+    Ej /traderef username\n
 
     :bulb: <b>Modo de uso:</b>
 
     1) Crear un conrtato
-    2) Hacer el intercambio
+    2) <i>Hacer el intercambio</i>
     3) Califica el contrato\n
     <b>Nota:</b> Cuando ambas
     partes hayan calificado
     el contrato se enviara
     la informacion al grupo
     desde donde se creo el
-    contrato
+    contrato y este sera
+    <b>cerrado</b> automaticamente
     """
     return help_trade
 
-def cerrar_contrato(bot, update, args):
-    contrato_id = args[0] if args else []
-
+def trade_califica(bot, update, args):
+    if len(args) == 2:
+         contrato_id = args[0]
+         contrato_comentario = args[1]
+    else:
+        msg_response = """
+        :no_entry_sign: Debes indicar el
+        numero de contrato
+        y un comentario
+        sobre la persona
+        con la cual hiciste
+        el contrato.\n
+        :bulb: Ejemplo\n
+        <b>/tradec 1104 Todo bien</b>\n
+        Ejecuta <b>/trade ?</b>
+        para obtener mas ayuda
+        """
+        update.message.reply_text(parse_mode="html",
+                text=emojize(msg_response, use_aliases=True))
+        return True
 
 def crear_contrato(bot, update, args):
 
@@ -910,6 +928,12 @@ def help(bot, update):
     /ban Expulsa a un usuario sin derecho a regresar
     /kick Expulsa a un uusario y puede volver cuando lo desee
 
+    /trade - Crea un contrato compra venta
+    /trade ? - Para obtener ayuda
+    /tradec - Calificar Conrtato
+    /tradeb - Buscar Inf Conrato
+    /traderef - Referencias de usuario
+
     Nota: Ahora es posible hacer calculos 
     con solo escribir directamente 2+2*3
 
@@ -1150,7 +1174,7 @@ def main():
     dp.add_handler(CommandHandler("trade", crear_contrato, pass_args=True))
     dp.add_handler(CallbackQueryHandler(callback_button))
 
-    dp.add_handler(CommandHandler("tradeclose", cerrar_contrato, pass_args=True))
+    dp.add_handler(CommandHandler("tradec", trade_califica, pass_args=True))
     # dp.add_handler(InlineQueryHandler(reply_to_query))
 
     dp.add_handler(CommandHandler("help", help))
