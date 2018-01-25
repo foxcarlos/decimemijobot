@@ -16,6 +16,8 @@ logger = logging.getLogger(__name__)
 
 from django.db.models import Count
 from django.contrib.auth.models import User as UserDjango
+from django.core.exceptions import ObjectDoesNotExist
+
 from bot.scrapy import NoticiasPanorama
 from bot.models import Alerta, AlertaUsuario, User, Grupo, Comando, ComandoEstado, Contrato, PersonaContrato
 
@@ -85,7 +87,7 @@ def callback_button(bot, update):
                 parse_mode="html",  reply_markup=reply_markup)
 
     elif query.data == "vendedor":
-        buyer_seller.append(query.from_user.username)
+        buyer_seller.append((query.from_user.username, query.from_user.id))
         keyboard = [[InlineKeyboardButton("Soy el Comprador",
             callback_data="comprador"),],]
         reply_markup = InlineKeyboardMarkup(keyboard)
@@ -94,7 +96,7 @@ def callback_button(bot, update):
                 reply_markup=reply_markup)
 
     elif query.data == "comprador":
-        buyer_seller.append(query.from_user.username)
+        buyer_seller.append((query.from_user.username, query.from_user.id))
         keyboard = [[
             InlineKeyboardButton("Generar", callback_data="generar"),
             InlineKeyboardButton("Cancelar", callback_data="cancelar_generar")]]
@@ -118,7 +120,7 @@ def callback_button(bot, update):
         <b>vendedor:</b> {3}
         <b>Grupo:</b> {4}
         <b>Status:</b> En Proceso
-        """.format(contrato, inf_operacion, comprador, vendedor, grupo_chat_titulo)
+        """.format(contrato, inf_operacion, comprador[0], vendedor[0], grupo_chat_titulo)
 
         # Solo para cuando se hacen pruebas desde el chat privado del bot
         if update.callback_query.message.chat.PRIVATE == "private":
@@ -126,10 +128,16 @@ def callback_button(bot, update):
             grupo_chat_titulo = "FoxBot"
             grupo_chat_tipo = "privado"
 
-        grupo = Grupo.buscar_o_crear(grupo_chat_id, grupo_chat_titulo, grupo_chat_tipo)
+        obj_grupo = Grupo.buscar_o_crear(grupo_chat_id, grupo_chat_titulo, grupo_chat_tipo)
         try:
-            obj_contrato = Contrato.objects.create(contrato=contrato, grupo=grupo, operacion=inf_operacion)
-            # PersonaContrato.objects.create(contrato=obj_contrato, user=sss, tipo_buyer_seller="")
+            obj_contrato = Contrato.objects.create(contrato=contrato, grupo=obj_grupo, operacion=inf_operacion)
+            for usuario in buyer_seller:
+                obj_user = User.objects.filter(chat_id=usuario[1])
+                if obj_user:
+                    try:
+                        PersonaContrato.objects.create(contrato=obj_contrato, user=obj_user, tipo_buyer_seller=usuario[0])
+                    except Exception as e:
+	                print(e)
 
         except Exception as e:
             msg_response = "Error al intentar crear el contrato"
