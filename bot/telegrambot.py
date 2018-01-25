@@ -84,6 +84,7 @@ def trade_califica(bot, update, args):
     if len(args) == 2:
          contrato_id = args[0]
          contrato_comentario = args[1]
+         PersonaContrato.objects.filter(contrato=contrato_id)
     else:
         msg_response = """
        :no_entry_sign: Debes indicar el
