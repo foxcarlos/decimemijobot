@@ -54,27 +54,28 @@ URL_DOLARTODAY = settings.CRIPTO_MONEDAS.get("URL_DOLARTODAY")
 def ayuda_trade():
     help_trade = """
     <b>Ayuda de Comandos</b>\n
-    /trade - Crea un contrato compra-venta
+    /trade - Crea un contrato
 
-    /calificar - Califica una compra-venta
-    Ej /calificar <conrtato> <comentario>
+    /calificar - Califica el Contrato
+    Ej /calificar conrtato comentario
 
     /consulta  - Consulta el status
-    Ej /consulta <contrato>
+    Ej /consulta contrato
 
     /referencia - Busca inf de un usuario
-    Ej /referencia <username>
+    Ej /referencia username\n
 
     :bulb: <b>Modo de uso:</b>
 
     1) Crear un conrtato
     2) Hacer el intercambio
     3) Califica el contrato\n
-    <b>Nota:</b> Cuando ambas partes 
-    hayan calificado el contrato
-    se enviara la informacion 
-    al grupo indicando que fue
-    cerrado el trato
+    <b>Nota:</b> Cuando ambas
+    partes hayan calificado
+    el contrato se enviara
+    la informacion al grupo
+    desde donde se creo el
+    contrato
     """
     return help_trade
 
@@ -90,7 +91,7 @@ def crear_contrato(bot, update, args):
     inf_operacion = ' '.join(args) if args else ''
 
     if not inf_operacion:
-        msg_response = ":no_entry_sign: Debes indicar el motivo de la operacion.\n<b>Ej: /trade venta de BTC por USD</b>"
+        msg_response = ":no_entry_sign: Debes indicar el motivo de la operacion.\n<b>Ej: /trade venta de BTC por USD</b>\n Ejecuta <b>/trade ?</b> para obtener ayuda"
         update.message.reply_text(parse_mode="html",
                 text=emojize(msg_response, use_aliases=True))
         return True
