@@ -141,7 +141,7 @@ def callback_button(bot, update):
                 if obj_user:
                     try:
                         PersonaContrato.objects.create(contrato=obj_contrato,
-                                user=obj_user, tipo_buyer_seller=usuario[0])
+                                user=obj_user[0], tipo_buyer_seller=usuario[0])
                     except Exception as e:
                         print(e)
 
