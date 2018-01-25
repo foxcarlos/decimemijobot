@@ -86,17 +86,16 @@ def trade_califica(bot, update, args):
          contrato_comentario = args[1]
     else:
         msg_response = """
-        :no_entry_sign: Debes indicar el
-        numero de contrato
-        y un comentario
-        sobre la persona
-        con la cual hiciste
-        el contrato.\n
-        :bulb: Ejemplo\n
-        <b>/tradec 1104 Todo bien</b>\n
-        Ejecuta <b>/trade ?</b>
-        para obtener mas ayuda
-        """
+       :no_entry_sign: Debes indicar el
+       numero de contrato
+       y un comentario sobre 
+       la persona con la cual
+       hiciste el contrato.\n
+       :bulb: Ejemplo:
+       <b>/tradec 1104 Todo bien</b>\n
+       Ejecuta <b>/trade ?</b>
+       para obtener mas ayuda
+       """
         update.message.reply_text(parse_mode="html",
                 text=emojize(msg_response, use_aliases=True))
         return True
