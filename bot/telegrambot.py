@@ -81,7 +81,8 @@ def callback_button(bot, update):
     query = update.callback_query
 
     if query.data == "aceptar":
-        keyboard = [[InlineKeyboardButton("Soy el Vendedor", callback_data="vendedor"),]]
+        keyboard = [[InlineKeyboardButton("Soy el Vendedor",
+            callback_data="vendedor"),]]
         reply_markup = InlineKeyboardMarkup(keyboard)
         query.edit_message_text('Presione este boton solo el <b>vendedor</b>:',
                 parse_mode="html",  reply_markup=reply_markup)
@@ -102,7 +103,8 @@ def callback_button(bot, update):
             InlineKeyboardButton("Cancelar", callback_data="cancelar_generar")]]
         reply_markup = InlineKeyboardMarkup(keyboard)
 
-        query.edit_message_text('Presione para generar el contrato compra-venta:', reply_markup=reply_markup)
+        query.edit_message_text('Presione para generar el contrato compra-venta:',
+                reply_markup=reply_markup)
 
     elif query.data == "generar":
         grupo_chat_id = query.message.chat.id
@@ -120,7 +122,8 @@ def callback_button(bot, update):
         <b>vendedor:</b> {3}
         <b>Grupo:</b> {4}
         <b>Status:</b> En Proceso
-        """.format(contrato, inf_operacion, comprador[0], vendedor[0], grupo_chat_titulo)
+        """.format(contrato, inf_operacion, comprador[0], vendedor[0],
+                grupo_chat_titulo)
 
         # Solo para cuando se hacen pruebas desde el chat privado del bot
         if update.callback_query.message.chat.PRIVATE == "private":
@@ -128,20 +131,24 @@ def callback_button(bot, update):
             grupo_chat_titulo = "FoxBot"
             grupo_chat_tipo = "privado"
 
-        obj_grupo = Grupo.buscar_o_crear(grupo_chat_id, grupo_chat_titulo, grupo_chat_tipo)
+        obj_grupo = Grupo.buscar_o_crear(grupo_chat_id, grupo_chat_titulo,
+                grupo_chat_tipo)
         try:
-            obj_contrato = Contrato.objects.create(contrato=contrato, grupo=obj_grupo, operacion=inf_operacion)
+            obj_contrato = Contrato.objects.create(contrato=contrato,
+                    grupo=obj_grupo, operacion=inf_operacion)
             for usuario in buyer_seller:
                 obj_user = User.objects.filter(chat_id=usuario[1])
                 if obj_user:
                     try:
-                        PersonaContrato.objects.create(contrato=obj_contrato, user=obj_user, tipo_buyer_seller=usuario[0])
+                        PersonaContrato.objects.create(contrato=obj_contrato,
+                                user=obj_user, tipo_buyer_seller=usuario[0])
                     except Exception as e:
-	                print(e)
+                        print(e)
 
         except Exception as e:
             msg_response = "Error al intentar crear el contrato"
-        query.edit_message_text(parse_mode="html", text=emojize(msg_response, use_aliases=True))
+        query.edit_message_text(parse_mode="html", text=emojize(msg_response,
+            use_aliases=True))
 
     elif query.data == "cancelar_generar":
         query.edit_message_text('Cancelado')
