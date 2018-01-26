@@ -249,7 +249,7 @@ def callback_califica(bot, update):
     import ipdb; ipdb.set_trace() # BREAKPOINT
     query = update.callback_query
     feedback, contrato_id, contrato_comentario = query.data.split(',')
-    chat_id = update.callback_query.chat.id
+    chat_id = update.callback_query.from_user.id
 
     try:
         usuario_contrato = Contrato.objects.get(
@@ -1259,6 +1259,10 @@ def main():
     # To get Dispatcher related to a specific bot
     # dp = DjangoTelegramBot.getDispatcher('BOT_n_username')  #get by bot username
 
+    dp.add_handler(CommandHandler("tradec", trade_califica, pass_args=True))
+    dp.add_handler(CallbackQueryHandler(callback_califica))
+    # dp.add_handler(InlineQueryHandler(reply_to_query))
+
     # on different commands - answer in Telegram
     dp.add_handler(CommandHandler("start", start))
     dp.add_handler(CommandHandler("reglas", reglas))
@@ -1281,10 +1285,6 @@ def main():
     dp.add_handler(CommandHandler("graf", historico))
     dp.add_handler(CommandHandler("graph", historico))
     dp.add_handler(CommandHandler("chart", historico))
-
-    dp.add_handler(CommandHandler("tradec", trade_califica, pass_args=True))
-    dp.add_handler(CallbackQueryHandler(callback_califica))
-    # dp.add_handler(InlineQueryHandler(reply_to_query))
 
     dp.add_handler(CommandHandler("calc", calc))
     dp.add_handler(CommandHandler("clc", calc))
