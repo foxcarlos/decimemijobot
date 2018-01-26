@@ -85,7 +85,10 @@ def trade_califica(bot, update, args):
     import ipdb; ipdb.set_trace() # BREAKPOINT
     chat_id = update.message.from_user.id
 
-    if args >= 2:
+    if len(args) >= 2:
+        contrato_id = args[0]
+        contrato_comentario = ' '.join(args[1:])
+
         keyboard = [[
                 InlineKeyboardButton("Positivo", callback_data=("pos",
                     contrato_id, contrato_comentario)),
@@ -96,16 +99,14 @@ def trade_califica(bot, update, args):
                 ]]
         reply_markup = InlineKeyboardMarkup(keyboard)
 
-        contrato_id = args[0]
-        contrato_comentario = ' '.join(args[1:])
 
         try:
             usuario_contrato = Contrato.objects.get(
                     contrato=contrato_id).contratos.get(
                             ~Q(user__chat_id=chat_id))
 
-            nombre = usuario_contrato.username if usuario_contrato.username \
-                    else usuario_contrato.first_name
+            nombre = usuario_contrato.user.username if usuario_contrato.user.username \
+                    else usuario_contrato.user.first_name
 
             update.message.reply_text('Califique a {0} como:'.format(nombre),
                     reply_markup=reply_markup)
