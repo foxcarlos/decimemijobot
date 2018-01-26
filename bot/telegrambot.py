@@ -152,12 +152,11 @@ def trade_califica(bot, update, args):
 
 
 def callback_califica(bot, update):
-    import ipdb; ipdb.set_trace() # BREAKPOINT
     query = update.callback_query
     feedback, contrato_id, contrato_comentario = query.data.split(',')
     id_evaluador = update.callback_query.from_user.id
     nombre_evaluador = update.callback_query.from_user.username if \
-            udpate.callback_query.from_user.username else \
+            update.callback_query.from_user.username else \
             update.callback_query.from_user.first_name
 
     try:
