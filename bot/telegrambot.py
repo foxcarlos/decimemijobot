@@ -184,6 +184,7 @@ def crear_contrato(bot, update, args):
 def callback_button(bot, update):
     query = update.callback_query
 
+    import ipdb; ipdb.set_trace() # BREAKPOINT
     if query.data == "aceptar":
         keyboard = [[InlineKeyboardButton("Soy el Vendedor",
             callback_data="vendedor"), ]]
@@ -1270,7 +1271,8 @@ def main():
     dp.add_handler(CallbackQueryHandler(callback_button))
 
     dp.add_handler(CommandHandler("tradec", trade_califica, pass_args=True))
-    dp.add_handler(CallbackQueryHandler(callback_califica))
+    #dp.add_handler(CallbackQueryHandler(callback_califica))
+    dp.add_handler(CallbackQueryHandler(callback_button))
     # dp.add_handler(InlineQueryHandler(reply_to_query))
 
     dp.add_handler(CommandHandler("help", help))
