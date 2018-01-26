@@ -10,11 +10,9 @@ from telegram import InlineKeyboardButton, InlineKeyboardMarkup, ReplyKeyboardMa
 from django_telegrambot.apps import DjangoTelegramBot
 from random import randint
 
+
 from django.conf import settings
-
-logger = logging.getLogger(__name__)
-
-from django.db.models import Count
+from django.db.models import Count, Q
 from django.contrib.auth.models import User as UserDjango
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -23,6 +21,8 @@ from bot.models import Alerta, AlertaUsuario, User, Grupo, Comando, ComandoEstad
 
 from bot.tasks import pool_message
 from datetime import datetime
+
+logger = logging.getLogger(__name__)
 
 try:
     import numpy as np
@@ -80,16 +80,42 @@ def ayuda_trade():
     """
     return help_trade
 
+
 def trade_califica(bot, update, args):
+    import ipdb; ipdb.set_trace() # BREAKPOINT
+    chat_id = update.message.from_user.id
+    contrato_id = args[0]
+    contrato_comentario = args[1]
+
+    keyboard = [[
+            InlineKeyboardButton("Positivo", callback_data=("pos",
+                contrato_id, contrato_comentario)),
+            InlineKeyboardButton("Negativo", callback_data=("neg",
+                contrato_id, contrato_comentario)),
+            InlineKeyboardButton("Neutral", callback_data=("neu",
+                contrato_id, contrato_comentario)),
+            ]]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+
     if len(args) == 2:
-         contrato_id = args[0]
-         contrato_comentario = args[1]
-         PersonaContrato.objects.filter(contrato=contrato_id)
+        try:
+            usuario_contrato = Contrato.objects.get(
+                    contrato=contrato_id).contratos.get(
+                            ~Q(user__chat_id=chat_id))
+
+            nombre = usuario_contrato.username if usuario_contrato.username \
+                    else usuario_contrato.first_name
+
+            update.message.reply_text('Califique a {0} como:'.format(nombre),
+                    reply_markup=reply_markup)
+        except ObjectDoesNotExist:
+            pass
+
     else:
         msg_response = """
        :no_entry_sign: Debes indicar el
        numero de contrato
-       y un comentario sobre 
+       y un comentario sobre
        la persona con la cual
        hiciste el contrato.\n
        :bulb: Ejemplo:
@@ -100,6 +126,29 @@ def trade_califica(bot, update, args):
         update.message.reply_text(parse_mode="html",
                 text=emojize(msg_response, use_aliases=True))
         return True
+
+
+def callback_califica(bot, update):
+    query = update.callback_query
+    feedback, contrato_id, contrato_comentario = query.data
+    chat_id = update.callback_query.chat.id
+
+    try:
+        usuario_contrato = Contrato.objects.get(
+                contrato=contrato_id).contratos.get(
+                        ~Q(user__chat_id=chat_id))
+
+        usuario_contrato.comentario = contrato_comentario
+        usuario_contrato.puntuacion = feedback
+        usuario_contrato.save()
+        msg_response = 'calificacion realizada con exito'
+
+    except ObjectDoesNotExist:
+        msg_response = 'Ocurrio un error'
+
+    query.edit_message_text(parse_mode="html", text=emojize(msg_response,
+        use_aliases=True))
+
 
 def crear_contrato(bot, update, args):
 
@@ -129,12 +178,13 @@ def crear_contrato(bot, update, args):
             reply_markup=reply_markup)
     return True
 
+
 def callback_button(bot, update):
     query = update.callback_query
 
     if query.data == "aceptar":
         keyboard = [[InlineKeyboardButton("Soy el Vendedor",
-            callback_data="vendedor"),]]
+            callback_data="vendedor"), ]]
         reply_markup = InlineKeyboardMarkup(keyboard)
         query.edit_message_text('Presione este boton solo el <b>vendedor</b>:',
                 parse_mode="html",  reply_markup=reply_markup)
@@ -142,7 +192,7 @@ def callback_button(bot, update):
     elif query.data == "vendedor":
         buyer_seller.append((query.from_user.username, query.from_user.id))
         keyboard = [[InlineKeyboardButton("Soy el Comprador",
-            callback_data="comprador"),],]
+            callback_data="comprador"), ], ]
         reply_markup = InlineKeyboardMarkup(keyboard)
 
         query.edit_message_text('Ahora presione este boton el Comprador:',
@@ -214,6 +264,8 @@ def callback_button(bot, update):
     return True
 
 #############################################################################
+
+
 def grupo_nuevo(update):
     if 'private' == update.message.chat.type:
         return True
@@ -230,6 +282,7 @@ def grupo_nuevo(update):
         print(E)
 
     return True
+
 
 def usuario_nuevo(update):
     # Datos del usuario
@@ -256,6 +309,7 @@ def usuario_nuevo(update):
 
     return True
 
+
 def valida_autorizacion_comando(bot, update):
     if 'private' == update.message.chat.type:
         return True
@@ -279,6 +333,7 @@ def valida_autorizacion_comando(bot, update):
                 return False
 
     return True
+
 
 def es_admin(bot, update):
     es_admin = False
@@ -315,7 +370,7 @@ def kick(bot, update):
 
     parameters = update.message.text
     cadena_sin_el_comando = ' '.join(parameters.split()[1:])
-    usuario = cadena_sin_el_comando.replace('@','')
+    usuario = cadena_sin_el_comando.replace('@', '')
 
     if not es_admin(bot, update):
         response = ':no_entry_sign: _{0}_, Solo los usuarios *Admin* pueden usar este comando'.format(update.message.from_user.username)
@@ -333,6 +388,7 @@ def kick(bot, update):
         file_ = open("bot/static/img/ayuda_ban_uso.png", "rb")
         bot.sendPhoto(update.message.chat_id,  photo=file_, caption="Ejemplo de uso del comando /kick")
 
+
 def kick_from_reply(bot, update):
     id_usuario_ban = update.message.reply_to_message.from_user.id
     username_usuario_ban = update.message.reply_to_message.from_user.username
@@ -344,13 +400,14 @@ def kick_from_reply(bot, update):
         update.message.chat.kick_member(id_usuario_ban, fecha)
 
         response = ' :boom: Fuistes expulsado :rocket: del grupo por *{0}*'.format(update.message.from_user.username)
-        bot.sendMessage(id_usuario_ban, parse_mode="Markdown", text=emojize(response, use_aliases=True ))
+        bot.sendMessage(id_usuario_ban, parse_mode="Markdown", text=emojize(response, use_aliases=True))
         response = 'Usuario *{0}* expulsado :rocket: por _{1}_ :smiling_imp:'.format(username_usuario_ban, update.message.from_user.username)
     else:
         response = ':x: No fue posible expulsar el usuario {0} con el id {1}'.format(username_usuario_ban, id_usuario_ban)
 
     bot.sendMessage(update.message.chat_id, parse_mode="Markdown", text=emojize(response, use_aliases=True))
     return True
+
 
 def ban(bot, update):
     if not valida_autorizacion_comando(bot, update):
@@ -359,7 +416,7 @@ def ban(bot, update):
 
     parameters = update.message.text
     cadena_sin_el_comando = ' '.join(parameters.split()[1:])
-    usuario = cadena_sin_el_comando.replace('@','')
+    usuario = cadena_sin_el_comando.replace('@', '')
 
     if not es_admin(bot, update):
         response = ':no_entry_sign: _{0}_, Solo los usuarios *Admin* pueden usar este comando'.format(update.message.from_user.username)
@@ -376,7 +433,8 @@ def ban(bot, update):
 
         file_ = open("bot/static/img/ayuda_ban_uso.png", "rb")
         bot.sendPhoto(update.message.chat_id,  photo=file_, caption="Ejemplo de uso del comando /ban")
-      # ban_directo(bot, update)
+        # ban_directo(bot, update)
+
 
 def ban_from_reply(bot, update):
     id_usuario_ban = update.message.reply_to_message.from_user.id
@@ -385,7 +443,7 @@ def ban_from_reply(bot, update):
     if id_usuario_ban:
         update.message.chat.kick_member(id_usuario_ban)
         response = ' :boom: Fuistes expulsado :rocket: del grupo por *{0}*'.format(update.message.from_user.username)
-        bot.sendMessage(id_usuario_ban, parse_mode="Markdown", text=emojize(response, use_aliases=True ))
+        bot.sendMessage(id_usuario_ban, parse_mode="Markdown", text=emojize(response, use_aliases=True))
         response = 'Usuario *{0}* expulsado :rocket: por _{1}_ :smiling_imp:'.format(username_usuario_ban, update.message.from_user.username)
     else:
         response = ':x: No fue posible expulsar el usuario {0} con el id {1}'.format(username_usuario_ban, id_usuario_ban)
@@ -393,10 +451,11 @@ def ban_from_reply(bot, update):
     bot.sendMessage(update.message.chat_id, parse_mode="Markdown", text=emojize(response, use_aliases=True))
     return True
 
+
 def unban(bot, update):
     parameters = update.message.text
     cadena_sin_el_comando = ' '.join(parameters.split()[1:])
-    usuario = cadena_sin_el_comando.replace('@','')
+    usuario = cadena_sin_el_comando.replace('@', '')
     response = ''
 
     if es_admin(bot, update):
@@ -412,6 +471,7 @@ def unban(bot, update):
 
     bot.sendMessage(update.message.chat_id, parse_mode="Markdown", text=response)
     return True
+
 
 """
 def prueba_boton(bot, update):
@@ -455,6 +515,7 @@ def prueba_forcereply(bot, update):
 def call_ForceReply(bot, update):
     query = update.force_reply
 """
+
 
 def ayuda_set_alarma():
     response = """
@@ -530,7 +591,7 @@ def button_alarmas(bot, update):
         response = activar_desactivar('I')
 
     elif query.data == 'Ayuda':
-        response =  ayuda_set_alarma()
+        response = ayuda_set_alarma()
 
     elif query.data == 'Cancelar':
         response = "Comando cancelado"
@@ -715,14 +776,13 @@ def historico(bot, update):
         bot.sendMessage(update.message.chat_id, text=emojize(response, use_aliases=True))
 
 
-
 def price(bot, update):
     print(update.message)
     parameters = update.message.text
     cadena_sin_el_comando = ' '.join(parameters.split()[1:])
 
     params = cadena_sin_el_comando.split() if \
-            len(cadena_sin_el_comando.split()) in range(1,3) else []
+            len(cadena_sin_el_comando.split()) in range(1, 3) else []
 
     if params:
         coin_ticker, market = params if len(params)>=2 else (''.join(params), '')
@@ -837,6 +897,7 @@ def evaluar(palabra):
         response = ""
     return response
 
+
 def chat(bot, update):
     print(update.message)
     bot.sendMessage(update.message.chat_id,
@@ -853,11 +914,11 @@ def get_dolartoday2():
     rq = requests.get(URL_DOLARTODAY).json()
 
     dolartoday = float(rq.get('USD').get('transferencia'))
-    implicito =  float(rq.get("USD").get("efectivo"))
+    implicito = float(rq.get("USD").get("efectivo"))
     dicom = float(rq.get("USD").get("sicad2"))
     cucuta = float(rq.get("USD").get("efectivo_cucuta"))
     localbitcoin = float(rq.get("USD").get("localbitcoin_ref"))
-    barril = float(rq.get("MISC").get("petroleo").replace(",", ".") )
+    barril = float(rq.get("MISC").get("petroleo").replace(",", "."))
     oro = float(rq.get("GOLD").get("rate"))
     fecha = datetime.now().strftime("%d-%m-%Y")
 
@@ -884,7 +945,7 @@ def dolartoday(bot, update):
     print(update.message)
     user_first_name = update.message.from_user.first_name
     bot.sendMessage(update.message.chat_id, parse_mode="Markdown", text=emojize(get_dolartoday2(),
-        use_aliases=True )
+        use_aliases=True)
         )
     usuario_nuevo(update)
 
@@ -897,7 +958,6 @@ def enviar_mensajes_todos(bot, update):
     if valida_root(update):
         users = User.objects.values('chat_id').annotate(dcount=Count('chat_id'))
         pool_message.delay(list(users), cadena_sin_el_comando)
-
 
 
 def help(bot, update):
@@ -934,7 +994,7 @@ def help(bot, update):
     /tradeb - Buscar Inf Conrato
     /traderef - Referencias de usuario
 
-    Nota: Ahora es posible hacer calculos 
+    Nota: Ahora es posible hacer calculos
     con solo escribir directamente 2+2*3
 
     """
@@ -959,6 +1019,7 @@ def me(bot, update):
     bot.sendMessage(update.message.chat_id,
             text='Tu informacion:\n{}'.format(update.effective_user))
 
+
 def valida_permiso_comando(bot, update):
     response = False
     if update.message.chat.type == 'private':
@@ -972,21 +1033,26 @@ def valida_permiso_comando(bot, update):
             response = False
     return response
 
+
 def set_alarma_dolartoday(bot, update):
     if valida_permiso_comando(bot, update):
         set_alarma(bot, update, "dolartoday")
+
 
 def set_alarma_bitcoin(bot, update):
     if valida_permiso_comando(bot, update):
         set_alarma(bot, update, "bitcoin")
 
+
 def set_alarma_ethereum(bot, update):
     if valida_permiso_comando(bot, update):
         set_alarma(bot, update, "ethereum")
 
+
 def set_alarma_litecoin(bot, update):
     if valida_permiso_comando(bot, update):
         set_alarma(bot, update, "litecoin")
+
 
 def set_alarma(bot, update, alerta):
     response = ""
@@ -1068,6 +1134,7 @@ def set_alarma(bot, update, alerta):
     bot.sendMessage(update.message.chat_id, text=response)
     usuario_nuevo(update)
 
+
 def valida_root(update):
     print(update.message)
     root = UserDjango.objects.filter(username__icontains="foxcarlos")
@@ -1078,8 +1145,10 @@ def valida_root(update):
     else:
         return False
 
+
 def reglas(bot, update):
     bot.send_message(chat_id=update.message.chat_id, text="Lo siento, Aun se definen las reglas del grupo.")
+
 
 def nuevo_miembro(bot, update):
     grupo = update.message.chat
@@ -1100,6 +1169,7 @@ def nuevo_miembro(bot, update):
     bot.send_message(chat_id=update.message.chat_id, parse_mode = "Markdown", text=emojize(msg_html, use_aliases=True))
     usuario_nuevo(update)
 
+
 def abandono_grupo(bot, update):
     grupo = update.message.chat
     nuevo_usuario = update.message.left_chat_member
@@ -1117,16 +1187,20 @@ def abandono_grupo(bot, update):
     </ul> """.format(username, grupo.title, username, nombre)
 
     bot.send_message(chat_id=update.message.chat_id, parse_mode = "html", text=msg_html)
+
+
 def hacer_donacion(bot, update):
     file_ = open("bot/static/img/bitcoin:1EXj4afHxArsPesqFfPwYcr522JkYrPcMq?recv=LocalBitcoins.com.png", "rb")
     bot.sendPhoto(update.message.chat_id,  photo=file_, caption="Si deseas haer una colaboracion de bitcoin puedes hacerlo a la siguiente direccion del wallet 1EXj4afHxArsPesqFfPwYcr522JkYrPcMq")
     return True
+
 
 def start(bot, update):
     # print(update.message)
     bot.sendMessage(update.message.chat_id,
             text='Bienvenido, te invito a ejecutar el comando /help para obtener mas ayuda')
     usuario_nuevo(update)
+
 
 def startgroup(bot, update):
     print(update.message)
@@ -1135,15 +1209,18 @@ def startgroup(bot, update):
             /help para obtener mas ayuda')
     usuario_nuevo(update)
 
+
 def error(bot, update, error):
     print(error)
     logger.warn('Update "%s" caused error "%s"' % (update, error))
+
 
 def forwarded(bot, update):
     print(update.message)
     #bot.sendMessage(update.message.chat_id,
     #        text='This msg forwaded information:\n {}'.\
     #                format(update.effective_message))
+
 
 def echo(bot, update):
     print("Eco")
@@ -1153,8 +1230,10 @@ def echo(bot, update):
         update.message.reply_text(m)
     usuario_nuevo(update)
 
+
 def unknown(bot, update):
     bot.send_message(chat_id=update.message.chat_id, text="Lo siento, No reconozco ese comando.")
+
 
 def main():
     logger.info("Loading handlers for telegram bot")
@@ -1175,6 +1254,7 @@ def main():
     dp.add_handler(CallbackQueryHandler(callback_button))
 
     dp.add_handler(CommandHandler("tradec", trade_califica, pass_args=True))
+    dp.add_handler(CallbackQueryHandler(callback_califica))
     # dp.add_handler(InlineQueryHandler(reply_to_query))
 
     dp.add_handler(CommandHandler("help", help))
