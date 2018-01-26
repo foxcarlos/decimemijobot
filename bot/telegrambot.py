@@ -50,7 +50,6 @@ URL_PRICE_USD_EUR_MARKET = settings.CRIPTO_MONEDAS.get("URL_PRICE_USD_EUR_MARKET
 URL_DOLARTODAY = settings.CRIPTO_MONEDAS.get("URL_DOLARTODAY")
 
 
-#############################################################################
 def ayuda_trade():
     help_trade = """
     <b>Ayuda de Comandos</b>\n
@@ -79,6 +78,104 @@ def ayuda_trade():
     <b>cerrado</b> automaticamente
     """
     return help_trade
+
+
+def trade_califica(bot, update, args):
+    chat_id = update.message.from_user.id
+
+    def valida_permiso(cont, user):
+        try:
+            Contrato.objects.get(contrato=cont).contratos.get(
+                            user__chat_id=user)
+        except ObjectDoesNotExist:
+            return False
+
+        return True
+
+    if len(args) >= 2:
+        contrato_id = args[0]
+        contrato_comentario = ' '.join(args[1:])
+
+        if not valida_permiso(contrato_id, chat_id):
+            msg_response = """
+            :no_entry_sign: No eres usuario de este contrato: <b>{0}</b>
+            """.format(contrato_id)
+
+            update.message.reply_text(parse_mode="html",
+                    text=emojize(msg_response, use_aliases=True))
+            return False
+
+        pos = "pos,{0},{1}".format(contrato_id, contrato_comentario)
+        neg = "neg,{0},{1}".format(contrato_id, contrato_comentario)
+        neu = "neu,{0},{1}".format(contrato_id, contrato_comentario)
+
+        keyboard = [[
+                InlineKeyboardButton("Positivo", callback_data=pos),
+                InlineKeyboardButton("Negativo", callback_data=neg),
+                InlineKeyboardButton("Neutral", callback_data=neu),
+                ]]
+        reply_markup2 = InlineKeyboardMarkup(keyboard)
+
+        try:
+            usuario_contrato = Contrato.objects.get(
+                    contrato=contrato_id).contratos.get(
+                            ~Q(user__chat_id=chat_id))
+
+            nombre = usuario_contrato.user.username if usuario_contrato.user.username \
+                    else usuario_contrato.user.first_name
+
+            update.message.reply_text('Califique a {0} como:'.format(nombre),
+                    reply_markup=reply_markup2)
+        except ObjectDoesNotExist:
+            msg_response = """
+            :no_entry_sign: No fue posible encontrar el contrato: <b>{0}</b>
+            """.format(contrato_id)
+
+            update.message.reply_text(parse_mode="html",
+                    text=emojize(msg_response, use_aliases=True))
+            return False
+    else:
+        msg_response = """
+       :no_entry_sign: Debes indicar el
+       numero de contrato
+       y un comentario sobre
+       la persona con la cual
+       hiciste el contrato.\n
+       :bulb: Ejemplo:
+       <b>/tradec 1104 Todo bien</b>\n
+       Ejecuta <b>/trade ?</b>
+       para obtener mas ayuda
+       """
+        update.message.reply_text(parse_mode="html",
+                text=emojize(msg_response, use_aliases=True))
+    return True
+
+
+def callback_califica(bot, update):
+    import ipdb; ipdb.set_trace() # BREAKPOINT
+    query = update.callback_query
+    feedback, contrato_id, contrato_comentario = query.data.split(',')
+    chat_id = update.callback_query.from_user.id
+
+    try:
+        usuario_contrato = Contrato.objects.get(
+                contrato=contrato_id).contratos.get(
+                        ~Q(user__chat_id=chat_id))
+
+        usuario_contrato.comentario = contrato_comentario
+        usuario_contrato.puntuacion = feedback
+        usuario_contrato.save()
+        msg_response = 'calificacion realizada con exito'
+
+    except ObjectDoesNotExist:
+        msg_response = 'Ocurrio un error'
+
+    # TODO: Verificar si ya ambos comenta
+    # TODO: Si ambos comentaron enviar in mensaje al grupo
+    # TODO: Enviar un mensaje a la persona que fue calificada
+
+    query.edit_message_text(parse_mode="html", text=emojize(msg_response,
+        use_aliases=True))
 
 
 def crear_contrato(bot, update, args):
@@ -113,7 +210,6 @@ def crear_contrato(bot, update, args):
 def callback_button(bot, update):
     query = update.callback_query
 
-    import ipdb; ipdb.set_trace() # BREAKPOINT
     if query.data == "aceptar":
         keyboard = [[InlineKeyboardButton("Soy el Vendedor",
             callback_data="vendedor"), ]]
@@ -194,78 +290,6 @@ def callback_button(bot, update):
         query.edit_message_text('Contrato cancelado:')
 
     return True
-
-#############################################################################
-
-def trade_califica(bot, update, args):
-    chat_id = update.message.from_user.id
-
-    if len(args) >= 2:
-        contrato_id = args[0]
-        contrato_comentario = ' '.join(args[1:])
-
-        pos = "pos,{0},{1}".format(contrato_id, contrato_comentario)
-        neg = "neg,{0},{1}".format(contrato_id, contrato_comentario)
-        neu = "neu,{0},{1}".format(contrato_id, contrato_comentario)
-
-        keyboard = [[
-                InlineKeyboardButton("Positivo", callback_data=pos),
-                InlineKeyboardButton("Negativo", callback_data=neg),
-                InlineKeyboardButton("Neutral", callback_data=neu),
-                ]]
-        reply_markup2 = InlineKeyboardMarkup(keyboard)
-
-        try:
-            usuario_contrato = Contrato.objects.get(
-                    contrato=contrato_id).contratos.get(
-                            ~Q(user__chat_id=chat_id))
-
-            nombre = usuario_contrato.user.username if usuario_contrato.user.username \
-                    else usuario_contrato.user.first_name
-
-            update.message.reply_text('Califique a {0} como:'.format(nombre),
-                    reply_markup=reply_markup2)
-        except ObjectDoesNotExist:
-            pass
-
-    else:
-        msg_response = """
-       :no_entry_sign: Debes indicar el
-       numero de contrato
-       y un comentario sobre
-       la persona con la cual
-       hiciste el contrato.\n
-       :bulb: Ejemplo:
-       <b>/tradec 1104 Todo bien</b>\n
-       Ejecuta <b>/trade ?</b>
-       para obtener mas ayuda
-       """
-        update.message.reply_text(parse_mode="html",
-                text=emojize(msg_response, use_aliases=True))
-    return True
-
-
-def callback_califica(bot, update):
-    import ipdb; ipdb.set_trace() # BREAKPOINT
-    query = update.callback_query
-    feedback, contrato_id, contrato_comentario = query.data.split(',')
-    chat_id = update.callback_query.from_user.id
-
-    try:
-        usuario_contrato = Contrato.objects.get(
-                contrato=contrato_id).contratos.get(
-                        ~Q(user__chat_id=chat_id))
-
-        usuario_contrato.comentario = contrato_comentario
-        usuario_contrato.puntuacion = feedback
-        usuario_contrato.save()
-        msg_response = 'calificacion realizada con exito'
-
-    except ObjectDoesNotExist:
-        msg_response = 'Ocurrio un error'
-
-    query.edit_message_text(parse_mode="html", text=emojize(msg_response,
-        use_aliases=True))
 
 
 def grupo_nuevo(update):
