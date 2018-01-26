@@ -182,7 +182,8 @@ def callback_califica(bot, update):
             emo = ":smiley:"
         elif feedback == "neg":
             emo = ":rage:"
-        elif feedback == ":no_mouth:"
+        elif feedback == "neu":
+            emo = ":no_mouth:"
 
     except ObjectDoesNotExist:
         msg_response = 'Ocurrio un error'
