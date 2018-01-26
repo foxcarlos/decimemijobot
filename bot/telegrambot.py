@@ -84,8 +84,6 @@ def ayuda_trade():
 def trade_califica(bot, update, args):
     import ipdb; ipdb.set_trace() # BREAKPOINT
     chat_id = update.message.from_user.id
-    contrato_id = args[0]
-    contrato_comentario = args[1]
 
     keyboard = [[
             InlineKeyboardButton("Positivo", callback_data=("pos",
@@ -98,6 +96,8 @@ def trade_califica(bot, update, args):
     reply_markup = InlineKeyboardMarkup(keyboard)
 
     if len(args) == 2:
+        contrato_id = args[0]
+        contrato_comentario = args[1]
         try:
             usuario_contrato = Contrato.objects.get(
                     contrato=contrato_id).contratos.get(
