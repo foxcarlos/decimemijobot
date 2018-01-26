@@ -81,77 +81,6 @@ def ayuda_trade():
     return help_trade
 
 
-def trade_califica(bot, update, args):
-    chat_id = update.message.from_user.id
-
-    if len(args) >= 2:
-        contrato_id = args[0]
-        contrato_comentario = ' '.join(args[1:])
-
-        pos = "pos,{0},{1}".format(contrato_id, contrato_comentario)
-        neg = "neg,{0},{1}".format(contrato_id, contrato_comentario)
-        neu = "neu,{0},{1}".format(contrato_id, contrato_comentario)
-
-        keyboard = [[
-                InlineKeyboardButton("Positivo", callback_data=pos),
-                InlineKeyboardButton("Negativo", callback_data=neg),
-                InlineKeyboardButton("Neutral", callback_data=neu),
-                ]]
-        reply_markup = InlineKeyboardMarkup(keyboard)
-
-        try:
-            usuario_contrato = Contrato.objects.get(
-                    contrato=contrato_id).contratos.get(
-                            ~Q(user__chat_id=chat_id))
-
-            nombre = usuario_contrato.user.username if usuario_contrato.user.username \
-                    else usuario_contrato.user.first_name
-
-            update.message.reply_text('Califique a {0} como:'.format(nombre),
-                    reply_markup=reply_markup)
-        except ObjectDoesNotExist:
-            pass
-
-    else:
-        msg_response = """
-       :no_entry_sign: Debes indicar el
-       numero de contrato
-       y un comentario sobre
-       la persona con la cual
-       hiciste el contrato.\n
-       :bulb: Ejemplo:
-       <b>/tradec 1104 Todo bien</b>\n
-       Ejecuta <b>/trade ?</b>
-       para obtener mas ayuda
-       """
-        update.message.reply_text(parse_mode="html",
-                text=emojize(msg_response, use_aliases=True))
-    return True
-
-
-def callback_califica(bot, update):
-    import ipdb; ipdb.set_trace() # BREAKPOINT
-    query = update.callback_query
-    feedback, contrato_id, contrato_comentario = query.data.split(',')
-    chat_id = update.callback_query.chat.id
-
-    try:
-        usuario_contrato = Contrato.objects.get(
-                contrato=contrato_id).contratos.get(
-                        ~Q(user__chat_id=chat_id))
-
-        usuario_contrato.comentario = contrato_comentario
-        usuario_contrato.puntuacion = feedback
-        usuario_contrato.save()
-        msg_response = 'calificacion realizada con exito'
-
-    except ObjectDoesNotExist:
-        msg_response = 'Ocurrio un error'
-
-    query.edit_message_text(parse_mode="html", text=emojize(msg_response,
-        use_aliases=True))
-
-
 def crear_contrato(bot, update, args):
 
     global buyer_seller
@@ -267,6 +196,76 @@ def callback_button(bot, update):
     return True
 
 #############################################################################
+
+def trade_califica(bot, update, args):
+    chat_id = update.message.from_user.id
+
+    if len(args) >= 2:
+        contrato_id = args[0]
+        contrato_comentario = ' '.join(args[1:])
+
+        pos = "pos,{0},{1}".format(contrato_id, contrato_comentario)
+        neg = "neg,{0},{1}".format(contrato_id, contrato_comentario)
+        neu = "neu,{0},{1}".format(contrato_id, contrato_comentario)
+
+        keyboard = [[
+                InlineKeyboardButton("Positivo", callback_data=pos),
+                InlineKeyboardButton("Negativo", callback_data=neg),
+                InlineKeyboardButton("Neutral", callback_data=neu),
+                ]]
+        reply_markup2 = InlineKeyboardMarkup(keyboard)
+
+        try:
+            usuario_contrato = Contrato.objects.get(
+                    contrato=contrato_id).contratos.get(
+                            ~Q(user__chat_id=chat_id))
+
+            nombre = usuario_contrato.user.username if usuario_contrato.user.username \
+                    else usuario_contrato.user.first_name
+
+            update.message.reply_text('Califique a {0} como:'.format(nombre),
+                    reply_markup=reply_markup2)
+        except ObjectDoesNotExist:
+            pass
+
+    else:
+        msg_response = """
+       :no_entry_sign: Debes indicar el
+       numero de contrato
+       y un comentario sobre
+       la persona con la cual
+       hiciste el contrato.\n
+       :bulb: Ejemplo:
+       <b>/tradec 1104 Todo bien</b>\n
+       Ejecuta <b>/trade ?</b>
+       para obtener mas ayuda
+       """
+        update.message.reply_text(parse_mode="html",
+                text=emojize(msg_response, use_aliases=True))
+    return True
+
+
+def callback_califica(bot, update):
+    import ipdb; ipdb.set_trace() # BREAKPOINT
+    query = update.callback_query
+    feedback, contrato_id, contrato_comentario = query.data.split(',')
+    chat_id = update.callback_query.chat.id
+
+    try:
+        usuario_contrato = Contrato.objects.get(
+                contrato=contrato_id).contratos.get(
+                        ~Q(user__chat_id=chat_id))
+
+        usuario_contrato.comentario = contrato_comentario
+        usuario_contrato.puntuacion = feedback
+        usuario_contrato.save()
+        msg_response = 'calificacion realizada con exito'
+
+    except ObjectDoesNotExist:
+        msg_response = 'Ocurrio un error'
+
+    query.edit_message_text(parse_mode="html", text=emojize(msg_response,
+        use_aliases=True))
 
 
 def grupo_nuevo(update):
@@ -1270,11 +1269,6 @@ def main():
     dp.add_handler(CommandHandler("trade", crear_contrato, pass_args=True))
     dp.add_handler(CallbackQueryHandler(callback_button))
 
-    dp.add_handler(CommandHandler("tradec", trade_califica, pass_args=True))
-    #dp.add_handler(CallbackQueryHandler(callback_califica))
-    dp.add_handler(CallbackQueryHandler(callback_button))
-    # dp.add_handler(InlineQueryHandler(reply_to_query))
-
     dp.add_handler(CommandHandler("help", help))
     dp.add_handler(CommandHandler("ayuda", help))
     dp.add_handler(CommandHandler("?", help))
@@ -1287,6 +1281,10 @@ def main():
     dp.add_handler(CommandHandler("graf", historico))
     dp.add_handler(CommandHandler("graph", historico))
     dp.add_handler(CommandHandler("chart", historico))
+
+    dp.add_handler(CommandHandler("tradec", trade_califica, pass_args=True))
+    dp.add_handler(CallbackQueryHandler(callback_califica))
+    # dp.add_handler(InlineQueryHandler(reply_to_query))
 
     dp.add_handler(CommandHandler("calc", calc))
     dp.add_handler(CommandHandler("clc", calc))
