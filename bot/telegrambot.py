@@ -548,6 +548,10 @@ def get_price_coinmarketcap(url):
 
 
 def all_coins(bot, update):
+    if not valida_autorizacion_comando(bot, update):
+        bot.sendMessage(update.message.chat_id, text=emojize("comando desabilitado por el admin, :speaker: Intenta hacerlo en privado al bot", use_aliases=True))
+        return True
+
     # bot.sendMessage(update.message.chat_id, text="Consultando... En un momento te muestro la informacion...!")
     bot.sendChatAction(update.message.chat_id, "upload_document")
 
@@ -690,7 +694,7 @@ def get_historico(lista_params):
 
 def historico(bot, update):
     if not valida_autorizacion_comando(bot, update):
-        # bot.sendMessage(update.message.chat_id, text=emojize("comando desabilitado por el admin", use_aliases=True))
+        bot.sendMessage(update.message.chat_id, text=emojize("comando desabilitado por el admin, :speaker: Intenta hacerlo en privado al bot", use_aliases=True))
         return True
 
     print(update.message)
@@ -716,6 +720,10 @@ def historico(bot, update):
 
 
 def price(bot, update):
+    if not valida_autorizacion_comando(bot, update):
+        bot.sendMessage(update.message.chat_id, text=emojize("comando desabilitado por el admin, :speaker: Intenta hacerlo en privado al bot", use_aliases=True))
+        return True
+
     print(update.message)
     parameters = update.message.text
     cadena_sin_el_comando = ' '.join(parameters.split()[1:])
@@ -799,6 +807,9 @@ def autor(bot, update):
 
 
 def bitcoin(bot, update):
+    if not valida_autorizacion_comando(bot, update):
+        bot.sendMessage(update.message.chat_id, text=emojize("comando desabilitado por el admin, :speaker: Intenta hacerlo en privado al bot", use_aliases=True))
+        return True
     print(update.message)
     user_first_name = update.message.from_user.first_name
 
@@ -880,6 +891,10 @@ def get_dolartoday2():
 
 
 def dolartoday(bot, update):
+    if not valida_autorizacion_comando(bot, update):
+        bot.sendMessage(update.message.chat_id, text=emojize("comando desabilitado por el admin, :speaker: Intenta hacerlo en privado al bot", use_aliases=True))
+        return True
+ 
     print(update.message)
     user_first_name = update.message.from_user.first_name
     bot.sendMessage(update.message.chat_id, parse_mode="Markdown", text=emojize(get_dolartoday2(),
@@ -1146,7 +1161,6 @@ def forwarded(bot, update):
 
 def echo(bot, update):
     print("Eco")
-    print(u'{0}'.format(update.message))
     m = evaluar(update.message.text)
     if m:
         update.message.reply_text(m)
