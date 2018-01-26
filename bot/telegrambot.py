@@ -85,17 +85,18 @@ def trade_califica(bot, update, args):
     import ipdb; ipdb.set_trace() # BREAKPOINT
     chat_id = update.message.from_user.id
 
-    keyboard = [[
-            InlineKeyboardButton("Positivo", callback_data=("pos",
-                contrato_id, contrato_comentario)),
-            InlineKeyboardButton("Negativo", callback_data=("neg",
-                contrato_id, contrato_comentario)),
-            InlineKeyboardButton("Neutral", callback_data=("neu",
-                contrato_id, contrato_comentario)),
-            ]]
-    reply_markup = InlineKeyboardMarkup(keyboard)
 
     if len(args) == 2:
+        keyboard = [[
+                InlineKeyboardButton("Positivo", callback_data=("pos",
+                    contrato_id, contrato_comentario)),
+                InlineKeyboardButton("Negativo", callback_data=("neg",
+                    contrato_id, contrato_comentario)),
+                InlineKeyboardButton("Neutral", callback_data=("neu",
+                    contrato_id, contrato_comentario)),
+                ]]
+        reply_markup = InlineKeyboardMarkup(keyboard)
+
         contrato_id = args[0]
         contrato_comentario = args[1]
         try:
