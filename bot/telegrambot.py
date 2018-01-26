@@ -155,12 +155,15 @@ def callback_califica(bot, update):
     import ipdb; ipdb.set_trace() # BREAKPOINT
     query = update.callback_query
     feedback, contrato_id, contrato_comentario = query.data.split(',')
-    chat_id = update.callback_query.from_user.id
+    id_evaluador = update.callback_query.from_user.id
+    nombre_evaluador = update.callback_query.from_user.username if \
+            udpate.callback_query.from_user.username else \
+            update.callback_query.from_user.first_name
 
     try:
         usuario_contrato = Contrato.objects.get(
                 contrato=contrato_id).contratos.get(
-                        ~Q(user__chat_id=chat_id))
+                        ~Q(user__chat_id=id_evaluador))
 
         usuario_contrato.comentario = contrato_comentario
         usuario_contrato.puntuacion = feedback
@@ -174,9 +177,6 @@ def callback_califica(bot, update):
         :sparkles: Calificacion realizada con exito,
         el usuario <b>{0}</b> tambien ha sido notificado""".format(nombre)
 
-        # query.edit_message_text(parse_mode="html", text=emojize(msg_response,
-        #    use_aliases=True))
-
         # Notificar al usuario que ha sido calificado
         if feedback == 'pos':
             emo = ":smiley:"
@@ -185,12 +185,16 @@ def callback_califica(bot, update):
         elif feedback == "neu":
             emo = ":no_mouth:"
 
+        msg_response2 = """{0} El usuario {1} te ha calificado """.format(
+                emo, nombre_evaluador)
+
+        bot.sendMessage(usuario_chat_id, text=emojize(msg_response2,
+            use_aliases=True))
+
     except ObjectDoesNotExist:
         msg_response = 'Ocurrio un error'
 
-    # TODO: Verificar si ya ambos comenta
     # TODO: Si ambos comentaron enviar in mensaje al grupo
-    # TODO: Enviar un mensaje a la persona que fue calificada
 
     query.edit_message_text(parse_mode="html", text=emojize(msg_response,
         use_aliases=True))
