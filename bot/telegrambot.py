@@ -164,7 +164,24 @@ def callback_califica(bot, update):
         usuario_contrato.comentario = contrato_comentario
         usuario_contrato.puntuacion = feedback
         usuario_contrato.save()
-        msg_response = 'calificacion realizada con exito'
+        nombre = usuario_contrato.user.username \
+                if usuario_contrato.user.username else \
+                usuario_contrato.user.first_name
+        usuario_chat_id = usuario_contrato.user.chat_id
+
+        msg_response = """
+        :sparkles: Calificacion realizada con exito,
+        el usuario <b>{0}</b> tambien ha sido notificado""".format(nombre)
+
+        # query.edit_message_text(parse_mode="html", text=emojize(msg_response,
+        #    use_aliases=True))
+
+        # Notificar al usuario que ha sido calificado
+        if feedback == 'pos':
+            emo = ":smiley:"
+        elif feedback == "neg":
+            emo = ":rage:"
+        elif feedback == ":no_mouth:"
 
     except ObjectDoesNotExist:
         msg_response = 'Ocurrio un error'
