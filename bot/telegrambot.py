@@ -82,7 +82,6 @@ def ayuda_trade():
 
 
 def trade_califica(bot, update, args):
-    import ipdb; ipdb.set_trace() # BREAKPOINT
     chat_id = update.message.from_user.id
 
     if len(args) >= 2:
@@ -127,10 +126,11 @@ def trade_califica(bot, update, args):
        """
         update.message.reply_text(parse_mode="html",
                 text=emojize(msg_response, use_aliases=True))
-        return True
+    return True
 
 
 def callback_califica(bot, update):
+    import ipdb; ipdb.set_trace() # BREAKPOINT
     query = update.callback_query
     feedback, contrato_id, contrato_comentario = query.data.split(',')
     chat_id = update.callback_query.chat.id
