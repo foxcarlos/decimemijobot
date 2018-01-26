@@ -89,16 +89,16 @@ def trade_califica(bot, update, args):
         contrato_id = args[0]
         contrato_comentario = ' '.join(args[1:])
 
+        pos = "pos,{0},{1}".format(contrato_id, contrato_comentario)
+        neg = "neg,{0},{1}".format(contrato_id, contrato_comentario)
+        neu = "neu,{0},{1}".format(contrato_id, contrato_comentario)
+
         keyboard = [[
-                InlineKeyboardButton("Positivo", callback_data=("pos",
-                    contrato_id, contrato_comentario)),
-                InlineKeyboardButton("Negativo", callback_data=("neg",
-                    contrato_id, contrato_comentario)),
-                InlineKeyboardButton("Neutral", callback_data=("neu",
-                    contrato_id, contrato_comentario)),
+                InlineKeyboardButton("Positivo", callback_data=pos),
+                InlineKeyboardButton("Negativo", callback_data=neg),
+                InlineKeyboardButton("Neutral", callback_data=neu),
                 ]]
         reply_markup = InlineKeyboardMarkup(keyboard)
-
 
         try:
             usuario_contrato = Contrato.objects.get(
@@ -132,7 +132,7 @@ def trade_califica(bot, update, args):
 
 def callback_califica(bot, update):
     query = update.callback_query
-    feedback, contrato_id, contrato_comentario = query.data
+    feedback, contrato_id, contrato_comentario = query.data.split(',')
     chat_id = update.callback_query.chat.id
 
     try:
