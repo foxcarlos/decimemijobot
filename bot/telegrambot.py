@@ -207,14 +207,13 @@ def callback_califica(bot, update):
         # TODO: Validar el tiempo  que ha transcurrido desde que se creo el
         # contrato para ver si se enviar el mensaje
 
-        import ipdb; ipdb.set_trace() # BREAKPOINT
         try:
             contrato = Contrato.objects.get(
                     contrato=contrato_id).contratos.filter(
                     comentario__isnull=False)
 
             if len(contrato) >=2:
-                grupo_chat_id = contrato[0].contrato.grupo.id
+                grupo_chat_id = contrato[0].contrato.grupo.grupo_id
                 operacion = contrato[0].contrato.operacion
                 user1 = contrato[0].user.username if contrato[0].user.username\
                         else contrato[0].user.first_name
