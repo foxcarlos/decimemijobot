@@ -194,8 +194,8 @@ def callback_califica(bot, update):
         si aun no lo has hecho.
         """.format(emo, nombre_evaluador, cal)
 
-        bot.sendMessage(usuario_chat_id, text=emojize(msg_response2,
-            use_aliases=True))
+        bot.sendMessage(usuario_chat_id, parse_mode='html',
+                text=emojize(msg_response2, use_aliases=True))
 
     except ObjectDoesNotExist:
         msg_response = """
@@ -237,8 +237,8 @@ def callback_califica(bot, update):
                 - Ejecuta <b>/tradeb {0}</b>
                 """.format(contrato_id, operacion, user1,
                         calif1, user2, calif2 )
-                bot.sendMessage(grupo_chat_id, text=emojize(msg_response3,
-                    use_aliases=True))
+                bot.sendMessage(grupo_chat_id, parse_mode="html",
+                        text=emojize(msg_response3, use_aliases=True))
 
         except ObjectDoesNotExist:
             pass
