@@ -188,10 +188,7 @@ def callback_califica(bot, update):
             cal = 'Neutral'
 
         msg_response2 = """
-        :bell: El usuario <b>{1}</b>
-        te ha calificado como <b>{2}</b> {0},
-        No olvides calificarlo tu
-        si aun no lo has hecho.
+        :bell: El usuario <b>{1}</b> te ha calificado como <b>{2}</b> {0}, No olvides calificarlo tu si aun no lo has hecho.
         """.format(emo, nombre_evaluador, cal)
 
         bot.sendMessage(usuario_chat_id, parse_mode='html',
@@ -223,8 +220,7 @@ def callback_califica(bot, update):
                 calif1 = contrato[0].comentario
                 calif2 = contrato[1].comentario
 
-                msg_response3 = """
-                :pushpin: <code>Contrato compra-venta finalizado:</code>\n
+                msg_response3 = """:pushpin: Contrato finalizado\n
                 <b>Contrato:</b><b>{0}</b>
                 <b>Operacion:</b> {1}
                 <b>#Ref:</b> @{2} fue calif. como {3}
