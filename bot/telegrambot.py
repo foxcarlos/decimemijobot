@@ -220,12 +220,7 @@ def callback_califica(bot, update):
                 calif1 = contrato[0].comentario
                 calif2 = contrato[1].comentario
 
-                msg_response3 = """:pushpin: Contrato finalizado\n
-                <b>Contrato:</b><b>{0}</b>
-                <b>Operacion:</b> {1}
-                <b>#Ref:</b> @{2} fue calif. como {3}
-                <b>#Ref:</b> @{4} fue calif. como {5}
-                :bulb: <b>Tips</b>\n
+                msg_response3 = """:pushpin: Contrato finalizado\n:small_orange_diamond:<b>Contrato:</b><b>{0}</b>\n:small_orange_diamond:<b>Operacion:</b> {1}\n:small_orange_diamond:<b>#Ref:</b> @{2} fue calif. como {3}\n:small_orange_diamond:<b>#Ref:</b> @{4} fue calif. como {5}\n:bulb: <b>Tips</b>\n
                 - Si quieres saber mas acerca de
                 la operacion puedes consultar
                 el contrato con el siguiente
