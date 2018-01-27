@@ -80,6 +80,11 @@ def ayuda_trade():
     return help_trade
 
 
+def trade_referencia(bot, update, args):
+    import ipdb; ipdb.set_trace() # BREAKPOINT
+    chat_id = update.message.from_user.id
+
+
 def trade_califica(bot, update, args):
     chat_id = update.message.from_user.id
 
@@ -199,7 +204,6 @@ def callback_califica(bot, update):
         :no_entry_sign: No fue posible evaluar a la persona
         """.format(contrato_id)
 
-    # TODO: Si ambos comentaron enviar in mensaje al grupo
     def cerrar_contrato(contrato_id):
         # TODO: Validar el tiempo  que ha transcurrido desde que se creo el
         # contrato para ver si se enviar el mensaje
@@ -1340,6 +1344,7 @@ def main():
     # To get Dispatcher related to a specific bot
     # dp = DjangoTelegramBot.getDispatcher('BOT_n_username')  #get by bot username
 
+    dp.add_handler(CommandHandler("traderef", trade_referencia, pass_args=True))
     dp.add_handler(CommandHandler("tradec", trade_califica, pass_args=True))
     dp.add_handler(CallbackQueryHandler(callback_califica))
     # dp.add_handler(InlineQueryHandler(reply_to_query))
