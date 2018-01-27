@@ -220,7 +220,7 @@ def callback_califica(bot, update):
                 calif1 = contrato[0].comentario
                 calif2 = contrato[1].comentario
 
-                msg_response3 = """:pushpin: Contrato finalizado\n\n:small_orange_diamond:<b>Contrato:</b><b>{0}</b>\n\n:small_orange_diamond:<b>Operacion:</b> {1}\n\n:small_orange_diamond:<b>#Ref:</b> @{2} fue calif. como {3}\n\n:small_orange_diamond:<b>#Ref:</b> @{4} fue calif. como {5}\n\n:bulb: <b>Tips</b>\n\n- Si quieres saber mas acerca de la operacion puedes consultar el contrato con el siguiente comando:\n\n - Ejecuta <b>/tradeb {0}</b>
+                msg_response3 = """:pushpin: Contrato finalizado\n\n:small_orange_diamond:<b>Contrato:</b><b>{0}</b>\n\n:small_orange_diamond:<b>Operacion:</b> {1}\n\n:small_orange_diamond:<b>#Ref:</b> @{2} fue calif. como {3}\n\n:small_orange_diamond:<b>#Ref:</b> @{4} fue calif. como {5}\n\n:bulb: <b>Tips:</b>\n\n- Si quieres saber mas acerca de la operacion puedes consultar el contrato con el siguiente comando:\n\n - Ejecuta:\n <b>/tradeb {0}</b>
                 """.format(contrato_id, operacion, user1,
                         calif1, user2, calif2 )
                 bot.sendMessage(grupo_chat_id, parse_mode="html",
