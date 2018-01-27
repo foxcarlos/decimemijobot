@@ -179,21 +179,71 @@ def callback_califica(bot, update):
         # Notificar al usuario que ha sido calificado
         if feedback == 'pos':
             emo = ":smiley:"
+            cal = "Positivo"
         elif feedback == "neg":
             emo = ":rage:"
+            cal = 'Negativo'
         elif feedback == "neu":
             emo = ":no_mouth:"
+            cal = 'Neutral'
 
-        msg_response2 = """{0} El usuario {1} te ha calificado """.format(
-                emo, nombre_evaluador)
+        msg_response2 = """
+        :bell: El usuario <b>{1}</b>
+        te ha calificado como <b>{2}</b> {0},
+        No olvides calificarlo tu
+        si aun no lo has hecho.
+        """.format(emo, nombre_evaluador, cal)
 
         bot.sendMessage(usuario_chat_id, text=emojize(msg_response2,
             use_aliases=True))
 
     except ObjectDoesNotExist:
-        msg_response = 'Ocurrio un error'
+        msg_response = """
+        :no_entry_sign: No fue posible evaluar a la persona
+        """.format(contrato_id)
 
     # TODO: Si ambos comentaron enviar in mensaje al grupo
+    def cerrar_contrato(contrato_id):
+        # TODO: Validar el tiempo  que ha transcurrido desde que se creo el
+        # contrato para ver si se enviar el mensaje
+
+        try:
+            contrato = Contrato.objects.get(
+                    contrato=contrato_id).contratos.filter(
+                    comentario__isnull=False)
+
+            if len(contrato) >=2:
+                grupo_chat_id = contrato[0].contrato.grupo.id
+                operacion = contrato[0].contrato.operacion
+                user1 = contrato[0].user.username if contrato[0].user.username\
+                        else contrato[0].user.first_name
+
+                user2 = contrato[1].user.username if contrato[1].user.username\
+                        else contrato[1].user.first_name
+                calif1 = contrato[0].comentario
+                calif2 = contrato[1].comentario
+
+                msg_response3 = """
+                :pushpin: <code>Contrato compra-venta finalizado:</code>\n
+                <b>Contrato:</b><b>{0}</b>
+                <b>Operacion:</b> {1}
+                <b>#Ref:</b> @{2} fue calif. como {3}
+                <b>#Ref:</b> @{4} fue calif. como {5}
+                :bulb: <b>Tips</b>\n
+                - Si quieres saber mas acerca de
+                la operacion puedes consultar
+                el contrato con el siguiente
+                comando:
+                - Ejecuta <b>/tradeb {0}</b>
+                """.format(contrato_id, operacion, user1,
+                        calif1, user2, calif2 )
+                bot.sendMessage(grupo_chat_id, text=emojize(msg_response3,
+                    use_aliases=True))
+
+        except ObjectDoesNotExist:
+            pass
+
+    cerrar_contrato(contrato_id)
 
     query.edit_message_text(parse_mode="html", text=emojize(msg_response,
         use_aliases=True))
