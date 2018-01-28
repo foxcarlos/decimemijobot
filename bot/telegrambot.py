@@ -100,7 +100,6 @@ def buscar_user(bot, update, args):
     return lista_user
 
 def trade_referencia(bot, update, args):
-    import ipdb; ipdb.set_trace() # BREAKPOINT
     chat_id = update.message.from_user.id
     lista = buscar_user(bot, update, args)
     print(lista)
@@ -262,7 +261,6 @@ def callback_califica(bot, update):
 
 def crear_contrato(bot, update, args):
 
-    import ipdb; ipdb.set_trace() # BREAKPOINT
     global buyer_seller
     global inf_operacion
     buyer_seller = []
@@ -291,7 +289,6 @@ def crear_contrato(bot, update, args):
 
 
 def callback_button(bot, update):
-    import ipdb; ipdb.set_trace() # BREAKPOINT
     query = update.callback_query
 
     metodo = query.data.split(',')
