@@ -1365,7 +1365,7 @@ def main():
     # To get Dispatcher related to a specific bot
     # dp = DjangoTelegramBot.getDispatcher('BOT_n_username')  #get by bot username
 
-    dp.add_handler(CommandHandler("traderef", trade_referencia, pass_args=True))
+    # dp.add_handler(CommandHandler("traderef", trade_referencia, pass_args=True))
     dp.add_handler(CommandHandler("tradec", trade_califica, pass_args=True))
     dp.add_handler(CallbackQueryHandler(callback_califica))
     # dp.add_handler(InlineQueryHandler(reply_to_query))
