@@ -1367,7 +1367,7 @@ def main():
 
     # dp.add_handler(CommandHandler("traderef", trade_referencia, pass_args=True))
     dp.add_handler(CommandHandler("tradec", trade_califica, pass_args=True))
-    dp.add_handler(CallbackQueryHandler(callback_califica))
+    # dp.add_handler(CallbackQueryHandler(callback_califica))
     # dp.add_handler(InlineQueryHandler(reply_to_query))
 
     # on different commands - answer in Telegram
@@ -1379,6 +1379,7 @@ def main():
 
     dp.add_handler(CommandHandler("trade", crear_contrato, pass_args=True))
     dp.add_handler(CallbackQueryHandler(callback_button))
+    dp.add_handler(CallbackQueryHandler(callback_califica))
 
     dp.add_handler(CommandHandler("help", help))
     dp.add_handler(CommandHandler("ayuda", help))
