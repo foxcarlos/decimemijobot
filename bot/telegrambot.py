@@ -131,9 +131,9 @@ def trade_califica(bot, update, args):
                     text=emojize(msg_response, use_aliases=True))
             return False
 
-        pos = "pos,{0},{1}".format(contrato_id, contrato_comentario)
-        neg = "neg,{0},{1}".format(contrato_id, contrato_comentario)
-        neu = "neu,{0},{1}".format(contrato_id, contrato_comentario)
+        pos = "califica,pos,{0},{1}".format(contrato_id, contrato_comentario)
+        neg = "califica,neg,{0},{1}".format(contrato_id, contrato_comentario)
+        neu = "califica,neu,{0},{1}".format(contrato_id, contrato_comentario)
 
         keyboard = [[
                 InlineKeyboardButton("Positivo", callback_data=pos),
@@ -179,7 +179,7 @@ def trade_califica(bot, update, args):
 
 def callback_califica(bot, update):
     query = update.callback_query
-    feedback, contrato_id, contrato_comentario = query.data.split(',')
+    metodo, feedback, contrato_id, contrato_comentario = query.data.split(',')
     id_evaluador = update.callback_query.from_user.id
     nombre_evaluador = update.callback_query.from_user.username if \
             update.callback_query.from_user.username else \
@@ -281,8 +281,8 @@ def crear_contrato(bot, update, args):
         return True
 
     keyboard = [[
-            InlineKeyboardButton("Si", callback_data="aceptar"),
-            InlineKeyboardButton("No", callback_data="cancelar")]]
+            InlineKeyboardButton("Si", callback_data="contrato,aceptar"),
+            InlineKeyboardButton("No", callback_data="contrato,cancelar")]]
 
     reply_markup = InlineKeyboardMarkup(keyboard)
     update.message.reply_text('Desea crear un contrato de compra venta?:',
@@ -294,84 +294,90 @@ def callback_button(bot, update):
     import ipdb; ipdb.set_trace() # BREAKPOINT
     query = update.callback_query
 
-    if query.data == "aceptar":
-        keyboard = [[InlineKeyboardButton("Soy el Vendedor",
-            callback_data="vendedor"), ]]
-        reply_markup = InlineKeyboardMarkup(keyboard)
-        query.edit_message_text('Presione este boton solo el <b>vendedor</b>:',
-                parse_mode="html",  reply_markup=reply_markup)
+    metodo = query.data.split(',')
+    if metodo[0] == 'contrato':
+        opcion = metodo[1]
+        if opcion == "aceptar":
+            keyboard = [[InlineKeyboardButton("Soy el Vendedor",
+                callback_data="contrato,vendedor"), ]]
+            reply_markup = InlineKeyboardMarkup(keyboard)
+            query.edit_message_text('Presione este boton solo el <b>vendedor</b>:',
+                    parse_mode="html",  reply_markup=reply_markup)
 
-    elif query.data == "vendedor":
-        buyer_seller.append((query.from_user.username, query.from_user.id))
-        keyboard = [[InlineKeyboardButton("Soy el Comprador",
-            callback_data="comprador"), ], ]
-        reply_markup = InlineKeyboardMarkup(keyboard)
+        elif opcion == "vendedor":
+            buyer_seller.append((query.from_user.username, query.from_user.id))
+            keyboard = [[InlineKeyboardButton("Soy el Comprador",
+                callback_data="contrato,comprador"), ], ]
+            reply_markup = InlineKeyboardMarkup(keyboard)
 
-        query.edit_message_text('Ahora presione este boton el Comprador:',
-                reply_markup=reply_markup)
+            query.edit_message_text('Ahora presione este boton el Comprador:',
+                    reply_markup=reply_markup)
 
-    elif query.data == "comprador":
-        buyer_seller.append((query.from_user.username, query.from_user.id))
-        keyboard = [[
-            InlineKeyboardButton("Generar", callback_data="generar"),
-            InlineKeyboardButton("Cancelar", callback_data="cancelar_generar")]]
-        reply_markup = InlineKeyboardMarkup(keyboard)
+        elif opcion == "comprador":
+            buyer_seller.append((query.from_user.username, query.from_user.id))
+            keyboard = [[
+                InlineKeyboardButton("Generar", callback_data="contrato,generar"),
+                InlineKeyboardButton("Cancelar", callback_data="contrato,cancelar_generar")]]
+            reply_markup = InlineKeyboardMarkup(keyboard)
 
-        query.edit_message_text('Presione para generar el contrato compra-venta:',
-                reply_markup=reply_markup)
+            query.edit_message_text('Presione para generar el contrato compra-venta:',
+                    reply_markup=reply_markup)
 
-    elif query.data == "generar":
-        grupo_chat_id = query.message.chat.id
-        grupo_chat_titulo = query.message.chat.title
-        grupo_chat_tipo = query.message.chat.type
-        contrato = Contrato.generar_nro_contrato()
-        comprador = buyer_seller[1]
-        vendedor = buyer_seller[0]
+        elif opcion == "generar":
+            grupo_chat_id = query.message.chat.id
+            grupo_chat_titulo = query.message.chat.title
+            grupo_chat_tipo = query.message.chat.type
+            contrato = Contrato.generar_nro_contrato()
+            comprador = buyer_seller[1]
+            vendedor = buyer_seller[0]
 
-        msg_response = """
-        :pushpin: <code>Se ha generado un contrato compra-venta:</code>\n
-        <b>Contrato:</b><b>{0}</b>
-        <b>Operacion:</b> {1}
-        <b>Comprador:</b> {2}
-        <b>vendedor:</b> {3}
-        <b>Grupo:</b> {4}
-        <b>Status:</b> En Proceso\n
-        :bulb: <b>Tips</b>\b
-        - Guarda el numero contrato
-        - Ejecuta <b>/trade ? para ayuda</b>
-        """.format(contrato, inf_operacion, comprador[0], vendedor[0],
-                grupo_chat_titulo)
+            msg_response = """
+            :pushpin: <code>Se ha generado un contrato compra-venta:</code>\n
+            <b>Contrato:</b><b>{0}</b>
+            <b>Operacion:</b> {1}
+            <b>Comprador:</b> {2}
+            <b>vendedor:</b> {3}
+            <b>Grupo:</b> {4}
+            <b>Status:</b> En Proceso\n
+            :bulb: <b>Tips</b>\b
+            - Guarda el numero contrato
+            - Ejecuta <b>/trade ? para ayuda</b>
+            """.format(contrato, inf_operacion, comprador[0], vendedor[0],
+                    grupo_chat_titulo)
 
-        # Solo para cuando se hacen pruebas desde el chat privado del bot
-        if update.callback_query.message.chat.PRIVATE == "private":
-            grupo_chat_id = 9796220
-            grupo_chat_titulo = "FoxBot"
-            grupo_chat_tipo = "privado"
+            # Solo para cuando se hacen pruebas desde el chat privado del bot
+            if update.callback_query.message.chat.PRIVATE == "private":
+                grupo_chat_id = 9796220
+                grupo_chat_titulo = "FoxBot"
+                grupo_chat_tipo = "privado"
 
-        obj_grupo = Grupo.buscar_o_crear(grupo_chat_id, grupo_chat_titulo,
-                grupo_chat_tipo)
-        try:
-            obj_contrato = Contrato.objects.create(contrato=contrato,
-                    grupo=obj_grupo, operacion=inf_operacion)
-            for usuario in buyer_seller:
-                obj_user = User.objects.filter(chat_id=usuario[1])
-                if obj_user:
-                    try:
-                        PersonaContrato.objects.create(contrato=obj_contrato,
-                                user=obj_user[0], tipo_buyer_seller=usuario[0])
-                    except Exception as e:
-                        print(e)
+            obj_grupo = Grupo.buscar_o_crear(grupo_chat_id, grupo_chat_titulo,
+                    grupo_chat_tipo)
+            try:
+                obj_contrato = Contrato.objects.create(contrato=contrato,
+                        grupo=obj_grupo, operacion=inf_operacion)
+                for usuario in buyer_seller:
+                    obj_user = User.objects.filter(chat_id=usuario[1])
+                    if obj_user:
+                        try:
+                            PersonaContrato.objects.create(contrato=obj_contrato,
+                                    user=obj_user[0], tipo_buyer_seller=usuario[0])
+                        except Exception as e:
+                            print(e)
 
-        except Exception as e:
-            msg_response = "Error al intentar crear el contrato"
-        query.edit_message_text(parse_mode="html", text=emojize(msg_response,
-            use_aliases=True))
+            except Exception as e:
+                msg_response = "Error al intentar crear el contrato"
+            query.edit_message_text(parse_mode="html", text=emojize(msg_response,
+                use_aliases=True))
 
-    elif query.data == "cancelar_generar":
-        query.edit_message_text('Cancelado')
+        elif opcion == "contrato,cancelar_generar":
+            query.edit_message_text('Cancelado')
 
-    elif query.data == "cancelar":
-        query.edit_message_text('Contrato cancelado:')
+        elif opcion == "contrato,cancelar":
+            query.edit_message_text('Contrato cancelado:')
+
+    elif metodo[0] == 'califica':
+        callback_califica(bot, update)
 
     return True
 
@@ -1367,9 +1373,8 @@ def main():
     # To get Dispatcher related to a specific bot
     # dp = DjangoTelegramBot.getDispatcher('BOT_n_username')  #get by bot username
 
-    # dp.add_handler(CommandHandler("traderef", trade_referencia, pass_args=True))
+    dp.add_handler(CommandHandler("traderef", trade_referencia, pass_args=True))
     dp.add_handler(CommandHandler("tradec", trade_califica, pass_args=True))
-    # dp.add_handler(CallbackQueryHandler(callback_califica))
     # dp.add_handler(InlineQueryHandler(reply_to_query))
 
     # on different commands - answer in Telegram
