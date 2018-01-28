@@ -79,10 +79,30 @@ def ayuda_trade():
     """
     return help_trade
 
+def buscar_user(bot, update, args):
+    lista_user = []
+    entidades = update.message.entities[1:]
+    for index, entidad in enumerate(entidades):
+        if entidad.type == 'text_mention':
+            user_chat_id = entidad.user.id
+            try:
+                usuario = User.objects.get(chat_id=user_chat_id)
+                lista_user.append(usuario)
+            except ObjectDoesNotExist:
+                pass
+        elif entidad.type == 'mention':
+            try:
+                usuario = User.objects.get(username=args[index])
+                lista_user.append(usuario)
+            except ObjectDoesNotExist:
+                pass
+    return lista_user
 
 def trade_referencia(bot, update, args):
     import ipdb; ipdb.set_trace() # BREAKPOINT
     chat_id = update.message.from_user.id
+    lista = buscar_user(bot, update, args)
+    print(lista)
 
 
 def trade_califica(bot, update, args):
@@ -193,7 +213,7 @@ def callback_califica(bot, update):
             cal = 'Neutral'
 
         msg_response2 = """
-        :bell: El usuario <b>{1}</b> te ha calificado como <b>{2}</b> {0}, No olvides calificarlo tu si aun no lo has hecho.
+        :bell: El usuario <b>{1}</b> te ha calificado como: <b>{2}</b> {0}, No olvides calificarlo tu si aun no lo has hecho.
         """.format(emo, nombre_evaluador, cal)
 
         bot.sendMessage(usuario_chat_id, parse_mode='html',
