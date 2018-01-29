@@ -109,24 +109,45 @@ def trade_referencia(bot, update, args):
     usuarios = buscar_user(bot, update, args)
     print(usuarios)
     msg_response = ''
+
+    def puntuacion(total, pos):
+        puntua = (pos - (pos/100)) / total
+        return '{0}%'.format(round(puntua, 1)*100)
+
     for usuario in usuarios:
+        msg_response_cabecera = ''
+        msg_response = ''
+        msg_response_final = ''
+        puntos_negativos = 0
+
         get_contratos  = PersonaContrato.objects.filter(user=usuario)
         total_intercambios = get_contratos.count()
-        agrupar = get_contratos.values('puntuacion').annotate(dcount=Count('puntuacion'))
+        agrupar = get_contratos.values('puntuacion').annotate(dcount=Count(
+            'puntuacion'))
         nombre = usuario.username if usuario.username else usuario.first_name
-        msg_response = """Calificaion para <b>{0}</b>\n\n""".format(nombre)
-        msg_response+="""Cantidad de Intercambios hechos: <b>{0}</b>\n """.format(
-                total_intercambios)
+
         for f in agrupar:
             if f.get('puntuacion') == 'pos':
                 msg_response+='Positivo: {0}\n'.format(f.get('dcount'))
-            elif f.get('puntuacion') == 'neu':
-                msg_response+='Negativo: {0}\n'.format(f.get('dcount'))
             elif f.get('puntuacion') == 'neg':
+                msg_response+='Negativo: {0}\n'.format(f.get('dcount'))
+                puntos_negativos = f.get('dcount')
+            elif f.get('puntuacion') == 'neu':
                 msg_response+='Neutral: {0}\n'.format(f.get('dcount'))
+            else:
+                continue
+
+        msg_response_cabecera = """Calificaion para <b>{0} {1}</b>\n\n""".format(
+                nombre, puntuacion(total_intercambios,
+                    total_intercambios-puntos_negativos)
+                )
+        msg_response_cabecera += """Total Intercambios: <b>{0}</b>\n """.format(
+                total_intercambios)
+
+        msg_response_final = msg_response_cabecera + msg_response
 
     update.message.reply_text(parse_mode="html",
-            text=emojize(msg_response, use_aliases=True))
+            text=emojize(msg_response_final, use_aliases=True))
     return True
 
 
