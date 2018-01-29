@@ -103,6 +103,7 @@ def trade_referencia(bot, update, args):
     chat_id = update.message.from_user.id
     usuarios = buscar_user(bot, update, args)
     print(usuarios)
+    msg_response = ''
     for usuario in usuarios:
         get_contratos  = PersonaContrato.objects.filter(user=usuario)
         total_intercambios = get_contratos.count()
