@@ -52,6 +52,8 @@ URL_DOLARTODAY = settings.CRIPTO_MONEDAS.get("URL_DOLARTODAY")
 global buyer_seller
 global inf_operacion
 
+buyer_seller = []
+inf_operacion = ''
 
 def ayuda_trade():
     help_trade = """
