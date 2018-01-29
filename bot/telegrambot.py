@@ -335,14 +335,8 @@ def callback_button(bot, update):
             vendedor = buyer_seller[0]
 
             msg_response = """
-            :pushpin: <code>Se ha generado un contrato compra-venta:</code>\n
-            <b>Contrato:</b><b>{0}</b>
-            <b>Operacion:</b> {1}
-            <b>Comprador:</b> {2}
-            <b>vendedor:</b> {3}
-            <b>Grupo:</b> {4}
-            <b>Status:</b> En Proceso\n
-            :bulb: <b>Tips</b>\b
+            :pushpin: <code>Se ha generado un contrato compra-venta:</code>\n<b>Contrato:</b><b>{0}</b>\n<b>Operacion:</b> {1}\n<b>Comprador:</b> {2}\n<b>vendedor:</b> {3}\n
+            <b>Grupo:</b> {4}\n<b>Status:</b> En Proceso\n\n:bulb: <b>Tips</b>\b
             - Guarda el numero contrato
             - Ejecuta <b>/trade ? para ayuda</b>
             """.format(contrato, inf_operacion, comprador[0], vendedor[0],
@@ -1281,7 +1275,6 @@ def valida_root(update):
 
 
 def reglas(bot, update):
-    import ipdb; ipdb.set_trace() # BREAKPOINT
     bot.send_message(chat_id=update.message.chat_id, text="Lo siento, Aun se definen las reglas del grupo.")
 
 
