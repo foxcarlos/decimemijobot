@@ -128,16 +128,16 @@ def trade_referencia(bot, update, args):
 
         for f in agrupar:
             if f.get('puntuacion') == 'pos':
-                msg_response+='Positivo: {0}\n'.format(f.get('dcount'))
+                msg_response+=':small_blue_diamond: Positivo: {0}\n'.format(f.get('dcount'))
             elif f.get('puntuacion') == 'neg':
-                msg_response+='Negativo: {0}\n'.format(f.get('dcount'))
+                msg_response+=':small_blue_diamond: Negativo: {0}\n'.format(f.get('dcount'))
                 puntos_negativos = f.get('dcount')
             elif f.get('puntuacion') == 'neu':
-                msg_response+='Neutral: {0}\n'.format(f.get('dcount'))
+                msg_response+=':small_blue_diamond: Neutral: {0}\n'.format(f.get('dcount'))
             else:
                 continue
 
-        msg_response_cabecera = """Calificaion para <b>{0} {1}</b>\n\n""".format(
+        msg_response_cabecera = """:memo: Calificaion para <b>{0} {1}</b>\n\n""".format(
                 nombre, puntuacion(total_intercambios,
                     total_intercambios-puntos_negativos)
                 )
