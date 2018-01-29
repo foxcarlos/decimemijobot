@@ -49,6 +49,9 @@ URL_PRICE_USD = settings.CRIPTO_MONEDAS.get("URL_PRICE_USD")
 URL_PRICE_USD_EUR_MARKET = settings.CRIPTO_MONEDAS.get("URL_PRICE_USD_EUR_MARKET")
 URL_DOLARTODAY = settings.CRIPTO_MONEDAS.get("URL_DOLARTODAY")
 
+global buyer_seller
+global inf_operacion
+
 
 def ayuda_trade():
     help_trade = """
@@ -281,8 +284,6 @@ def callback_califica(bot, update):
 
 def crear_contrato(bot, update, args):
 
-    global buyer_seller
-    global inf_operacion
     buyer_seller = []
     inf_operacion = ' '.join(args) if args else ''
 
@@ -311,7 +312,6 @@ def crear_contrato(bot, update, args):
 def callback_button(bot, update):
     query = update.callback_query
 
-    buyer_seller = []
     metodo = query.data.split(',')
     if metodo[0] == 'contrato':
         opcion = metodo[1]
