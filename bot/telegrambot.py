@@ -311,6 +311,7 @@ def crear_contrato(bot, update, args):
 def callback_button(bot, update):
     query = update.callback_query
 
+    buyer_seller = []
     metodo = query.data.split(',')
     if metodo[0] == 'contrato':
         opcion = metodo[1]
