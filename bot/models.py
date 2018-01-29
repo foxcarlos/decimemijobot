@@ -35,7 +35,7 @@ class Grupo(models.Model):
 
     def __str__(self):
         #return str(self.grupo_id)
-        return self.descripcion
+        return self.descripcion if self.descripcion else 'Sin descripcion'
 
     class Meta:
         '''.'''
