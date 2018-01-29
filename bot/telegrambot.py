@@ -1281,6 +1281,7 @@ def valida_root(update):
 
 
 def reglas(bot, update):
+    import ipdb; ipdb.set_trace() # BREAKPOINT
     bot.send_message(chat_id=update.message.chat_id, text="Lo siento, Aun se definen las reglas del grupo.")
 
 
