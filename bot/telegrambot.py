@@ -335,10 +335,7 @@ def callback_button(bot, update):
             vendedor = buyer_seller[0]
 
             msg_response = """
-            :pushpin: <code>Se ha generado un contrato compra-venta:</code>\n<b>Contrato:</b><b>{0}</b>\n<b>Operacion:</b> {1}\n<b>Comprador:</b> {2}\n<b>vendedor:</b> {3}\n
-            <b>Grupo:</b> {4}\n<b>Status:</b> En Proceso\n\n:bulb: <b>Tips</b>\b
-            - Guarda el numero contrato
-            - Ejecuta <b>/trade ? para ayuda</b>
+            :pushpin: <code>Se ha generado un contrato compra-venta:</code>\n\n<b>Contrato:</b><b>{0}</b>\n<b>Operacion:</b> {1}\n<b>Comprador:</b> {2}\n<b>vendedor:</b> {3}\n<b>Grupo:</b> {4}\n<b>Status:</b> En Proceso\n\n:bulb: <b>Tips</b>\n - Guarda el numero contrato\n - Ejecuta <b>/trade ? para ayuda</b>
             """.format(contrato, inf_operacion, comprador[0], vendedor[0],
                     grupo_chat_titulo)
 
