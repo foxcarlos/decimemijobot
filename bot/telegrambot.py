@@ -327,7 +327,6 @@ def callback_button(bot, update):
                     reply_markup=reply_markup)
 
         elif opcion == "generar":
-            import ipdb; ipdb.set_trace() # BREAKPOINT
 
             grupo_chat_id = query.message.chat.id
             grupo_chat_titulo = query.message.chat.title
@@ -342,10 +341,10 @@ def callback_button(bot, update):
                     grupo_chat_titulo)
 
             # Solo para cuando se hacen pruebas desde el chat privado del bot
-            if update.callback_query.message.chat.PRIVATE == "private":
+            """if update.callback_query.message.chat.PRIVATE == "private":
                 grupo_chat_id = 9796220
                 grupo_chat_titulo = "FoxBot"
-                grupo_chat_tipo = "privado"
+                grupo_chat_tipo = "privado"""
 
             obj_grupo = Grupo.buscar_o_crear(grupo_chat_id, grupo_chat_titulo,
                     grupo_chat_tipo)
