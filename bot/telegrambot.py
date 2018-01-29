@@ -100,6 +100,7 @@ def buscar_user(bot, update, args):
     return lista_user
 
 def trade_referencia(bot, update, args):
+    import ipdb; ipdb.set_trace() # BREAKPOINT
     chat_id = update.message.from_user.id
     usuarios = buscar_user(bot, update, args)
     print(usuarios)
@@ -107,8 +108,19 @@ def trade_referencia(bot, update, args):
         get_contratos  = PersonaContrato.objects.filter(user=usuario)
         total_intercambios = get_contratos.count()
         agrupar = get_contratos.values('puntuacion').annotate(dcount=Count('puntuacion'))
+        nombre = usuario.username if usuario.username else usuario.first_name
+        msg_response = """Calificaion para <b>{0}</b>\n\n""".format(nombre)
+        for f in agrupar:
+            if f.get('puntuacion') == 'pos':
+                msg_response+='Positivo: {0}\n'.format(f.get('dcount'))
+            elif f.get('puntuacion') == 'neu':
+                msg_response+='Negativo: {0}\n'.format(f.get('dcount'))
+            elif f.get('puntuacion') == 'neg':
+                msg_response+='Neutral: {0}\n'.format(f.get('dcount'))
 
-
+    update.message.reply_text(parse_mode="html",
+            text=emojize(msg_response, use_aliases=True))
+    return True
 
 
 def trade_califica(bot, update, args):
