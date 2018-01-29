@@ -104,6 +104,37 @@ def buscar_user(bot, update, args):
                 pass
     return lista_user
 
+def trade2user(bot, update, args):
+    usuarios = buscar_user(bot, update, args)
+    lista_contratos = PersonaContrato.objects.filter(user=usuarios[0])
+    detalle_contratos = PersonaContrato.objects.filter(
+            contrato__in=[
+                contrato.contrato for contrato in lista_contratos]).exclude(
+                        user=usuarios[0])
+    msg_response = ''
+    for fila in detalle_contratos:
+        msg_response += """Intercambios de {7}
+        Fecha: {0}\n
+        Contrato: {1}\n
+        Operacion: {2}
+        Grupo: {3}\n
+        Cliente: {4}\n
+        Puntuacion: {5}\n
+        Comentario: {6}\n\n
+        """.foramt(
+                fila.contrato.fecha.strftime("%d-%m-%Y"),
+                fila.contrato.contrato,
+                fila.contrato.operacion,
+                fila.contrato.grupo.descripcion,
+                fila.user.first_name,
+                fila.puntuacion,
+                fila.comentario,
+                usuarios[0].username
+                )
+    update.message.reply_text(parse_mode="html",
+            text=emojize(msg_response, use_aliases=True))
+
+
 def trade_referencia(bot, update, args):
     chat_id = update.message.from_user.id
     usuarios = buscar_user(bot, update, args)
@@ -1406,6 +1437,7 @@ def main():
     # To get Dispatcher related to a specific bot
     # dp = DjangoTelegramBot.getDispatcher('BOT_n_username')  #get by bot username
 
+    dp.add_handler(CommandHandler("trade2user", trade2user, pass_args=True))
     dp.add_handler(CommandHandler("traderef", trade_referencia, pass_args=True))
     dp.add_handler(CommandHandler("tradec", trade_califica, pass_args=True))
     # dp.add_handler(InlineQueryHandler(reply_to_query))
