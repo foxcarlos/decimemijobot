@@ -101,8 +101,14 @@ def buscar_user(bot, update, args):
 
 def trade_referencia(bot, update, args):
     chat_id = update.message.from_user.id
-    lista = buscar_user(bot, update, args)
-    print(lista)
+    usuarios = buscar_user(bot, update, args)
+    print(usuarios)
+    for usuario in usuaraios:
+        get_contratos  = PersonaContrato.objects.filter(user=usuario)
+        total_intercambios = get_contratos.count()
+        agrupar = get_contratos.values('puntuacion').annotate(dcount=Count('puntuacion'))
+
+
 
 
 def trade_califica(bot, update, args):
