@@ -114,14 +114,14 @@ def trade2user(bot, update, args):
     msg_response = ''
     for fila in detalle_contratos:
         msg_response += """Intercambios de {7}
-        Fecha: {0}\n
-        Contrato: {1}\n
+        Fecha: {0}
+        Contrato: {1}
         Operacion: {2}
-        Grupo: {3}\n
-        Cliente: {4}\n
-        Puntuacion: {5}\n
+        Grupo: {3}
+        Cliente: {4}
+        Puntuacion: {5}
         Comentario: {6}\n\n
-        """.foramt(
+        """.format(
                 fila.contrato.fecha.strftime("%d-%m-%Y"),
                 fila.contrato.contrato,
                 fila.contrato.operacion,
