@@ -145,16 +145,24 @@ def trade_referencia(bot, update, args):
         puntua = (pos - (pos/100)) / total
         return '{0}%'.format(round(puntua, 1)*100)
 
+    import ipdb; ipdb.set_trace() # BREAKPOINT
     for usuario in usuarios:
         msg_response_cabecera = ''
         msg_response = ''
         msg_response_final = ''
         puntos_negativos = 0
 
-        get_contratos  = PersonaContrato.objects.filter(user=usuario)
+        # get_contratos  = PersonaContrato.objects.filter(user=usuario)
+        lista_contratos = [f.contrato \
+                for f in PersonaContrato.objects.filter(
+                    user__username__icontains="SSilva79")]
+        get_contratos = PersonaContrato.objects.filter(
+                contrato__in=lista_contratos).exclude(user=usuario)
+
         total_intercambios = get_contratos.count()
         agrupar = get_contratos.values('puntuacion').annotate(dcount=Count(
             'puntuacion'))
+
         nombre = usuario.username if usuario.username else usuario.first_name
 
         for f in agrupar:
@@ -328,7 +336,7 @@ def callback_califica(bot, update):
                 calif1 = contrato[0].comentario
                 calif2 = contrato[1].comentario
 
-                msg_response3 = """:pushpin: Contrato finalizado\n\n:small_orange_diamond:<b>Contrato:</b><b>{0}</b>\n\n:small_orange_diamond:<b>Operacion:</b> {1}\n\n:small_orange_diamond:<b>#Ref:</b> @{2} fue calif. como {3}\n\n:small_orange_diamond:<b>#Ref:</b> @{4} fue calif. como {5}\n\n:bulb: <b>Tips:</b>\n\n- Si quieres saber mas acerca de la operacion puedes consultar el contrato con el siguiente comando:\n\n - Ejecuta:\n <b>/tradeb {0}</b>
+                msg_response3 = """:pushpin: Contrato finalizado\n\n:small_orange_diamond:<b>Contrato:</b><b>{0}</b>\n\n:small_orange_diamond:<b>Operacion:</b> {1}\n\n:small_orange_diamond:<b>#Ref:</b> @{2} fue calif. como {5}\n\n:small_orange_diamond:<b>#Ref:</b> @{4} fue calif. como {3}\n\n:bulb: <b>Tips:</b>\n\n- Si quieres saber mas acerca de la operacion puedes consultar el contrato con el siguiente comando:\n\n - Ejecuta:\n <b>/tradeb {0}</b>
                 """.format(contrato_id, operacion, user1,
                         calif1, user2, calif2 )
                 bot.sendMessage(grupo_chat_id, parse_mode="html",
