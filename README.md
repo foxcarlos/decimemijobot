@@ -1,25 +1,32 @@
-# DecimeMijo Bot para Telegram
+# FoxBot Bot para Telegram
 Bot Telegram funciones varias
 
 Estas son las funciones que realiza el Bot
 
   - autor - Acerca de
+  - donar - Si deseas hacer una donacion
   - help - Lista de comandos disponibles
+  - bitcoin - Precio Bitcoin
+  - dolartoday - Precio del Dolar Venezuela
   - allcoins - Precio de algunas las cripto monedas
-  - bitcoin - Precio actual del Bitcoin
-  - ban -banear un usuario
-  - dolartoday - Precio actual del Dolar Venezuela
-  - ethereum - Precio actual del Ethereum
-  - litecoin - Precio actual del LiteCoin
-  - masivo - Envia un mensaje a todos los usuarios del Bot
-  - set_alarma_bitcoin - Activa notificaciones cuando ocurra un evento
-  - set_alarma_ethereum - Activa notificaciones cuando ocurra un evento
-  - set_alarma_litecoin - Activa notificaciones cuando ocurra un evento
-  - panorama - Lista noticas de sucesos en Mcbo
-
+  - precio - <coin_ticker> <Market> Ej: /precio btc coinbase
+  - grafico - <coin_ticker> <market>
+  - clc - <coin_ticker> <monto> - Calcula el valor del BTC de un monto of coin pasado
+  - ban - banear un usuario del grupo
+  - set_alarma_bitcoin - <estado> Ej: /set_alarma_bitcoin on
+  - set_alarma_dolartoday - <estado> Ej: /set_alarma_bitcoin on
+  - set_alarma_ethereum - <estado> Ej: /set_alarma_ethereum on
+  - set_alarma_litecoin - <estado> Ej: /set_alarma_litecoin on
+  - ban - reply al usuario y esribir /ban
+  - trade - Crear un contrato compra venta
+  - tradeb - Buscar Inf Conrato
+  - tradec - Calificar Conrtato
+  - traderef - Buscar Referencias de usuario
+  
+  
 ### Installation
 
-DecimeMijo requires python v3+ to run.
+FoxBot requires python v3+ to run.
 ```sh
 $ sudo apt-get install python3 python3-doc
 $ sudo apt-get install redis-server
@@ -27,7 +34,7 @@ $ sudo apt-get install redis-server
 
 = Repo =
 ```sh
-$ git clone git@github.com:foxcarlos/decimemijobot.git
+$ git clone git@github.com:foxcarlos/foxbot.git
 ```
 = Prepare Virtual Env =
 ```sh
@@ -41,7 +48,7 @@ export WORKON_HOME=~/Envs
 source /usr/local/bin/virtualenvwrapper.sh
 
 Run in terminal
-$ mkvirtualenv --python=/usr/bin/python3 decimemijobot
+$ mkvirtualenv --python=/usr/bin/python3 foxbot
 ```
 #### For telegrambot
 ```sh
