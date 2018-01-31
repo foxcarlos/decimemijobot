@@ -136,10 +136,13 @@ def trade2user(bot, update, args):
 
 
 def trade_referencia(bot, update, args):
+    import ipdb;ipdb.set_trace()
     chat_id = update.message.from_user.id
     usuarios = buscar_user(bot, update, args)
     print(usuarios)
     msg_response = ''
+    msg_response_cabecera = ''
+    msg_response_final = ''
 
     def puntuacion(total, pos):
         puntua = (pos - (pos/100)) / total
