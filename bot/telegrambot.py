@@ -96,9 +96,10 @@ def buscar_user(bot, update, args):
             except ObjectDoesNotExist:
                 pass
         elif entidad.type == 'mention':
+            user_ = args[index].replace('@', '')
             try:
                 usuario = User.objects.get(
-                        username=args[index].replace('@', ''))
+                        username__icontains=user_)
                 lista_user.append(usuario)
             except ObjectDoesNotExist:
                 pass
