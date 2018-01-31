@@ -145,7 +145,6 @@ def trade_referencia(bot, update, args):
         puntua = (pos - (pos/100)) / total
         return '{0}%'.format(round(puntua, 1)*100)
 
-    import ipdb; ipdb.set_trace() # BREAKPOINT
     for usuario in usuarios:
         msg_response_cabecera = ''
         msg_response = ''
@@ -155,7 +154,7 @@ def trade_referencia(bot, update, args):
         # get_contratos  = PersonaContrato.objects.filter(user=usuario)
         lista_contratos = [f.contrato \
                 for f in PersonaContrato.objects.filter(
-                    user__username__icontains="SSilva79")]
+                    user=usuario)]
         get_contratos = PersonaContrato.objects.filter(
                 contrato__in=lista_contratos).exclude(user=usuario)
 
