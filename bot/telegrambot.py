@@ -151,10 +151,17 @@ def trade_referencia(bot, update, args):
         msg_response_final = ''
         puntos_negativos = 0
 
-        get_contratos  = PersonaContrato.objects.filter(user=usuario)
+        # get_contratos  = PersonaContrato.objects.filter(user=usuario)
+        lista_contratos = [f.contrato \
+                for f in PersonaContrato.objects.filter(
+                    user=usuario)]
+        get_contratos = PersonaContrato.objects.filter(
+                contrato__in=lista_contratos).exclude(user=usuario)
+
         total_intercambios = get_contratos.count()
         agrupar = get_contratos.values('puntuacion').annotate(dcount=Count(
             'puntuacion'))
+
         nombre = usuario.username if usuario.username else usuario.first_name
 
         for f in agrupar:
@@ -262,9 +269,17 @@ def callback_califica(bot, update):
             update.callback_query.from_user.first_name
 
     try:
-        usuario_contrato = Contrato.objects.get(
+
+        # Usuario Evaludado
+        usuario_evaluado = Contrato.objects.get(
                 contrato=contrato_id).contratos.get(
                         ~Q(user__chat_id=id_evaluador))
+        evaludado_chat_id = usuario_evaluado.user.chat_id
+
+        # Usuario Evaluador
+        usuario_contrato = Contrato.objects.get(
+                contrato=contrato_id).contratos.get(
+                        user__chat_id=id_evaluador)
 
         usuario_contrato.comentario = contrato_comentario
         usuario_contrato.puntuacion = feedback
@@ -272,7 +287,6 @@ def callback_califica(bot, update):
         nombre = usuario_contrato.user.username \
                 if usuario_contrato.user.username else \
                 usuario_contrato.user.first_name
-        usuario_chat_id = usuario_contrato.user.chat_id
 
         msg_response = """
         :sparkles: Calificacion realizada con exito,
@@ -293,7 +307,7 @@ def callback_califica(bot, update):
         :bell: El usuario <b>{1}</b> te ha calificado como: <b>{2}</b> {0}, No olvides calificarlo tu si aun no lo has hecho.
         """.format(emo, nombre_evaluador, cal)
 
-        bot.sendMessage(usuario_chat_id, parse_mode='html',
+        bot.sendMessage(evaludado_chat_id, parse_mode='html',
                 text=emojize(msg_response2, use_aliases=True))
 
     except ObjectDoesNotExist:
@@ -321,7 +335,7 @@ def callback_califica(bot, update):
                 calif1 = contrato[0].comentario
                 calif2 = contrato[1].comentario
 
-                msg_response3 = """:pushpin: Contrato finalizado\n\n:small_orange_diamond:<b>Contrato:</b><b>{0}</b>\n\n:small_orange_diamond:<b>Operacion:</b> {1}\n\n:small_orange_diamond:<b>#Ref:</b> @{2} fue calif. como {3}\n\n:small_orange_diamond:<b>#Ref:</b> @{4} fue calif. como {5}\n\n:bulb: <b>Tips:</b>\n\n- Si quieres saber mas acerca de la operacion puedes consultar el contrato con el siguiente comando:\n\n - Ejecuta:\n <b>/tradeb {0}</b>
+                msg_response3 = """:pushpin: Contrato finalizado\n\n:small_orange_diamond:<b>Contrato:</b><b>{0}</b>\n\n:small_orange_diamond:<b>Operacion:</b> {1}\n\n:small_orange_diamond:<b>#Ref:</b> @{2} fue calif. como {5}\n\n:small_orange_diamond:<b>#Ref:</b> @{4} fue calif. como {3}\n\n:bulb: <b>Tips:</b>\n\n- Si quieres saber mas acerca de la operacion puedes consultar el contrato con el siguiente comando:\n\n - Ejecuta:\n <b>/tradeb {0}</b>
                 """.format(contrato_id, operacion, user1,
                         calif1, user2, calif2 )
                 bot.sendMessage(grupo_chat_id, parse_mode="html",
@@ -408,12 +422,6 @@ def callback_button(bot, update):
             :pushpin: <code>Se ha generado un contrato compra-venta:</code>\n\n<b>Contrato:</b><b>{0}</b>\n<b>Operacion:</b> {1}\n<b>Comprador:</b> {2}\n<b>vendedor:</b> {3}\n<b>Grupo:</b> {4}\n<b>Status:</b> En Proceso\n\n:bulb: <b>Tips</b>\n - Guarda el numero contrato\n - Ejecuta <b>/trade ? para ayuda</b>
             """.format(contrato, inf_operacion, comprador[0], vendedor[0],
                     grupo_chat_titulo)
-
-            # Solo para cuando se hacen pruebas desde el chat privado del bot
-            """if update.callback_query.message.chat.PRIVATE == "private":
-                grupo_chat_id = 9796220
-                grupo_chat_titulo = "FoxBot"
-                grupo_chat_tipo = "privado"""
 
             obj_grupo = Grupo.buscar_o_crear(grupo_chat_id, grupo_chat_titulo,
                     grupo_chat_tipo)
