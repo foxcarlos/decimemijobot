@@ -374,7 +374,6 @@ def crear_contrato(bot, update, args):
     buyer_seller = []
     inf_operacion.append(' '.join(args) if args else '')
 
-    import ipdb; ipdb.set_trace() # BREAKPOINT
     if not inf_operacion:
         msg_response = ":no_entry_sign: Debes indicar el motivo de la operacion.\n<b>Ej: /trade venta de BTC por USD</b>\n Ejecuta <b>/trade ?</b> para obtener ayuda"
         update.message.reply_text(parse_mode="html",
@@ -680,50 +679,6 @@ def unban(bot, update):
     return True
 
 
-"""
-def prueba_boton(bot, update):
-    from telegram import InlineKeyboardButton, InlineKeyboardMarkup
-
-    import ipdb; ipdb.set_trace() # BREAKPOINT
-    # chat_administradores = update.message.chat.get_administrators()
-    keyboard = [[InlineKeyboardButton("Option 1", callback_data='1'),
-                 InlineKeyboardButton("Option 2", callback_data='2')],
-                [InlineKeyboardButton("Option 3", callback_data='3')]]
-
-    reply_markup = InlineKeyboardMarkup(keyboard)
-    update.message.reply_text('Seleccione una Opccion:', reply_markup=reply_markup)
-
-def callback_button(bot, update):
-    query = update.callback_query
-
-    bot.edit_message_text(text="La opcion fue: {}".format(query.data),
-            chat_id=query.message.chat_id,
-            message_id=query.message.message_id
-            )
-    if query.data == '2':
-        reply_markup = opcion2_boton(bot, update)
-        # editMessageReplyMarkup
-        query.edit_message_text('Seleccione otra Opccion:', reply_markup=reply_markup)
-    return True
-
-def opcion2_boton(bot, update):
-    from telegram import InlineKeyboardButton, InlineKeyboardMarkup
-
-    # chat_administradores = update.message.chat.get_administrators()
-    keyboard = [[InlineKeyboardButton("Option 2.1", callback_data='2.1'),
-                 InlineKeyboardButton("Option 2.2", callback_data='2.2')],
-                [InlineKeyboardButton("Option 2.3", callback_data='2.3')]]
-    reply_markup = InlineKeyboardMarkup(keyboard)
-    return reply_markup
-
-def prueba_forcereply(bot, update):
-    update.message.reply_text('Cual es tu nombre:')
-
-def call_ForceReply(bot, update):
-    query = update.force_reply
-"""
-
-
 def ayuda_set_alarma():
     response = """
     Te doy una mano con eso:
@@ -757,6 +712,7 @@ def ayuda_set_alarma():
 
 
 def button_alarmas(bot, update):
+    import ipdb; ipdb.set_trace() # BREAKPOINT
     response = ""
     username = update.callback_query.from_user.username
     chat_id = update.callback_query.from_user.id
