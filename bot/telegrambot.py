@@ -369,6 +369,7 @@ def callback_califica(bot, update):
 def crear_contrato(bot, update, args):
 
     buyer_seller = []
+    import ipdb; ipdb.set_trace() # BREAKPOINT
     inf_operacion = ' '.join(args) if args else ''
 
     if not inf_operacion:
