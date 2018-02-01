@@ -292,6 +292,10 @@ def callback_califica(bot, update):
                         ~Q(user__chat_id=id_evaluador))
         evaludado_chat_id = usuario_evaluado.user.chat_id
 
+        nombre_evaluado = usuario_evaluado.user.username \
+                if usuario_evaluado.user.username else \
+                usuario_evaluado.user.first_name
+
         # Usuario Evaluador
         usuario_contrato = Contrato.objects.get(
                 contrato=contrato_id).contratos.get(
@@ -305,8 +309,7 @@ def callback_califica(bot, update):
                 usuario_contrato.user.first_name
 
         msg_response = """
-        :sparkles: Calificacion realizada con exito,
-        el usuario <b>{0}</b> tambien ha sido notificado""".format(nombre)
+        :sparkles: Calificacion realizada con exito, el usuario <b>{0}</b> tambien ha sido notificado""".format(nombre_evaluado)
 
         # Notificar al usuario que ha sido calificado
         if feedback == 'pos':
@@ -320,8 +323,8 @@ def callback_califica(bot, update):
             cal = 'Neutral'
 
         msg_response2 = """
-        :bell: El usuario <b>{1}</b> te ha calificado como: <b>{2}</b> {0}, No olvides calificarlo tu si aun no lo has hecho.
-        """.format(emo, nombre_evaluador, cal)
+        :bell: El usuario <b>{1}</b> te ha calificado como: <b>{2}</b> {0}, No olvides calificarlo tu si aun no lo has hecho\nEjecuta /tradec {3} Tu comentario .
+        """.format(emo, nombre_evaluador, cal, usuario_contrato.contrato)
 
         bot.sendMessage(evaludado_chat_id, parse_mode='html',
                 text=emojize(msg_response2, use_aliases=True))
@@ -377,15 +380,15 @@ def crear_contrato(bot, update, args):
                 text=emojize(msg_response, use_aliases=True))
         return True
 
-    elif inf_operacion == '?':
+    elif inf_operacion[0] == '?':
         msg_response = ayuda_trade()
         update.message.reply_text(parse_mode="html",
                 text=emojize(msg_response, use_aliases=True))
         return True
 
     keyboard = [[
-            InlineKeyboardButton("Si", callback_data="contrato,aceptar,{0} ".format(inf_operacion)),
-            InlineKeyboardButton("No", callback_data="contrato,cancelar,{0}".format(inf_operacion))]]
+            InlineKeyboardButton("Si", callback_data="contrato,aceptar"),
+            InlineKeyboardButton("No", callback_data="contrato,cancelar")]]
 
     reply_markup = InlineKeyboardMarkup(keyboard)
     update.message.reply_text('Desea crear un contrato de compra venta?:',
