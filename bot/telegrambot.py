@@ -53,7 +53,7 @@ global buyer_seller
 global inf_operacion
 
 buyer_seller = []
-inf_operacion = ''
+inf_operacion = []
 
 def ayuda_trade():
     help_trade = """
@@ -369,7 +369,7 @@ def callback_califica(bot, update):
 def crear_contrato(bot, update, args):
 
     buyer_seller = []
-    inf_operacion = ' '.join(args) if args else ''
+    inf_operacion.append(' '.join(args) if args else '')
 
     if not inf_operacion:
         msg_response = ":no_entry_sign: Debes indicar el motivo de la operacion.\n<b>Ej: /trade venta de BTC por USD</b>\n Ejecuta <b>/trade ?</b> para obtener ayuda"
@@ -400,9 +400,6 @@ def callback_button(bot, update):
     if metodo[0] == 'contrato':
         opcion = metodo[1]
         if opcion == "aceptar":
-            inf_operacion = metodo[2]
-            inf_operacion2 = [inf_operacion]
-
             keyboard = [[InlineKeyboardButton("Soy el Vendedor",
                 callback_data="contrato,vendedor"), ]]
             reply_markup = InlineKeyboardMarkup(keyboard)
