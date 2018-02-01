@@ -136,6 +136,9 @@ def trade2user(bot, update, args):
                 fila.comentario,
                 usuarios[0].username
                 )
+    if not detalle_contratos:
+        msg_response = 'Total Intercambios:<b>0</b>'
+
     update.message.reply_text(parse_mode="html",
             text=emojize(msg_response, use_aliases=True))
 
