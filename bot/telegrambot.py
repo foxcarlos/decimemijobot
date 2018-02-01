@@ -106,6 +106,16 @@ def buscar_user(bot, update, args):
     return lista_user
 
 def trade2user(bot, update, args):
+    if len(args) <1:
+        msg_response = """
+        :no_entry_sign: Debes mencionar la persona a quien quieres consultar\n:bulb: Ejemplo:\n
+        <b>/trade2user @FoxCarlos</b>\n
+        Ejecuta <b>/trade ?</b>
+        para obtener mas ayuda"""
+        update.message.reply_text(parse_mode="html",
+                text=emojize(msg_response, use_aliases=True))
+        retuen False
+
     usuarios = buscar_user(bot, update, args)
     lista_contratos = PersonaContrato.objects.filter(user=usuarios[0])
     detalle_contratos = PersonaContrato.objects.filter(
@@ -131,6 +141,16 @@ def trade2user(bot, update, args):
 
 def trade_referencia(bot, update, args):
     chat_id = update.message.from_user.id
+    if len(args) <1:
+        msg_response = """
+        :no_entry_sign: Debes mencionar la persona a quien quieres consultar\n:bulb: Ejemplo:\n
+        <b>/traderef @FoxCarlos</b>\n
+        Ejecuta <b>/trade ?</b>
+        para obtener mas ayuda"""
+        update.message.reply_text(parse_mode="html",
+                text=emojize(msg_response, use_aliases=True))
+        retuen False
+
     usuarios = buscar_user(bot, update, args)
     print(usuarios)
     msg_response = ''
