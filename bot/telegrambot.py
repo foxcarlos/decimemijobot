@@ -398,7 +398,9 @@ def callback_button(bot, update):
 
     metodo = query.data.split(',')
     if metodo[0] == 'contrato':
+        import ipdb; ipdb.set_trace() # BREAKPOINT
         opcion = metodo[1]
+        inf_operacion = metodo[2]
         if opcion == "aceptar":
             keyboard = [[InlineKeyboardButton("Soy el Vendedor",
                 callback_data="contrato,vendedor"), ]]
@@ -416,7 +418,6 @@ def callback_button(bot, update):
                     parse_mode="html", reply_markup=reply_markup)
 
         elif opcion == "comprador":
-            import ipdb; ipdb.set_trace() # BREAKPOINT
             buyer_seller.append((query.from_user.username, query.from_user.id, 'Comprador'))
             keyboard = [[
                 InlineKeyboardButton("Generar", callback_data="contrato,generar,{0}".format(inf_operacion)),
@@ -427,7 +428,6 @@ def callback_button(bot, update):
                     reply_markup=reply_markup)
 
         elif opcion == "generar":
-            inf_operacion = metodo[2]
             grupo_chat_id = query.message.chat.id
             grupo_chat_titulo = query.message.chat.title
             grupo_chat_tipo = query.message.chat.type
