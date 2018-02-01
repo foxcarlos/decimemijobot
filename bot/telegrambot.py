@@ -374,6 +374,7 @@ def crear_contrato(bot, update, args):
     buyer_seller = []
     inf_operacion.append(' '.join(args) if args else '')
 
+    import ipdb; ipdb.set_trace() # BREAKPOINT
     if not inf_operacion:
         msg_response = ":no_entry_sign: Debes indicar el motivo de la operacion.\n<b>Ej: /trade venta de BTC por USD</b>\n Ejecuta <b>/trade ?</b> para obtener ayuda"
         update.message.reply_text(parse_mode="html",
