@@ -442,7 +442,7 @@ def callback_button(bot, update):
                     grupo_chat_tipo)
             try:
                 obj_contrato = Contrato.objects.create(contrato=contrato,
-                        grupo=obj_grupo, operacion=inf_operacion)
+                        grupo=obj_grupo, operacion=inf_operacion[0])
                 for usuario in buyer_seller:
                     obj_user = User.objects.filter(chat_id=usuario[1])
                     if obj_user:
