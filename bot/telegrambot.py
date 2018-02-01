@@ -114,7 +114,7 @@ def trade2user(bot, update, args):
         para obtener mas ayuda"""
         update.message.reply_text(parse_mode="html",
                 text=emojize(msg_response, use_aliases=True))
-        retuen False
+        return False
 
     usuarios = buscar_user(bot, update, args)
     lista_contratos = PersonaContrato.objects.filter(user=usuarios[0])
@@ -149,7 +149,7 @@ def trade_referencia(bot, update, args):
         para obtener mas ayuda"""
         update.message.reply_text(parse_mode="html",
                 text=emojize(msg_response, use_aliases=True))
-        retuen False
+        return False
 
     usuarios = buscar_user(bot, update, args)
     print(usuarios)
