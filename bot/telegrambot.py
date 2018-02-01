@@ -63,8 +63,9 @@ def ayuda_trade():
     /tradec - Califica el Contrato
     Ej /tradec contrato comentario
 
-    /tradeb  - Busca Inf contrato
-    Ej /tradeb contrato
+    /trade2user  - Busca todas las
+    transacciones de  un Usuario
+    Ej /trade2user username
 
     /traderef - Referencias de usuario
     Ej /traderef username\n
@@ -1224,7 +1225,7 @@ def help(bot, update):
     /trade - Crea un contrato compra venta
     /trade ? - Para obtener ayuda
     /tradec - Calificar Conrtato
-    /tradeb - Buscar Inf Conrato
+    /trade2user - Listas todas las operaciones de un usuario
     /traderef - Referencias de usuario
 
     Nota: Ahora es posible hacer calculos
