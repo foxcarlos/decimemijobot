@@ -419,7 +419,7 @@ def callback_button(bot, update):
         elif opcion == "comprador":
             buyer_seller.append((query.from_user.username, query.from_user.id, 'Comprador'))
             keyboard = [[
-                InlineKeyboardButton("Generar", callback_data="contrato,generar"),
+                InlineKeyboardButton("Generar", callback_data="contrato,generar,{0}".format(inf_operacion)),
                 InlineKeyboardButton("Cancelar", callback_data="contrato,cancelar_generar")]]
             reply_markup = InlineKeyboardMarkup(keyboard)
 
