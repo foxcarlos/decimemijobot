@@ -371,11 +371,13 @@ def callback_califica(bot, update):
 
 def crear_contrato(bot, update, args):
 
-    import ipdb; ipdb.set_trace() # BREAKPOINT
     buyer_seller = []
-    inf_operacion.append(' '.join(args) if args else '')
+    if args:
+        inf_operacion.append(' '.join(args))
+    else:
+        informacion = []
 
-    if not inf_operacion:
+    if not args:
         msg_response = ":no_entry_sign: Debes indicar el motivo de la operacion.\n<b>Ej: /trade venta de BTC por USD</b>\n Ejecuta <b>/trade ?</b> para obtener ayuda"
         update.message.reply_text(parse_mode="html",
                 text=emojize(msg_response, use_aliases=True))
