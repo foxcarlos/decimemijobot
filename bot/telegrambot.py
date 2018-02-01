@@ -426,7 +426,6 @@ def callback_button(bot, update):
                     reply_markup=reply_markup)
 
         elif opcion == "generar":
-            import ipdb; ipdb.set_trace() # BREAKPOINT
             grupo_chat_id = query.message.chat.id
             grupo_chat_titulo = query.message.chat.title
             grupo_chat_tipo = query.message.chat.type
@@ -436,7 +435,7 @@ def callback_button(bot, update):
 
             msg_response = """
             :pushpin: <code>Se ha generado un contrato compra-venta:</code>\n\n<b>Contrato:</b><b>{0}</b>\n<b>Operacion:</b> {1}\n<b>Comprador:</b> {2}\n<b>vendedor:</b> {3}\n<b>Grupo:</b> {4}\n<b>Status:</b> En Proceso\n\n:bulb: <b>Tips</b>\n - Guarda el numero contrato\n - Ejecuta <b>/trade ? para ayuda</b>
-            """.format(contrato, inf_operacion, comprador[0], vendedor[0],
+            """.format(contrato, inf_operacion[0], comprador[0], vendedor[0],
                     grupo_chat_titulo)
 
             obj_grupo = Grupo.buscar_o_crear(grupo_chat_id, grupo_chat_titulo,
