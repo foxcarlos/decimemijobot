@@ -407,7 +407,7 @@ def callback_button(bot, update):
                     parse_mode="html",  reply_markup=reply_markup)
 
         elif opcion == "vendedor":
-            buyer_seller.append((query.from_user.username, query.from_user.id))
+            buyer_seller.append((query.from_user.username, query.from_user.id, 'Vendedor'))
             keyboard = [[InlineKeyboardButton("Soy el Comprador",
                 callback_data="contrato,comprador"), ], ]
             reply_markup = InlineKeyboardMarkup(keyboard)
@@ -416,7 +416,7 @@ def callback_button(bot, update):
                     reply_markup=reply_markup)
 
         elif opcion == "comprador":
-            buyer_seller.append((query.from_user.username, query.from_user.id))
+            buyer_seller.append((query.from_user.username, query.from_user.id, 'Comprador'))
             keyboard = [[
                 InlineKeyboardButton("Generar", callback_data="contrato,generar"),
                 InlineKeyboardButton("Cancelar", callback_data="contrato,cancelar_generar")]]
@@ -430,6 +430,7 @@ def callback_button(bot, update):
             grupo_chat_id = query.message.chat.id
             grupo_chat_titulo = query.message.chat.title
             grupo_chat_tipo = query.message.chat.type
+            import ipdb; ipdb.set_trace() # BREAKPOINT
             contrato = Contrato.generar_nro_contrato()
             comprador = buyer_seller[1]
             vendedor = buyer_seller[0]
