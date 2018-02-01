@@ -14,7 +14,7 @@ set_alarma_ethereum - <estado> Ej: /set_alarma_ethereum on
 set_alarma_litecoin - <estado> Ej: /set_alarma_litecoin on
 ban - reply al usuario y esribir /ban
 trade - Crear un contrato compra venta
-tradeb - Buscar Inf Conrato
+trade2user - Lista de todas las operaciones de un usuario
 tradec - Calificar Conrtato
 traderef - Buscar Referencias de usuario
 
