@@ -159,7 +159,10 @@ def trade_referencia(bot, update, args):
     msg_response_final = ''
 
     def puntuacion(total, pos):
-        puntua = (pos - (pos/100)) / total
+        try:
+            puntua = (pos - (pos/100)) / total
+        except:
+            puntua = 0
         return '{0}%'.format(round(puntua, 1)*100)
 
     for usuario in usuarios:
