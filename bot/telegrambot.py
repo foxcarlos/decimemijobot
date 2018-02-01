@@ -401,6 +401,8 @@ def callback_button(bot, update):
         opcion = metodo[1]
         if opcion == "aceptar":
             inf_operacion = metodo[2]
+            inf_operacion2 = [inf_operacion]
+
             keyboard = [[InlineKeyboardButton("Soy el Vendedor",
                 callback_data="contrato,vendedor"), ]]
             reply_markup = InlineKeyboardMarkup(keyboard)
