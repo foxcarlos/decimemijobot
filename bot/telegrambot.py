@@ -430,7 +430,6 @@ def callback_button(bot, update):
             grupo_chat_id = query.message.chat.id
             grupo_chat_titulo = query.message.chat.title
             grupo_chat_tipo = query.message.chat.type
-            import ipdb; ipdb.set_trace() # BREAKPOINT
             contrato = Contrato.generar_nro_contrato()
             comprador = buyer_seller[1]
             vendedor = buyer_seller[0]
@@ -450,7 +449,7 @@ def callback_button(bot, update):
                     if obj_user:
                         try:
                             PersonaContrato.objects.create(contrato=obj_contrato,
-                                    user=obj_user[0], tipo_buyer_seller=usuario[0])
+                                    user=obj_user[0], tipo_buyer_seller=usuario[2])
                         except Exception as e:
                             print(e)
 
