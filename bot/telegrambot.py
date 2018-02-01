@@ -371,6 +371,7 @@ def callback_califica(bot, update):
 
 def crear_contrato(bot, update, args):
 
+    import ipdb; ipdb.set_trace() # BREAKPOINT
     buyer_seller = []
     inf_operacion.append(' '.join(args) if args else '')
 
@@ -399,7 +400,6 @@ def crear_contrato(bot, update, args):
 def callback_button(bot, update):
     query = update.callback_query
 
-    import ipdb; ipdb.set_trace() # BREAKPOINT
     metodo = query.data.split(',')
     if metodo[0] == 'contrato':
         opcion = metodo[1]
