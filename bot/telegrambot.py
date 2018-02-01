@@ -465,10 +465,10 @@ def callback_button(bot, update):
             query.edit_message_text(parse_mode="html", text=emojize(msg_response,
                 use_aliases=True))
 
-        elif opcion == "contrato,cancelar_generar":
+        elif opcion == "cancelar_generar":
             query.edit_message_text('Cancelado')
 
-        elif opcion == "contrato,cancelar":
+        elif opcion == "cancelar":
             query.edit_message_text('Contrato cancelado:')
 
     elif metodo[0] == 'califica':
