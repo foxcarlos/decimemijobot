@@ -400,8 +400,8 @@ def callback_button(bot, update):
     if metodo[0] == 'contrato':
         import ipdb; ipdb.set_trace() # BREAKPOINT
         opcion = metodo[1]
-        inf_operacion = metodo[2]
         if opcion == "aceptar":
+            inf_operacion = metodo[2]
             keyboard = [[InlineKeyboardButton("Soy el Vendedor",
                 callback_data="contrato,vendedor"), ]]
             reply_markup = InlineKeyboardMarkup(keyboard)
