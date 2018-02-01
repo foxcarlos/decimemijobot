@@ -399,6 +399,7 @@ def crear_contrato(bot, update, args):
 def callback_button(bot, update):
     query = update.callback_query
 
+    import ipdb; ipdb.set_trace() # BREAKPOINT
     metodo = query.data.split(',')
     if metodo[0] == 'contrato':
         opcion = metodo[1]
@@ -712,7 +713,6 @@ def ayuda_set_alarma():
 
 
 def button_alarmas(bot, update):
-    import ipdb; ipdb.set_trace() # BREAKPOINT
     response = ""
     username = update.callback_query.from_user.username
     chat_id = update.callback_query.from_user.id
