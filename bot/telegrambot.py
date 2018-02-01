@@ -470,6 +470,58 @@ def callback_button(bot, update):
     elif metodo[0] == 'califica':
         callback_califica(bot, update)
 
+    elif metodo[0] == 'alarma':
+        response = ""
+        username = update.callback_query.from_user.username
+        chat_id = update.callback_query.from_user.id
+        texto = update.callback_query.message.text
+        alerta = texto[texto.find("[", 0)+1: texto.find("]", 1)]
+
+        query = update.callback_query
+
+        def activar_desactivar(estado):
+            if update.callback_query.message.chat.type == 'private':
+                username = update.callback_query.message.chat.username
+                chat_id = update.callback_query.message.chat.id
+
+            elif update.callback_query.message.chat.type == 'group':
+                username = update.callback_query.message.chat.title
+                chat_id = update.callback_query.message.chat.id
+
+            elif update.callback_query.message.chat.type == 'supergroup':
+                username = update.callback_query.message.chat.username
+                chat_id = update.callback_query.message.chat.id
+
+            obj_alerta = Alerta.objects.get(comando__icontains=alerta)
+            buscar_o_crear = AlertaUsuario.objects.get_or_create(
+                    alerta=obj_alerta, chat_id=chat_id)[0]
+
+            buscar_o_crear.estado = estado
+            buscar_o_crear.chat_username = username
+            buscar_o_crear.save()
+            response = "{0} Alarma <b>{1}</b> <i>{2}</i>".format(
+                    ':bell:' if estado=='A' else ':no_bell:',
+                    alerta,
+                    'Activada' if estado=='A' else 'Desactivada')
+            return response
+
+        opcion = metodo[1]
+        if opcion == 'Activar':
+            response = activar_desactivar('A')
+
+        elif opcion == 'Desactivar':
+            response = activar_desactivar('I')
+
+        elif opcion == 'Ayuda':
+            response = ayuda_set_alarma()
+
+        elif opcion == 'Cancelar':
+            response = "Comando cancelado"
+
+        bot.edit_message_text(parse_mode="HTML", text=emojize(response, use_aliases=True),
+                chat_id=query.message.chat_id,
+                message_id=query.message.message_id)
+
     return True
 
 
@@ -1300,10 +1352,10 @@ def set_alarma(bot, update, alerta):
         else:
             response = "El Comando es xx% , Ejemplo 5%"
     else:
-        keyboard = [[InlineKeyboardButton("Activar", callback_data='Activar'),
-                    InlineKeyboardButton("Desactivar", callback_data='Desactivar')],
-                    [InlineKeyboardButton("Ayuda", callback_data='Ayuda'),
-                    InlineKeyboardButton("Regresar", callback_data='Cancelar')]]
+        keyboard = [[InlineKeyboardButton("Activar", callback_data='alarma,Activar'),
+                    InlineKeyboardButton("Desactivar", callback_data='alarma,Desactivar')],
+                    [InlineKeyboardButton("Ayuda", callback_data='alarma,Ayuda'),
+                    InlineKeyboardButton("Regresar", callback_data='alarma,Cancelar')]]
 
         reply_markup = InlineKeyboardMarkup(keyboard)
         update.message.reply_text('No indicastes ninguna opcion para [{0}], que deseas hacer?:'.format(alerta), reply_markup=reply_markup)
