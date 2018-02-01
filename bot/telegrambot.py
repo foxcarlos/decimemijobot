@@ -397,6 +397,7 @@ def callback_button(bot, update):
     query = update.callback_query
 
     metodo = query.data.split(',')
+    import ipdb; ipdb.set_trace() # BREAKPOINT
     if metodo[0] == 'contrato':
         opcion = metodo[1]
         if opcion == "aceptar":
