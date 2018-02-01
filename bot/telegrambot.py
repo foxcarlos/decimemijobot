@@ -369,7 +369,6 @@ def callback_califica(bot, update):
 def crear_contrato(bot, update, args):
 
     buyer_seller = []
-    import ipdb; ipdb.set_trace() # BREAKPOINT
     inf_operacion = ' '.join(args) if args else ''
 
     if not inf_operacion:
@@ -385,8 +384,8 @@ def crear_contrato(bot, update, args):
         return True
 
     keyboard = [[
-            InlineKeyboardButton("Si", callback_data="contrato,aceptar"),
-            InlineKeyboardButton("No", callback_data="contrato,cancelar")]]
+            InlineKeyboardButton("Si", callback_data="contrato,aceptar,{0} ".format(inf_operacion)),
+            InlineKeyboardButton("No", callback_data="contrato,cancelar,{0}".format(inf_operacion))]]
 
     reply_markup = InlineKeyboardMarkup(keyboard)
     update.message.reply_text('Desea crear un contrato de compra venta?:',
@@ -404,7 +403,7 @@ def callback_button(bot, update):
             keyboard = [[InlineKeyboardButton("Soy el Vendedor",
                 callback_data="contrato,vendedor"), ]]
             reply_markup = InlineKeyboardMarkup(keyboard)
-            query.edit_message_text('Presione este boton solo el <b>vendedor</b>:',
+            query.edit_message_text('Presione este boton solo el <b>Vendedor</b>:',
                     parse_mode="html",  reply_markup=reply_markup)
 
         elif opcion == "vendedor":
@@ -413,8 +412,8 @@ def callback_button(bot, update):
                 callback_data="contrato,comprador"), ], ]
             reply_markup = InlineKeyboardMarkup(keyboard)
 
-            query.edit_message_text('Ahora presione este boton el Comprador:',
-                    reply_markup=reply_markup)
+            query.edit_message_text('Ahora presione este boton el <b>Comprador</b>:',
+                    parse_mode="html", reply_markup=reply_markup)
 
         elif opcion == "comprador":
             buyer_seller.append((query.from_user.username, query.from_user.id, 'Comprador'))
@@ -427,8 +426,7 @@ def callback_button(bot, update):
                     reply_markup=reply_markup)
 
         elif opcion == "generar":
-
-            import ipdb; ipdb.set_trace() # BREAKPOINT
+            inf_operacion = metodo[2]
             grupo_chat_id = query.message.chat.id
             grupo_chat_titulo = query.message.chat.title
             grupo_chat_tipo = query.message.chat.type
