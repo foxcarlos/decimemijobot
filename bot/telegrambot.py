@@ -882,13 +882,13 @@ def get_price_usd_eur(coin_ticker, market='coinbase'):
 
 
 def calc(bot, update):
-    import ipdb; ipdb.set_trace() # BREAKPOINT
     print(update.message)
     market = 'coinbase'
     parameters = update.message.text
     cadena_sin_el_comando = ' '.join(parameters.split()[1:])
     params = cadena_sin_el_comando.split() if \
             len(cadena_sin_el_comando.split()) == 2 else []
+    ve = u'\U0001F1FB' + u'\U0001F1EA'
 
     if not params:
         response = "*{0}* Debes indicar */clc coin_ticker monto*\n\n_Ej_: /clc btc 0.0002 \n\nSi desea calcular VEF a bitcoin y Dolar ejecute\n\n/clc vef 2500000".format(":question:")
@@ -899,7 +899,7 @@ def calc(bot, update):
             valores = data.values()
             total_euros, total_btc, total_dolar = [float(symbol)*float(monto) for symbol in valores]
             total_vef = float(monto) * (data.get("USD") * get_dolartoday())
-            response = """:moneybag: El calculo de {0} es :\n\n:dollar: Dolar: {1:,.2f}\n:euro: Euro: {2:,.2f}\n:btc: BTC: {3:,.2f}\n:small_orange_diamond:  VEF: {4:,.2f}\n\nNota: Precios basados en: {5} y VEF en (DolarToday) """.format(
+            response = """:moneybag: El calculo de {0} es :\n\n:dollar: Dolar: {1:,.2f}\n:euro: Euro: {2:,.2f}\n:small_orange_diamond: BTC: {3:,.6f}\nu'\U0001F1FB' + u'\U0001F1EA'  VEF: {4:,.2f}\n\nNota: Precios basados en: {5} y VEF en (DolarToday) """.format(
                     monto, total_dolar, total_euros, total_btc, total_vef, market.capitalize())
 
         if moneda.upper() == "VEF":
