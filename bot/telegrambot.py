@@ -1498,7 +1498,7 @@ def test_envio(bot, update, args):
     Ahora puedes calcular cualquier\n
     cripto y puedes saber su equivalnte\n
     en Dolares, Euros, VEF, y Bitcoin\n\n
-    <b>Ejemplo: comando /clc eth 0.005<\b>\n\n
+    <b>Ejemplo: comando /clc eth 0.005</b>\n\n
     <b>Comando: /ban</b>\n\n
     Puedes expulsar a
     un usuario del grupo
