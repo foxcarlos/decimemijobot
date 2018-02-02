@@ -894,7 +894,7 @@ def calc(bot, update):
         response = "*{0}* Debes indicar */clc coin_ticker monto*\n\n_Ej_: /clc btc 0.0002 \n\nSi desea calcular VEF a bitcoin y Dolar ejecute\n\n/clc vef 2500000".format(":question:")
     else:
         moneda, monto = params
-        data = get_price_usd_eur(moneda, market)
+        data = get_price_usd_eur(moneda.upper(), market)
         if data.get('Response') != "Error":
             valores = data.values()
             total_euros, total_btc, total_dolar = [float(symbol)*float(monto) for symbol in valores]
