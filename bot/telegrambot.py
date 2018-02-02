@@ -875,7 +875,7 @@ def all_coins(bot, update):
 
 
 def get_price_usd_eur(coin_ticker, market='coinbase'):
-    url = URL_PRICE_USD_EUR_MARKET.format(coin_ticker.upper(), market)
+    url = URL_PRICE_USD_EUR_MARKET.format(coin_ticker.upper())
     data = requests.get(url)
     response = data.json() if data else ''
     return response
