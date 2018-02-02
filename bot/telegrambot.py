@@ -1492,37 +1492,7 @@ def unknown(bot, update):
 
 def test_envio(bot, update, args):
     import ipdb; ipdb.set_trace() # BREAKPOINT
-    texto = """
-    FoxBot - Mejoras de la version\n\n
-    <b>Comando: /clc</b>\n\n
-    Ahora puedes calcular cualquier\n
-    cripto y puedes saber su equivalnte\n
-    en Dolares, Euros, VEF, y Bitcoin\n\n
-    <b>Ejemplo: comando /clc eth 0.005</b>\n\n
-    <b>Comando: /ban</b>\n\n
-    Puedes expulsar a
-    un usuario del grupo
-    tan solo haciendo reply
-    de un mensje de ese
-    usuario y escribiendo
-    el comando /ban
-    NOTA: es necesario darle
-    permisos Administrador
-    al Bot\n\n
-    <b>Comando: /trade</b>\n\n
-    Crear contratos de compra
-    venta, manten un registro
-    de las calificaciones de
-    las personas que compran
-    y venden, consulta si el
-    usuario es confiable,
-    busca todas los contratos
-    compra venta que el usuario
-    ha realizado\n\n
-    <b>Comando: /trade</b>\n
-    <b>Comando: /tradec</b>\n
-    <b>Comando: /traderef</b>\n
-    <b>Comando: /trade2user</b>\n"""
+    texto = """FoxBot - Mejoras de la version\n\n<b>Comando: /clc</b>\n\nAhora puedes calcular cualquier\ncripto y puedes saber su equivalnte\nen Dolares, Euros, VEF, y Bitcoin\n\n<b>Ejemplo: comando /clc eth 0.005</b>\n\n<b>Comando: /ban</b>\n\n Puedes expulsar a un usuario del grupo tan solo haciendo reply de un mensje de ese usuario y escribiendo el comando /ban NOTA: es necesario darle permisos Administrador al Bot\n\n<b>Comando: /trade</b>\n\nCrear contratos de compra venta, manten un registro de las calificaciones de las personas que compran y venden, consulta si el usuario es confiable, busca todas los contratos compra venta que el usuario ha realizado\n\n<b>Comando: /trade</b>\n<b>Comando: /tradec</b>\n<b>Comando: /traderef</b>\n<b>Comando: /trade2user</b>\n"""
 
     bot.send_message(chat_id=-1001185618743, parse_mode="html", text=emojize(texto, use_aliases=True))
 
