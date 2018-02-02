@@ -17,3 +17,13 @@ def pool_message(users, cadena_sin_el_comando):
             print(E)
         sleep(3)
 
+@app.task
+def grupo_message(grupos, cadena_sin_el_comando):
+    for grupo in grupos if cadena_sin_el_comando else []:
+        try:
+            # DjangoTelegramBot.dispatcher.bot.sendMessage(grupo.get("grupo_id"), text=cadena_sin_el_comando)
+            print(grupo.get("grupo_id ", cadena_sin_el_comando))
+        except Exception as E:
+            print(E)
+        sleep(3)
+

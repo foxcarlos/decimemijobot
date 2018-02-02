@@ -19,7 +19,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from bot.scrapy import NoticiasPanorama
 from bot.models import Alerta, AlertaUsuario, User, Grupo, Comando, ComandoEstado, Contrato, PersonaContrato
 
-from bot.tasks import pool_message
+from bot.tasks import pool_message, grupo_message
 from datetime import datetime
 
 logger = logging.getLogger(__name__)
@@ -1190,13 +1190,21 @@ def dolartoday(bot, update):
     if not valida_autorizacion_comando(bot, update):
         bot.sendMessage(update.message.chat_id, text=emojize("comando desabilitado por el admin, :speaker: Intenta hacerlo en privado al bot", use_aliases=True))
         return True
- 
+
     print(update.message)
     user_first_name = update.message.from_user.first_name
     bot.sendMessage(update.message.chat_id, parse_mode="Markdown", text=emojize(get_dolartoday2(),
         use_aliases=True)
         )
     usuario_nuevo(update)
+
+
+def enviar_mensajes_grupos(bot, update, args):
+    cadena_sin_el_comando = ' '.join(args)
+
+    if valida_root(update):
+        users = Grupo.objects.values('grupo_id').annotate(dcount=Count('grupo_id'))
+        grupo_message.delay(list(users), cadena_sin_el_comando)
 
 
 def enviar_mensajes_todos(bot, update):
@@ -1532,6 +1540,7 @@ def main():
     dp.add_handler(CommandHandler("set_alarma_litecoin", set_alarma_litecoin))
     dp.add_handler(CommandHandler("dolartoday", dolartoday))
     dp.add_handler(CommandHandler("masivo", enviar_mensajes_todos))
+    dp.add_handler(CommandHandler("masivo_grupos", enviar_mensajes_grupos))
     dp.add_handler(CommandHandler("autor", autor))
     dp.add_handler(CommandHandler("donar", hacer_donacion))
     dp.add_handler(CommandHandler("startgroup", startgroup))
