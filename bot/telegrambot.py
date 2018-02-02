@@ -1491,7 +1491,9 @@ def unknown(bot, update):
     bot.send_message(chat_id=update.message.chat_id, text="Lo siento, No reconozco ese comando.")
 
 def test_envio(bot, update, args):
-    texto = ' '.join(args)
+    parameters = update.message.text
+    texto = ' '.join(parameters.split()[1:])
+    # texto = ' '.join(args)
     bot.send_message(chat_id=-1001185618743, parse_mode="html", text=emojize(texto, use_aliases=True))
 
 def main():
