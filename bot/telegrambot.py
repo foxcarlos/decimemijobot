@@ -882,6 +882,7 @@ def get_price_usd_eur(coin_ticker, market='coinbase'):
 
 
 def calc(bot, update):
+    import ipdb; ipdb.set_trace() # BREAKPOINT
     print(update.message)
     market = 'coinbase'
     parameters = update.message.text
