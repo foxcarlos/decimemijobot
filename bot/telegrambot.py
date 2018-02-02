@@ -896,6 +896,7 @@ def calc(bot, update):
         moneda, monto = params
         data = get_price_usd_eur(moneda.upper(), market)
         if data.get('Response') != "Error":
+            import ipdb; ipdb.set_trace() # BREAKPOINT
             valores = data.values()
             total_euros, total_btc, total_dolar = [float(symbol)*float(monto) for symbol in valores]
             total_vef = float(monto) * (data.get("USD") * get_dolartoday())
