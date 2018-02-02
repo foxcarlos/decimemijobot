@@ -1491,6 +1491,7 @@ def unknown(bot, update):
     bot.send_message(chat_id=update.message.chat_id, text="Lo siento, No reconozco ese comando.")
 
 def test_envio(bot, update, args):
+    import ipdb; ipdb.set_trace() # BREAKPOINT
     texto = """
     FoxBot - Mejoras de la version\n\n
     <b>Comando: /clc</b>\n\n
