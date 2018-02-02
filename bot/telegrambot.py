@@ -1490,6 +1490,9 @@ def echo(bot, update):
 def unknown(bot, update):
     bot.send_message(chat_id=update.message.chat_id, text="Lo siento, No reconozco ese comando.")
 
+def test_envio(bot, update, args):
+    texto = ' '.join(args)
+    bot.send_message(chat_id=-1001185618743, parse_mode="html", text=emojize(texto, use_aliases=True))
 
 def main():
     logger.info("Loading handlers for telegram bot")
@@ -1540,7 +1543,8 @@ def main():
     dp.add_handler(CommandHandler("set_alarma_litecoin", set_alarma_litecoin))
     dp.add_handler(CommandHandler("dolartoday", dolartoday))
     dp.add_handler(CommandHandler("masivo", enviar_mensajes_todos))
-    dp.add_handler(CommandHandler("masivo_grupos", enviar_mensajes_grupos))
+    dp.add_handler(CommandHandler("test_envio", test_envio, pass_args=True))
+    dp.add_handler(CommandHandler("masivo_grupos", enviar_mensajes_grupos, pass_args=True))
     dp.add_handler(CommandHandler("autor", autor))
     dp.add_handler(CommandHandler("donar", hacer_donacion))
     dp.add_handler(CommandHandler("startgroup", startgroup))
