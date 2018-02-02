@@ -896,7 +896,7 @@ def calc(bot, update):
         moneda, monto = params
         data = get_price_usd_eur(moneda, market)
         if data.get('Response') != "Error":
-            total_dolar, total_btc, [float(symbol)*float(monto) for symbol in data.values()]total_euros = [float(symbol)*float(monto) for symbol in data.values()]
+            total_dolar, total_btc, total_euros = [float(symbol)*float(monto) for symbol in data.values()]
             total_vef = float(monto) * (data.get("USD") * get_dolartoday())
             response = """:moneybag: El calculo de {3} es :\n\n:dollar: Dolar: {0:,.2f}\n:euro: Euro: {1:,.2f}\n:btc: BTC: {5:,.2f}\n:small_orange_diamond:  VEF: {2:,.2f}\n\nNota: Precios basados en: {4} y VEF en (DolarToday) """.format(
                     total_euros, total_dolar, total_vef, monto, market.capitalize(), total_btc)
