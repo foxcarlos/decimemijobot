@@ -1285,8 +1285,17 @@ def valida_permiso_comando(bot, update):
         if es_admin(bot, update):
             response = True
         else:
-            texto = ":no_entry_sign: Lo siento, solo los Admin del grupo pueden ejecutar este comando, \n:speaker: Intenta hacerlo en privado al bot https://t.me/DecimeMijobot/?start=true"
-            bot.sendMessage(update.message.chat_id, text=emojize(texto, use_aliases=True))
+            texto = ":no_entry_sign: Solo los Admin del grupo pueden ejecutar este comando, \n:speaker: Intenta hacerlo en privado al bot"
+            keyboard = [
+                InlineKeyboardButton("Ir al bot", callback_data="ir",
+                    url="https://t.me/DecimeMijobot/?start=true")]
+            reply_markup = InlineKeyboardMarkup(keyboard)
+
+            # texto = ":no_entry_sign: Lo siento, solo los Admin del grupo pueden ejecutar este comando, \n:speaker: Intenta hacerlo en privado al bot https://t.me/DecimeMijobot/?start=true"
+            bot.sendMessage(update.message.chat_id,
+                    text=emojize(texto, use_aliases=True),
+                    reply_markup=reply_markup
+                    )
             response = False
     return response
 
