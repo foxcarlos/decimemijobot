@@ -1286,9 +1286,9 @@ def valida_permiso_comando(bot, update):
             response = True
         else:
             texto = ":no_entry_sign: Solo los Admin del grupo pueden ejecutar este comando, \n:speaker: Intenta hacerlo en privado al bot"
-            keyboard = [
+            keyboard = [[
                 InlineKeyboardButton("Ir al bot", callback_data="ir",
-                    url="https://t.me/DecimeMijobot/?start=true")]
+                    url="https://t.me/DecimeMijobot/?start=true")]]
             reply_markup = InlineKeyboardMarkup(keyboard)
 
             # texto = ":no_entry_sign: Lo siento, solo los Admin del grupo pueden ejecutar este comando, \n:speaker: Intenta hacerlo en privado al bot https://t.me/DecimeMijobot/?start=true"
