@@ -1312,7 +1312,7 @@ def mensaje_valida_autorizacion_comando(bot, update):
     reply_markup = InlineKeyboardMarkup(keyboard)
 
     # texto = ":no_entry_sign: Lo siento, solo los Admin del grupo pueden ejecutar este comando, \n:speaker: Intenta hacerlo en privado al bot https://t.me/DecimeMijobot/?start=true"
-    bot.sendMessage(update.message.chat_id,
+    bot.sendMessage(update.message.chat_id, parse_mode='html',
             text=emojize(texto, use_aliases=True),
             reply_markup=reply_markup
             )
