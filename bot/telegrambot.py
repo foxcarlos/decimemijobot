@@ -1109,10 +1109,17 @@ def bitcoin(bot, update):
     print(update.message)
     user_first_name = update.message.from_user.first_name
 
-    btc = get_price(URL_BTC_USD)
-    response = '*{0}* El precio del Bitcoin es: *{1:0,.2f}* USD'.\
-            format(user_first_name, float(btc))
-    bot.sendMessage(update.message.chat_id, parse_mode="Markdown", text=response)
+    # btc = get_price(URL_BTC_USD)
+    #response = '*{0}* El precio del Bitcoin es: *{1:0,.2f}* USD'.\
+    #        format(user_first_name, float(btc))
+    btc = get_price(URL_PRICE_USD_EUR_MARKET)
+    msg_response = """El precio del bitcoin es:\n
+    :dollar: <b>{0}</b>\n
+    :euro: <b>{1}</b>\n
+    """.format(btc.get('USD'), btc.get('EUR'))
+
+    bot.sendMessage(update.message.chat_id, parse_mode="html",
+            text=emojize(msg_response, use_aliases=True))
     usuario_nuevo(update)
 
 
