@@ -1185,9 +1185,9 @@ def get_dolartoday2():
     :euro: *DolarToday*: {6:0,.2f}\n\
     :euro: *Implicito*: {7:0,.2f}\n\
     :euro: *Dicom*: {8:0,.2f}\n\
-    :euro: *Cucuta*: {9:0,.2f}\n\
-    :fuelpump: *Petroleo*: {10:0,.2f}\n\
-    :moneybag: *Oro*: {11:0,.2f}\n\
+    :euro: *Cucuta*: {9:0,.2f}\n\n
+    :fuelpump: *Petroleo* USD: {10:0,.2f}\n\
+    :moneybag: *Oro* USD: {11:0,.2f}\n\
         """.format(fecha,
                     dolartoday,
                     implicito,
