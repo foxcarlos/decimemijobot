@@ -363,7 +363,7 @@ def callback_califica(bot, update):
 
                 msg_response3 = """:pushpin: Contrato finalizado\n\n:small_orange_diamond:<b>Contrato:</b><b>{0}</b>\n\n:small_orange_diamond:<b>Operacion:</b> {1}\n\n:small_orange_diamond:<b>#Ref:</b> @{2} fue calif. como {5}\n\n:small_orange_diamond:<b>#Ref:</b> @{4} fue calif. como {3}\n\n:bulb: <b>Tips:</b>\n\n- Si quieres saber mas acerca de la operacion puedes consultar el contrato con el siguiente comando:\n\n - Ejecuta:\n <b>/tradeb {0}</b>
                 """.format(contrato_id, operacion, user1,
-                        calif1, user2, calif2 )
+                        calif1, user2, calif2)
                 bot.sendMessage(grupo_chat_id, parse_mode="html",
                         text=emojize(msg_response3, use_aliases=True))
 
@@ -627,9 +627,11 @@ def es_admin(bot, update):
 
     return es_admin
 
+
 def buscar_usuario_id(nombre):
     usuario = User.objects.filter(username__icontains=nombre)
     return usuario.chat_id if usuario else 0
+
 
 def kick(bot, update):
     if not valida_autorizacion_comando(bot, update):
@@ -804,14 +806,13 @@ def button_alarmas(bot, update):
         buscar_o_crear.chat_username = username
         buscar_o_crear.save()
         response = "{0} Alarma <b>{1}</b> <i>{2}</i>".format(
-                ':bell:' if estado=='A' else ':no_bell:',
+                ':bell:' if estado == 'A' else ':no_bell:',
                 alerta,
-                'Activada' if estado=='A' else 'Desactivada')
+                'Activada' if estado == 'A' else 'Desactivada')
         return response
 
     if query.data == 'Activar':
         response = activar_desactivar('A')
-
     elif query.data == 'Desactivar':
         response = activar_desactivar('I')
 
@@ -836,7 +837,7 @@ def get_price_coinmarketcap(url):
 
 def all_coins(bot, update):
     if not valida_autorizacion_comando(bot, update):
-        bot.sendMessage(update.message.chat_id, text=emojize("comando desabilitado por el admin, :speaker: Intenta hacerlo en privado al bot", use_aliases=True))
+        mensaje_valida_autorizacion_comando(bot, update)
         return True
 
     # bot.sendMessage(update.message.chat_id, text="Consultando... En un momento te muestro la informacion...!")
@@ -990,7 +991,7 @@ def get_historico(lista_params):
 
 def historico(bot, update):
     if not valida_autorizacion_comando(bot, update):
-        bot.sendMessage(update.message.chat_id, text=emojize("comando desabilitado por el admin, :speaker: Intenta hacerlo en privado al bot", use_aliases=True))
+        mensaje_valida_autorizacion_comando(bot, update)
         return True
 
     print(update.message)
@@ -1016,7 +1017,7 @@ def historico(bot, update):
 
 def price(bot, update):
     if not valida_autorizacion_comando(bot, update):
-        bot.sendMessage(update.message.chat_id, text=emojize("comando desabilitado por el admin, :speaker: Intenta hacerlo en privado al bot", use_aliases=True))
+        mensaje_valida_autorizacion_comando(bot, update)
         return True
 
     print(update.message)
@@ -1103,7 +1104,7 @@ def autor(bot, update):
 
 def bitcoin(bot, update):
     if not valida_autorizacion_comando(bot, update):
-        bot.sendMessage(update.message.chat_id, text=emojize("comando desabilitado por el admin, :speaker: Intenta hacerlo en privado al bot", use_aliases=True))
+        mensaje_valida_autorizacion_comando(bot, update)
         return True
     print(update.message)
     user_first_name = update.message.from_user.first_name
@@ -1188,7 +1189,7 @@ def get_dolartoday2():
 
 def dolartoday(bot, update):
     if not valida_autorizacion_comando(bot, update):
-        bot.sendMessage(update.message.chat_id, text=emojize("comando desabilitado por el admin, :speaker: Intenta hacerlo en privado al bot", use_aliases=True))
+        mensaje_valida_autorizacion_comando(bot, update)
         return True
 
     print(update.message)
@@ -1276,6 +1277,19 @@ def me(bot, update):
     bot.sendMessage(update.message.chat_id,
             text='Tu informacion:\n{}'.format(update.effective_user))
 
+def mensaje_valida_autorizacion_comando(bot, update):
+    texto = ":no_entry_sign: Comando deshabilitado por el <b>Admin</b>, \n:speaker: Intenta hacerlo en privado al bot"
+    keyboard = [[
+        InlineKeyboardButton("Ir al bot", callback_data="ir",
+            url="https://t.me/DecimeMijobot/?start=true")]]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+
+    # texto = ":no_entry_sign: Lo siento, solo los Admin del grupo pueden ejecutar este comando, \n:speaker: Intenta hacerlo en privado al bot https://t.me/DecimeMijobot/?start=true"
+    bot.sendMessage(update.message.chat_id,
+            text=emojize(texto, use_aliases=True),
+            reply_markup=reply_markup
+            )
+
 
 def valida_permiso_comando(bot, update):
     response = False
@@ -1285,17 +1299,7 @@ def valida_permiso_comando(bot, update):
         if es_admin(bot, update):
             response = True
         else:
-            texto = ":no_entry_sign: Solo los Admin del grupo pueden ejecutar este comando, \n:speaker: Intenta hacerlo en privado al bot"
-            keyboard = [[
-                InlineKeyboardButton("Ir al bot", callback_data="ir",
-                    url="https://t.me/DecimeMijobot/?start=true")]]
-            reply_markup = InlineKeyboardMarkup(keyboard)
-
-            # texto = ":no_entry_sign: Lo siento, solo los Admin del grupo pueden ejecutar este comando, \n:speaker: Intenta hacerlo en privado al bot https://t.me/DecimeMijobot/?start=true"
-            bot.sendMessage(update.message.chat_id,
-                    text=emojize(texto, use_aliases=True),
-                    reply_markup=reply_markup
-                    )
+            mensaje_valida_autorizacion_comando(bot, update)
             response = False
     return response
 
@@ -1335,7 +1339,6 @@ def set_alarma(bot, update, alerta):
     elif update.message.chat.type == 'supergroup':
         username = update.message.chat.username
         chat_id = update.message.chat.id
-
 
     cadena_sin_el_comando = ' '.join(parameters.split()[1:])
     obj_alerta = Alerta.objects.get(comando__icontains=alerta)
@@ -1430,7 +1433,7 @@ def nuevo_miembro(bot, update):
     :small_blue_diamond: Nombre: *{4}*\n
     """.format(username, grupo.title, id_, username, nombre)
     if not username:
-        msg_html+= "*{0}* Por politicas del Grupo es necesario que configures un alias @{1}\n".format(nombre, id_)
+        msg_html += "*{0}* Por politicas del Grupo es necesario que configures un alias @{1}\n".format(nombre, id_)
 
     bot.send_message(chat_id=update.message.chat_id, parse_mode = "Markdown", text=emojize(msg_html, use_aliases=True))
     usuario_nuevo(update)
@@ -1500,7 +1503,6 @@ def unknown(bot, update):
     bot.send_message(chat_id=update.message.chat_id, text="Lo siento, No reconozco ese comando.")
 
 def test_envio(bot, update, args):
-    import ipdb; ipdb.set_trace() # BREAKPOINT
     texto = """FoxBot - Mejoras de la version\n\n<b>Comando: /clc</b>\n\nAhora puedes calcular cualquier\ncripto y puedes saber su equivalnte\nen Dolares, Euros, VEF, y Bitcoin\n\n<b>Ejemplo: comando /clc eth 0.005</b>\n\n<b>Comando: /ban</b>\n\n Puedes expulsar a un usuario del grupo tan solo haciendo reply de un mensje de ese usuario y escribiendo el comando /ban NOTA: es necesario darle permisos Administrador al Bot\n\n<b>Comando: /trade</b>\n\nCrear contratos de compra venta, manten un registro de las calificaciones de las personas que compran y venden, consulta si el usuario es confiable, busca todas los contratos compra venta que el usuario ha realizado\n\n<b>Comando: /trade</b>\n<b>Comando: /tradec</b>\n<b>Comando: /traderef</b>\n<b>Comando: /trade2user</b>\n"""
 
     bot.send_message(chat_id=-1001185618743, parse_mode="html", text=emojize(texto, use_aliases=True))
