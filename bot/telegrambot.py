@@ -1174,7 +1174,7 @@ def get_dolartoday2():
     implicito_e = float(rq.get("EUR").get("efectivo"))
     dicom_e = float(rq.get("EUR").get("sicad2"))
     cucuta_e = float(rq.get("EUR").get("efectivo_cucuta"))
-    localbitcoin_e = float(rq.get("EUR").get("localbitcoin_ref"))
+    # localbitcoin_e = float(rq.get("EUR").get("localbitcoin_ref"))
 
     response = """:speaker: DolarToday hoy USD/EUR: {0}:\n\n\
     :dollar: *DolarToday*: {1:0,.2f}\n\
@@ -1186,9 +1186,8 @@ def get_dolartoday2():
     :euro: *Implicito*: {7:0,.2f}\n\
     :euro: *Dicom*: {8:0,.2f}\n\
     :euro: *Cucuta*: {9:0,.2f}\n\
-    :euro: *LocalBitcoin*: {10:0,.2f}\n\n\
-    :fuelpump: *Petroleo*: {11:0,.2f}\n\
-    :moneybag: *Oro*: {12:0,.2f}\n\
+    :fuelpump: *Petroleo*: {10:0,.2f}\n\
+    :moneybag: *Oro*: {11:0,.2f}\n\
         """.format(fecha,
                     dolartoday,
                     implicito,
@@ -1199,7 +1198,6 @@ def get_dolartoday2():
                     implicito_e,
                     dicom_e,
                     cucuta_e,
-                    localbitcoin_e,
                     barril,
                     oro)
     return response
