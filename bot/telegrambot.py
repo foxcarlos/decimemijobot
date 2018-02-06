@@ -894,33 +894,35 @@ def calc(bot, update):
     if not params:
         response = "*{0}* Debes indicar */clc coin_ticker monto*\n\n_Ej_: /clc btc 0.0002 \n\nSi desea calcular VEF a bitcoin y Dolar ejecute\n\n/clc vef 2500000".format(":question:")
     else:
-        moneda, monto = params
-        data = get_price_usd_eur(moneda.upper(), market)
-        if data.get('Response') != "Error":
-            valores = []  # data.values()
-            eur = data.get('EUR')
-            valores.append(eur)
-            usd = data.get('USD')
-            valores.append(usd)
-            btc = data.get('BTC')
-            valores.append(btc)
+        try:
+            moneda, monto = params
+            data = get_price_usd_eur(moneda.upper(), market)
+            if data.get('Response') != "Error":
+                valores = []  # data.values()
+                eur = data.get('EUR')
+                valores.append(eur)
+                usd = data.get('USD')
+                valores.append(usd)
+                btc = data.get('BTC')
+                valores.append(btc)
 
-            total_euros, total_dolar, total_btc = [float(symbol)*float(monto) for symbol in valores]
-            total_vef = float(monto) * (data.get("USD") * get_dolartoday())
-            response = """:moneybag: El calculo de {0} es :\n\n:dollar: Dolar: {1:,.2f}\n:euro: Euro: {2:,.2f}\n:small_orange_diamond: BTC: {3:,.6f}\n\U0001F1FB\U0001F1EA  VEF: {4:,.2f}\n\nNota: Precios basados en: {5} y VEF en (DolarToday) """.format(
-                    monto, total_dolar, total_euros, total_btc, total_vef, market.capitalize())
+                total_euros, total_dolar, total_btc = [float(symbol)*float(monto) for symbol in valores]
+                total_vef = float(monto) * (data.get("USD") * get_dolartoday())
+                response = """:moneybag: El calculo de {0} es :\n\n:dollar: Dolar: {1:,.2f}\n:euro: Euro: {2:,.2f}\n:small_orange_diamond: BTC: {3:,.6f}\n\U0001F1FB\U0001F1EA  VEF: {4:,.2f}\n\nNota: Precios basados en: {5} y VEF en (DolarToday) """.format(
+                        monto, total_dolar, total_euros, total_btc, total_vef, market.capitalize())
 
-        if moneda.upper() == "VEF":
-            data = get_price_usd_eur("btc", market)
-            total_btc = float(monto) / (data.get("USD") * get_dolartoday())
-            total_dolar = float(monto) / get_dolartoday()
+            if moneda.upper() == "VEF":
+                data = get_price_usd_eur("btc", market)
+                total_btc = float(monto) / (data.get("USD") * get_dolartoday())
+                total_dolar = float(monto) / get_dolartoday()
 
-            response = """:moneybag: El calculo para {0} es de :\n\n:chart_with_downwards_trend: BTC: {1:,.9f}\n:dollar: Dolares: {2:,.2f}\n\nNota: Precios basados en: {3} y VEF en (DolarToday) """.format(
-                monto, total_btc, total_dolar, market.capitalize())
+                response = """:moneybag: El calculo para {0} es de :\n\n:chart_with_downwards_trend: BTC: {1:,.9f}\n:dollar: Dolares: {2:,.2f}\n\nNota: Precios basados en: {3} y VEF en (DolarToday) """.format(
+                    monto, total_btc, total_dolar, market.capitalize())
+        except Exception as e:
+            response = 'Verifica que el monto tenga como separacion decimal . Ej: /clc btc 0.001'
 
     bot.sendMessage(update.message.chat_id, parse_mode="Markdown", text=emojize(response,
         use_aliases=True))
-    # bot.sendMessage(update.message.chat_id, "<b>This</b> <i>is some Text</i>", DjangoTelegramBot.ParseMode.HTML)
     usuario_nuevo(update)
 
 
