@@ -1112,7 +1112,9 @@ def bitcoin(bot, update):
     # btc = get_price(URL_BTC_USD)
     #response = '*{0}* El precio del Bitcoin es: *{1:0,.2f}* USD'.\
     #        format(user_first_name, float(btc))
-    btc = get_price(URL_PRICE_USD_EUR_MARKET)
+
+    btc = get_price_usd_eur("BTC", "bitfinex")
+    # btc = get_price(URL_PRICE_USD_EUR_MARKET)
     msg_response = """El precio del bitcoin es:\n
     :dollar: <b>{0}</b>\n
     :euro: <b>{1}</b>\n
