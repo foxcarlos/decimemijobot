@@ -888,7 +888,7 @@ def valida_calcula_moneda(moneda, monto, data):
     else:
         try:
             total_btc = float(monto) / data.get(moneda)
-            total_dolar = data.get('moneda') / data.get('USD')
+            total_dolar = data.get(moneda) / data.get('USD')
         except Exception as E:
             total_btc = 0
             total_dolar = 0
