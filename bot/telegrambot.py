@@ -903,7 +903,6 @@ def calc(bot, update):
             len(cadena_sin_el_comando.split()) == 2 else []
     ve = u'\U0001F1FB' + u'\U0001F1EA'
 
-    import ipdb; ipdb.set_trace() # BREAKPOINT
     if not params:
         response = "*{0}* Debes indicar */clc coin_ticker monto*\n\n_Ej_: /clc btc 0.0002 \n\nSi desea calcular VEF a bitcoin y Dolar ejecute\n\n/clc vef 2500000".format(":question:")
     else:
