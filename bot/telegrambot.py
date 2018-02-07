@@ -925,7 +925,7 @@ def calc(bot, update):
                         monto, total_dolar, total_euros, total_btc, total_vef, market.capitalize())
 
             if moneda.upper() in list(data):
-                # data = get_price_usd_eur("btc", market)
+                data = get_price_usd_eur("btc", market)
                 # total_btc = float(monto) / (data.get("USD") * get_dolartoday())
                 #total_dolar = float(monto) / get_dolartoday()
                 monto, total_btc, total_dolar = valida_calcula_moneda(
