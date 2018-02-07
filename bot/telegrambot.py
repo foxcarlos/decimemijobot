@@ -883,7 +883,6 @@ def get_price_usd_eur(coin_ticker, market='coinbase'):
 
 
 def calc(bot, update):
-    print(update.message)
     market = 'coinbase'
     parameters = update.message.text
     cadena_sin_el_comando = ' '.join(parameters.split()[1:])
@@ -924,6 +923,7 @@ def calc(bot, update):
     bot.sendMessage(update.message.chat_id, parse_mode="Markdown", text=emojize(response,
         use_aliases=True))
     usuario_nuevo(update)
+    print(update.message)
 
 
 def preparar_prametros(cabecera, valor):
@@ -996,7 +996,6 @@ def historico(bot, update):
         mensaje_valida_autorizacion_comando(bot, update)
         return True
 
-    print(update.message)
     parameters = update.message.text
     cadena_sin_el_comando = ' '.join(parameters.split()[1:])
 
@@ -1015,6 +1014,7 @@ def historico(bot, update):
         bot.sendMessage(update.message.chat_id, text=emojize("o tambien puedes graficar", use_aliases=True))
         response = "{0} Ayuda /grafico <coin_ticker> <market>".format(":question:")
         bot.sendMessage(update.message.chat_id, text=emojize(response, use_aliases=True))
+    print(update.message)
 
 
 def price(bot, update):
@@ -1022,7 +1022,6 @@ def price(bot, update):
         mensaje_valida_autorizacion_comando(bot, update)
         return True
 
-    print(update.message)
     parameters = update.message.text
     cadena_sin_el_comando = ' '.join(parameters.split()[1:])
 
@@ -1093,6 +1092,7 @@ def price(bot, update):
     bot.sendMessage(update.message.chat_id, parse_mode = "Markdown", text=emojize(response,
         use_aliases=True))
     usuario_nuevo(update)
+    print(update.message)
 
 
 def autor(bot, update):
@@ -1108,7 +1108,6 @@ def bitcoin(bot, update):
     if not valida_autorizacion_comando(bot, update):
         mensaje_valida_autorizacion_comando(bot, update)
         return True
-    print(update.message)
     user_first_name = update.message.from_user.first_name
 
     # btc = get_price(URL_BTC_USD)
@@ -1125,6 +1124,7 @@ def bitcoin(bot, update):
     bot.sendMessage(update.message.chat_id, parse_mode="html",
             text=emojize(msg_response, use_aliases=True))
     usuario_nuevo(update)
+    print(update.message)
 
 
 def bitcoin_satoshitango(bot, update):
@@ -1219,12 +1219,12 @@ def dolartoday(bot, update):
         mensaje_valida_autorizacion_comando(bot, update)
         return True
 
-    print(update.message)
     user_first_name = update.message.from_user.first_name
     bot.sendMessage(update.message.chat_id, parse_mode="Markdown", text=emojize(get_dolartoday2(),
         use_aliases=True)
         )
     usuario_nuevo(update)
+    print(update.message)
 
 
 def enviar_mensajes_grupos(bot, update, args):
@@ -1300,7 +1300,6 @@ def help(bot, update):
 
 
 def me(bot, update):
-    print(update.message)
     bot.sendMessage(update.message.chat_id,
             text='Tu informacion:\n{}'.format(update.effective_user))
 
@@ -1432,7 +1431,6 @@ def set_alarma(bot, update, alerta):
 
 
 def valida_root(update):
-    print(update.message)
     root = UserDjango.objects.filter(username__icontains="foxcarlos")
     me_id = update.message.chat_id
 
@@ -1440,6 +1438,7 @@ def valida_root(update):
         return True
     else:
         return False
+    print(update.message)
 
 
 def reglas(bot, update):
@@ -1512,10 +1511,10 @@ def error(bot, update, error):
 
 
 def forwarded(bot, update):
-    print(update.message)
     #bot.sendMessage(update.message.chat_id,
     #        text='This msg forwaded information:\n {}'.\
     #                format(update.effective_message))
+    print(update.message)
 
 
 def echo(bot, update):
@@ -1524,6 +1523,7 @@ def echo(bot, update):
     if m:
         update.message.reply_text(m)
     usuario_nuevo(update)
+    print(update.message)
 
 
 def unknown(bot, update):
