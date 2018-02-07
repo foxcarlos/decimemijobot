@@ -881,6 +881,19 @@ def get_price_usd_eur(coin_ticker, market='coinbase'):
     response = data.json() if data else ''
     return response
 
+def valida_calcula_moneda(moneda, monto, data):
+    if moneda == 'VEF':
+        total_btc = float(monto) / (data.get("USD") * get_dolartoday())
+        total_dolar = float(monto) / get_dolartoday()
+    else:
+        try:
+            total_btc = float(monto) / data.get(moneda)
+            total_dolar = float(monto) / data.get('USD')
+        except Exception as E:
+            total_btc = 0
+            total_dolar = 0
+
+    return monto, total_btc, total_dolar
 
 def calc(bot, update):
     market = 'coinbase'
@@ -910,13 +923,15 @@ def calc(bot, update):
                 response = """:moneybag: El calculo de {0} es :\n\n:dollar: Dolar: {1:,.2f}\n:euro: Euro: {2:,.2f}\n:small_orange_diamond: BTC: {3:,.6f}\n\U0001F1FB\U0001F1EA  VEF: {4:,.2f}\n\nNota: Precios basados en: {5} y VEF en (DolarToday) """.format(
                         monto, total_dolar, total_euros, total_btc, total_vef, market.capitalize())
 
-            if moneda.upper() == "VEF":
-                data = get_price_usd_eur("btc", market)
-                total_btc = float(monto) / (data.get("USD") * get_dolartoday())
-                total_dolar = float(monto) / get_dolartoday()
+            if moneda.upper() in list(data):
+                # data = get_price_usd_eur("btc", market)
+                # total_btc = float(monto) / (data.get("USD") * get_dolartoday())
+                #total_dolar = float(monto) / get_dolartoday()
+                monto, total_btc, total_dolar = valida_calcula_moneda(
+                        moneda, monto, data)
 
                 response = """:moneybag: El calculo para {0} es de :\n\n:chart_with_downwards_trend: BTC: {1:,.9f}\n:dollar: Dolares: {2:,.2f}\n\nNota: Precios basados en: {3} y VEF en (DolarToday) """.format(
-                    monto, total_btc, total_dolar, market.capitalize())
+                        monto, total_btc, total_dolar, market.capitalize())
         except Exception as e:
             response = 'Verifica que el monto tenga como separacion decimal . Ej: /clc btc 0.001'
 
