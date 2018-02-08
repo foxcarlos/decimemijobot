@@ -902,9 +902,9 @@ def calc(bot, update):
     params = cadena_sin_el_comando.split() if \
             len(cadena_sin_el_comando.split()) == 2 else []
     ve = u'\U0001F1FB' + u'\U0001F1EA'
-    response = "<b>{0}</b> Debes indicar <b>/clc coin_ticker monto</b>\n\n_Ej_: /clc btc 0.0002 \n\nSi desea calcular VEF a bitcoin y Dolar ejecute\n\n/clc vef 2500000".format(":question:")
+    response = "<b>{0}</b> Debes indicar <b>/clc coin_ticker monto</b>\n\n<i>Ej</i>: /clc btc 0.0002 \n\nSi desea calcular VEF a bitcoin y Dolar ejecute\n\n/clc vef 2500000".format(":question:")
     if not params:
-        response = "<b>{0}</b> Debes indicar <b>/clc coin_ticker monto</b>\n\n_Ej_: /clc btc 0.0002 \n\nSi desea calcular VEF a bitcoin y Dolar ejecute\n\n/clc vef 2500000".format(":question:")
+        response = "<b>{0}</b> Debes indicar <b>/clc coin_ticker monto</b>\n\n<i>Ej</i>: /clc btc 0.0002 \n\nSi desea calcular VEF a bitcoin y Dolar ejecute\n\n/clc vef 2500000".format(":question:")
     else:
         try:
             moneda, monto = params
@@ -923,10 +923,11 @@ def calc(bot, update):
                 response = """:moneybag: El calculo de <b>{0}</b> <i>{5}</i> es :\n\n:dollar: Dolar: {1:,.2f}\n:euro: Euro: {2:,.2f}\n:small_orange_diamond: BTC: {3:,.6f}\n\U0001F1FB\U0001F1EA  VEF: {4:,.2f} """.format(
                         monto, total_dolar, total_euros, total_btc, total_vef, moneda.upper())
 
-            if moneda.upper() in list(data):
+                # Esto es para que solo pase por aqui cuando se solicite
+                # cualquier moneda menos el BTC porque ese se calcula en la
+                # sentecia de arriba
+                if moneda.upper() != "BTC" and moneda.upper() in list(data):
                 data = get_price_usd_eur("btc", market)
-                # total_btc = float(monto) / (data.get("USD") * get_dolartoday())
-                #total_dolar = float(monto) / get_dolartoday()
                 monto, total_btc, total_dolar = valida_calcula_moneda(
                         moneda.upper(), monto, data)
 
