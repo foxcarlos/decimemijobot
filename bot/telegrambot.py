@@ -923,10 +923,10 @@ def calc(bot, update):
                 response = """:moneybag: El calculo de <b>{0}</b> <i>{5}</i> es :\n\n:dollar: Dolar: {1:,.2f}\n:euro: Euro: {2:,.2f}\n:small_orange_diamond: BTC: {3:,.6f}\n\U0001F1FB\U0001F1EA  VEF: {4:,.2f} """.format(
                         monto, total_dolar, total_euros, total_btc, total_vef, moneda.upper())
 
-                # Esto es para que solo pase por aqui cuando se solicite
-                # cualquier moneda menos el BTC porque ese se calcula en la
-                # sentecia de arriba
-                if moneda.upper() != "BTC" and moneda.upper() in list(data):
+            # Esto es para que solo pase por aqui cuando se solicite
+            # cualquier moneda menos el BTC porque ese se calcula en la
+            # sentecia de arriba
+            if moneda.upper() != "BTC" and moneda.upper() in list(data):
                 data = get_price_usd_eur("btc", market)
                 monto, total_btc, total_dolar = valida_calcula_moneda(
                         moneda.upper(), monto, data)
