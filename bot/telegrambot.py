@@ -902,7 +902,7 @@ def calc(bot, update):
     params = cadena_sin_el_comando.split() if \
             len(cadena_sin_el_comando.split()) == 2 else []
     ve = u'\U0001F1FB' + u'\U0001F1EA'
-    import ipdb; ipdb.set_trace() # BREAKPOINT
+    response = "<b>{0}</b> Debes indicar <b>/clc coin_ticker monto</b>\n\n_Ej_: /clc btc 0.0002 \n\nSi desea calcular VEF a bitcoin y Dolar ejecute\n\n/clc vef 2500000".format(":question:")
     if not params:
         response = "<b>{0}</b> Debes indicar <b>/clc coin_ticker monto</b>\n\n_Ej_: /clc btc 0.0002 \n\nSi desea calcular VEF a bitcoin y Dolar ejecute\n\n/clc vef 2500000".format(":question:")
     else:
@@ -930,7 +930,7 @@ def calc(bot, update):
                 monto, total_btc, total_dolar = valida_calcula_moneda(
                         moneda.upper(), monto, data)
 
-                response = """:moneybag: El calculo para <b>{0}</b> <i>{4}</i> es de :\n\n:chart_with_downwards_trend: BTC: {1:,.9f}\n:dollar: Dolares: {2:,.2f}\n\nNota: Precios basados en: {3}""".format(
+                response = """:moneybag: El calculo para <b>{0}</b> <i>{4}</i> es de :\n\n:chart_with_downwards_trend: BTC: {1:,.9f}\n:dollar: Dolares: {2:,.2f}\n\n<b>Nota:</b> Precios basados en: {3}""".format(
                         monto, total_btc, total_dolar, market.capitalize(), moneda.upper())
         except Exception as e:
             response = 'Verifica que el monto tenga como separacion decimal . Ej: /clc btc 0.001'
