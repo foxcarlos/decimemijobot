@@ -904,7 +904,7 @@ def calc(bot, update):
     ve = u'\U0001F1FB' + u'\U0001F1EA'
 
     if not params:
-        response = "*{0}* Debes indicar */clc coin_ticker monto*\n\n_Ej_: /clc btc 0.0002 \n\nSi desea calcular VEF a bitcoin y Dolar ejecute\n\n/clc vef 2500000".format(":question:")
+        response = "<b>{0}</b> Debes indicar <b>/clc coin_ticker monto</b>\n\n_Ej_: /clc btc 0.0002 \n\nSi desea calcular VEF a bitcoin y Dolar ejecute\n\n/clc vef 2500000".format(":question:")
     else:
         try:
             moneda, monto = params
@@ -920,8 +920,8 @@ def calc(bot, update):
 
                 total_euros, total_dolar, total_btc = [float(symbol)*float(monto) for symbol in valores]
                 total_vef = float(monto) * (data.get("USD") * get_dolartoday())
-                response = """:moneybag: El calculo de {0} es :\n\n:dollar: Dolar: {1:,.2f}\n:euro: Euro: {2:,.2f}\n:small_orange_diamond: BTC: {3:,.6f}\n\U0001F1FB\U0001F1EA  VEF: {4:,.2f}\n\nNota: Precios basados en: {5} y VEF en (DolarToday) """.format(
-                        monto, total_dolar, total_euros, total_btc, total_vef, market.capitalize())
+                response = """:moneybag: El calculo de <b>{0}</b> <i>{5}</i> es :\n\n:dollar: Dolar: {1:,.2f}\n:euro: Euro: {2:,.2f}\n:small_orange_diamond: BTC: {3:,.6f}\n\U0001F1FB\U0001F1EA  VEF: {4:,.2f} """.format(
+                        monto, total_dolar, total_euros, total_btc, total_vef, moneda.upper())
 
             if moneda.upper() in list(data):
                 data = get_price_usd_eur("btc", market)
@@ -930,13 +930,13 @@ def calc(bot, update):
                 monto, total_btc, total_dolar = valida_calcula_moneda(
                         moneda.upper(), monto, data)
 
-                response = """:moneybag: El calculo para {0} es de :\n\n:chart_with_downwards_trend: BTC: {1:,.9f}\n:dollar: Dolares: {2:,.2f}\n\nNota: Precios basados en: {3} y VEF en (DolarToday) """.format(
-                        monto, total_btc, total_dolar, market.capitalize())
+                response = """:moneybag: El calculo para <b>{0}</b> <i>{4}</i> es de :\n\n:chart_with_downwards_trend: BTC: {1:,.9f}\n:dollar: Dolares: {2:,.2f}\n\nNota: Precios basados en: {3}""".format(
+                        monto, total_btc, total_dolar, market.capitalize(), moneda.upper())
         except Exception as e:
             response = 'Verifica que el monto tenga como separacion decimal . Ej: /clc btc 0.001'
 
-    bot.sendMessage(update.message.chat_id, parse_mode="Markdown", text=emojize(response,
-        use_aliases=True))
+    bot.sendMessage(update.message.chat_id, parse_mode="html",
+            text=emojize(response, use_aliases=True))
     usuario_nuevo(update)
     print(update.message)
 
