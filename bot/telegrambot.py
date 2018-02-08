@@ -902,7 +902,6 @@ def calc(bot, update):
     params = cadena_sin_el_comando.split() if \
             len(cadena_sin_el_comando.split()) == 2 else []
     ve = u'\U0001F1FB' + u'\U0001F1EA'
-
     if not params:
         response = "<b>{0}</b> Debes indicar <b>/clc coin_ticker monto</b>\n\n_Ej_: /clc btc 0.0002 \n\nSi desea calcular VEF a bitcoin y Dolar ejecute\n\n/clc vef 2500000".format(":question:")
     else:
@@ -1467,16 +1466,17 @@ def nuevo_miembro(bot, update):
     id_ = nuevo_usuario.id
     username = nuevo_usuario.username
     nombre = nuevo_usuario.first_name
-    msg_html = """
-    *Bienvenido {0} al grupo {1}*\n
-    :small_blue_diamond: Id: *{2}*\n
-    :small_blue_diamond: Usuario: *{3}*\n
-    :small_blue_diamond: Nombre: *{4}*\n
-    """.format(username, grupo.title, id_, username, nombre)
-    if not username:
-        msg_html += "*{0}* Por politicas del Grupo es necesario que configures un alias @{1}\n".format(nombre, id_)
+    emoji_saludo = u'\U0001F596'
 
-    bot.send_message(chat_id=update.message.chat_id, parse_mode = "Markdown", text=emojize(msg_html, use_aliases=True))
+    msg_html = """
+    {5} <b>Bienvenido {0} al grupo {1}</b>\n\n:small_blue_diamond: Id: <b>{2}</b>\n:small_blue_diamond: Usuario: <b>{3}</b>\n:small_blue_diamond: Nombre: <b>{4}</b>\n""".format(
+            username if username else nombre, grupo.title, id_, username,
+            nombre, emoji_saludo)
+
+    if not username:
+        msg_html += "<b>{0}</b> Por politicas del Grupo es necesario que configures un alias @{1}\n".format(nombre, id_)
+
+    bot.send_message(chat_id=update.message.chat_id, parse_mode = "html", text=emojize(msg_html, use_aliases=True))
     usuario_nuevo(update)
 
 
