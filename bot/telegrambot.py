@@ -1202,6 +1202,7 @@ def get_dolartoday2():
     dicom_e = float(rq.get("EUR").get("sicad2"))
     cucuta_e = float(rq.get("EUR").get("efectivo_cucuta"))
     # localbitcoin_e = float(rq.get("EUR").get("localbitcoin_ref"))
+    emoji_barril = u'\U0001F6E2'
 
     response = """:speaker: DolarToday hoy USD/EUR: {0}:\n\n\
     :dollar: *DolarToday*: {1:0,.2f}\n\
@@ -1213,7 +1214,7 @@ def get_dolartoday2():
     :euro: *Implicito*: {7:0,.2f}\n\
     :euro: *Dicom*: {8:0,.2f}\n\
     :euro: *Cucuta*: {9:0,.2f}\n\n
-    :fuelpump: *Petroleo* USD: {10:0,.2f}\n\
+    {12} *Petroleo* USD: {10:0,.2f}\n\
     :moneybag: *Oro* USD: {11:0,.2f}\n\
         """.format(fecha,
                     dolartoday,
@@ -1226,7 +1227,9 @@ def get_dolartoday2():
                     dicom_e,
                     cucuta_e,
                     barril,
-                    oro)
+                    oro,
+                    emoji_barril
+                    )
     return response
 
 
@@ -1469,6 +1472,7 @@ def nuevo_miembro(bot, update):
     username = nuevo_usuario.username
     nombre = nuevo_usuario.first_name
     emoji_saludo = u'\U0001F596'
+    emoji_policia = u'\U0001F46E'
 
     msg_html = """
     {5} <b>Bienvenido {0} al grupo {1}</b>\n\n:small_blue_diamond: Id: <b>{2}</b>\n:small_blue_diamond: Usuario: <b>{3}</b>\n:small_blue_diamond: Nombre: <b>{4}</b>\n""".format(
@@ -1476,7 +1480,7 @@ def nuevo_miembro(bot, update):
             nombre, emoji_saludo)
 
     if not username:
-        msg_html += "<b>{0}</b> Por politicas del Grupo es necesario que configures un alias @{1}\n".format(nombre, id_)
+        msg_html += "{2} <b>{0}</b> Por politicas del Grupo es necesario que configures un alias @{1}\n".format(nombre, id_, emoji_policia)
 
     bot.send_message(chat_id=update.message.chat_id, parse_mode = "html", text=emojize(msg_html, use_aliases=True))
     usuario_nuevo(update)
