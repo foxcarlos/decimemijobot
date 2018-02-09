@@ -1169,7 +1169,7 @@ def lista_negra_find(bot, update):
     entidades = update.message.entities[1:]
     for index, entidad in enumerate(entidades):
         if entidad.type == 'mention':
-            if args[index] in menciones_a_bloquear:
+            if entidad in menciones_a_bloquear:
                 usuario_a_expulsar = update.message.from_user.id
 
 def evaluar(palabra):
@@ -1548,7 +1548,7 @@ def forwarded(bot, update):
     print(update.message)
 
 
-def echo(bot, update, args):
+def echo(bot, update):
     print("Eco")
     m = evaluar(update.message.text)
     import ipdb; ipdb.set_trace() # BREAKPOINT
