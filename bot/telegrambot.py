@@ -1478,7 +1478,7 @@ def nuevo_miembro(bot, update):
     emoji_policia = u'\U0001F46E'
 
     msg_html = """
-    {5} <b>Bienvenido {0} al grupo {1}</b>\n\n:small_blue_diamond: Id: <b>{2}</b>\n:small_blue_diamond: Usuario: <b>{3}</b>\n:small_blue_diamond: Nombre: <b>{4}</b>\n""".format(
+    {5} <b>Bienvenido {0} al grupo {1}</b>\n\n:small_blue_diamond: Id: <b>{2}</b>\n:small_blue_diamond: Usuario: <b>{3}</b>\n:small_blue_diamond: Nombre: <b>{4}</b>\n\n""".format(
             username if username else nombre, grupo.title, id_, username,
             nombre, emoji_saludo)
 
