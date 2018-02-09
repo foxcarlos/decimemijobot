@@ -1173,7 +1173,10 @@ def lista_negra_find(bot, update):
         if entidad.type == 'mention':
             if args[index] in menciones_a_bloquear:
                 usuario_a_expulsar = update.message.from_user.id
-                update.message.reply_text("/ban ")
+                update.message.chat.kick_member(usuario_a_expulsar)
+                update.message.reply_text("@foxcarlos /ban a {0} ".format(
+                    update.message.from_user.username)
+                    )
 
 def evaluar(palabra):
     response = ""
