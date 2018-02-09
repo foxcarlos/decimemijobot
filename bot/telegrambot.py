@@ -1161,7 +1161,10 @@ def bitcoin_satoshitango(bot, update):
     bot.sendMessage(update.message.chat_id, text=response)
     usuario_nuevo(update)
 
-def lista_negra_find(bot, update, args):
+def lista_negra_find(bot, update):
+    parameters = update.message.text
+    cadena_sin_el_comando = ' '.join(parameters.split()[1:])
+
     menciones_a_bloquear = ["@AltcoinsLatinoPump"]
     entidades = update.message.entities[1:]
     for index, entidad in enumerate(entidades):
