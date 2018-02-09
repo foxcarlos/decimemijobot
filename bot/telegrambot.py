@@ -1164,13 +1164,16 @@ def bitcoin_satoshitango(bot, update):
 def lista_negra_find(bot, update):
     parameters = update.message.text
     cadena_sin_el_comando = ' '.join(parameters.split()[1:])
+    args = [entidad for entidad in cadena_sin_el_comando.split(' ')\
+            if '@' in entidad]
 
     menciones_a_bloquear = ["@AltcoinsLatinoPump"]
-    entidades = update.message.entities[1:]
+    entidades = update.message.entities
     for index, entidad in enumerate(entidades):
         if entidad.type == 'mention':
-            if entidad in menciones_a_bloquear:
+            if args[index] in menciones_a_bloquear:
                 usuario_a_expulsar = update.message.from_user.id
+                update.message.reply_text("/ban ")
 
 def evaluar(palabra):
     response = ""
