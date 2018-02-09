@@ -1161,9 +1161,13 @@ def bitcoin_satoshitango(bot, update):
     bot.sendMessage(update.message.chat_id, text=response)
     usuario_nuevo(update)
 
-def lista_negra_add(bot, update, args):
-    users_a_bloquear = buscar_user(bot, update, args)
-
+def lista_negra_find(bot, update, args):
+    menciones_a_bloquear = ["@AltcoinsLatinoPump"]
+    entidades = update.message.entities[1:]
+    for index, entidad in enumerate(entidades):
+        if entidad.type == 'mention':
+            if args[index] in menciones_a_bloquear:
+                usuario_a_expulsar = update.message.from_user.id
 
 def evaluar(palabra):
     response = ""
@@ -1544,6 +1548,9 @@ def forwarded(bot, update):
 def echo(bot, update):
     print("Eco")
     m = evaluar(update.message.text)
+    import ipdb; ipdb.set_trace() # BREAKPOINT
+    ln = lista_negra_find(bot, update)
+
     if m:
         update.message.reply_text(m)
     usuario_nuevo(update)

@@ -9,6 +9,14 @@ from random import randint
 
 # Create your models here.
 
+class BlackList(models.Model):
+    '''.'''
+
+    mencion = models.CharField(max_length=100, blank=False, null=False,
+            unique=True)
+    activo = models.BooleanField(default=False)
+
+
 class User(models.Model):
     '''.'''
 
