@@ -1545,7 +1545,7 @@ def forwarded(bot, update):
     print(update.message)
 
 
-def echo(bot, update):
+def echo(bot, update, args):
     print("Eco")
     m = evaluar(update.message.text)
     import ipdb; ipdb.set_trace() # BREAKPOINT
@@ -1625,7 +1625,7 @@ def main():
 
     dp.add_handler(MessageHandler(Filters.command, unknown))
     # on noncommand i.e message - echo the message on Telegram
-    dp.add_handler(MessageHandler(Filters.text, echo))
+    dp.add_handler(MessageHandler(Filters.text, echo, pass_args=True))
     # dp.add_handler(MessageHandler(Filters.status_update, abandono_grupo))
     dp.add_handler(MessageHandler(Filters.status_update.new_chat_members, nuevo_miembro))
 
