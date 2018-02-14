@@ -27,3 +27,20 @@ def grupo_message(grupos, cadena_sin_el_comando):
             print(E)
         sleep(3)
 
+@app.task
+def yt2mp3(url, filename):
+    from pytube import YouTube
+    import os
+
+    def convert_to_mp3(stream, file_handle):
+        import ipdb;ipdb.set_trace()
+        nombre = os.path.split(os.path.abspath(file_handle.name))[1]
+        comando = "ffmpeg -i '{0}' -vn -ar 44100 -ac 2 -ab 192 -f mp3 {1}.mp3".format(nombre, nombre.replace(" ", '_'))
+        os.system(comando)
+
+
+    yt = YouTube(url)
+    yt.register_on_complete_callback(convert_to_aac)
+    yt.streams.filter(only_audio=True).first().download()
+
+
