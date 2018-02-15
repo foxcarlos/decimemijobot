@@ -40,6 +40,8 @@ def convert_to_mp3(stream, file_handle):
     except Exception as E:
         print(E)
         msg_response = " :x: <b>Ocurrio un error al procesar el arachivo</b>"
+    return msg_response
+
 
 @app.task
 def yt2mp3(chat_id, url):
@@ -47,10 +49,10 @@ def yt2mp3(chat_id, url):
     import os
 
     yt = YouTube(url)
-    yt.register_on_complete_callback(convert_to_mp3)
+    msg_response = yt.register_on_complete_callback(convert_to_mp3)
     yt.streams.filter(only_audio=True).first().download()
 
-    msg_response = " :x: <b>Ocurrio un error al procesar el arachivo</b>"
+    # msg_response = " :x: <b>Ocurrio un error al procesar el arachivo</b>"
     DjangoTelegramBot.dispatcher.bot.sendMessage(chat_id,
             parse_mode="html", text=emojize(msg_response, use_aliases=True))
 
