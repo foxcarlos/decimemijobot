@@ -1284,10 +1284,9 @@ def enviar_mensajes_todos(bot, update):
 
 
 def yt_a_mp3(bot, update, args):
-    import ipdb; ipdb.set_trace() # BREAKPOINT
-    """if not valida_autorizacion_comando(bot, update):
+    if not valida_autorizacion_comando(bot, update):
         mensaje_valida_autorizacion_comando(bot, update)
-        return True"""
+        return True
 
     user_first_name = update.message.from_user.first_name
     msg_response = ":hourglass_flowing_sand: <i>{0}</i> <b>Espera mientras proceso la información...</b>".format(user_first_name)
@@ -1295,7 +1294,7 @@ def yt_a_mp3(bot, update, args):
         bot.sendMessage(update.message.chat_id, parse_mode="html",
                 text=emojize(msg_response, use_aliases=True))
 
-        yt2mp3.delay(bot, update, args[0])
+        yt2mp3.delay(args[0])
 
     usuario_nuevo(update)
     print(update.message)
