@@ -43,6 +43,7 @@ def convert_to_mp3(stream, file_handle):
 
 @app.task
 def yt2mp3(chat_id, url):
+    import ipdb; ipdb.set_trace() # BREAKPOINT
     from pytube import YouTube
     import os
 
