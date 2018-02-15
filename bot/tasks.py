@@ -35,8 +35,8 @@ def yt2mp3(bot, update, url):
     from pytube import YouTube
     import os
 
+    import ipdb; ipdb.set_trace() # BREAKPOINT
     def convert_to_mp3(stream, file_handle):
-        import ipdb;ipdb.set_trace()
         try:
             nombre = os.path.split(os.path.abspath(file_handle.name))[1]
             filename = nombre.replace(" ", "_")
