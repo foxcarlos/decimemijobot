@@ -19,7 +19,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from bot.scrapy import NoticiasPanorama
 from bot.models import Alerta, AlertaUsuario, User, Grupo, Comando, ComandoEstado, Contrato, PersonaContrato
 
-from bot.tasks import pool_message, grupo_message
+from bot.tasks import pool_message, grupo_message, yt2mp3
 from datetime import datetime
 
 logger = logging.getLogger(__name__)
@@ -1269,6 +1269,7 @@ def enviar_mensajes_grupos(bot, update, args):
     if valida_root(update):
         users = Grupo.objects.values('grupo_id').annotate(dcount=Count('grupo_id'))
         grupo_message.delay(list(users), cadena_sin_el_comando)
+    return True
 
 
 def enviar_mensajes_todos(bot, update):
@@ -1279,6 +1280,25 @@ def enviar_mensajes_todos(bot, update):
     if valida_root(update):
         users = User.objects.values('chat_id').annotate(dcount=Count('chat_id'))
         pool_message.delay(list(users), cadena_sin_el_comando)
+    return True
+
+
+def yt_a_mp3(bot, update, args):
+    if not valida_autorizacion_comando(bot, update):
+        mensaje_valida_autorizacion_comando(bot, update)
+        return True
+
+    user_first_name = update.message.from_user.first_name
+    msg_response = ":hourglass_flowing_sand: <i>{0}</i> <b>Espera mientras proceso la información...</b>".format(user_first_name)
+    if args:
+        bot.sendMessage(update.message.chat_id, parse_mode="html",
+                text=emojize(msg_response, use_aliases=True))
+
+        yt2mp3.delay(bot, update, args[0])
+
+    usuario_nuevo(update)
+    print(update.message)
+    return True
 
 
 def help(bot, update):
@@ -1623,6 +1643,7 @@ def main():
     dp.add_handler(CommandHandler("set_alarma_litecoin", set_alarma_litecoin))
     dp.add_handler(CommandHandler("dolartoday", dolartoday))
     dp.add_handler(CommandHandler("masivo", enviar_mensajes_todos))
+    dp.add_handler(CommandHandler("yt2mp3", yt_a_mp3, pass_args=True))
     dp.add_handler(CommandHandler("test_envio", test_envio, pass_args=True))
     dp.add_handler(CommandHandler("masivo_grupos", enviar_mensajes_grupos, pass_args=True))
     dp.add_handler(CommandHandler("autor", autor))
