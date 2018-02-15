@@ -1284,6 +1284,8 @@ def enviar_mensajes_todos(bot, update):
 
 
 def yt_a_mp3(bot, update, args):
+    chat_id = update.message.chat_id
+
     if not valida_autorizacion_comando(bot, update):
         mensaje_valida_autorizacion_comando(bot, update)
         return True
@@ -1294,7 +1296,7 @@ def yt_a_mp3(bot, update, args):
         bot.sendMessage(update.message.chat_id, parse_mode="html",
                 text=emojize(msg_response, use_aliases=True))
 
-        yt2mp3.delay(args[0])
+        yt2mp3.delay(chat_id, args[0])
 
     usuario_nuevo(update)
     print(update.message)
