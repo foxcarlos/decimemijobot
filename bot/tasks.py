@@ -31,11 +31,10 @@ def grupo_message(grupos, cadena_sin_el_comando):
 
 
 @app.task
-def yt2mp3(bot, update, url):
+def yt2mp3(chat_id, url):
     from pytube import YouTube
     import os
 
-    import ipdb; ipdb.set_trace() # BREAKPOINT
     def convert_to_mp3(stream, file_handle):
         try:
             nombre = os.path.split(os.path.abspath(file_handle.name))[1]
@@ -52,6 +51,6 @@ def yt2mp3(bot, update, url):
     yt.register_on_complete_callback(convert_to_mp3)
     yt.streams.filter(only_audio=True).first().download()
 
-    DjangoTelegramBot.dispatcher.bot.sendMessage(update.message.chat_id,
+    DjangoTelegramBot.dispatcher.bot.sendMessage(chat_id,
             parse_mode="html", text=emojize(msg_response, use_aliases=True))
 
