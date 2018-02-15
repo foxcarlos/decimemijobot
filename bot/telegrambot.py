@@ -1284,6 +1284,7 @@ def enviar_mensajes_todos(bot, update):
 
 
 def yt_a_mp3(bot, update, args):
+    import ipdb; ipdb.set_trace() # BREAKPOINT
     if not valida_autorizacion_comando(bot, update):
         mensaje_valida_autorizacion_comando(bot, update)
         return True
