@@ -44,7 +44,7 @@ def yt2mp3(chat_id, url):
             filename = nombre.replace(" ", "_").replace("mp4", "")
             filename = ''.join(re.findall('\w', filename))
             filename_mp3 = "{0}.mp3".format(filename)
-            comando = "ffmpeg -i '{0}' -vn -ar 44100 -ac 2 -ab 192 -f mp3 {0}".format(nombre, filename_mp3)
+            comando = 'ffmpeg -i "{0}" -vn -ar 44100 -ac 2 -ab 192 -f mp3 {0}'.format(nombre, filename_mp3)
             os.system(comando)
             msg_response.append("{0}".format(filename_mp3))
         except Exception as E:
