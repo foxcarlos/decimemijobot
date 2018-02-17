@@ -1337,6 +1337,8 @@ def help(bot, update):
     /trade2user - Listas todas las operaciones de un usuario
     /traderef - Referencias de usuario
 
+    /yt2mp3 <link youtube> - Convierte video youtube a mp3
+
     Nota: Ahora es posible hacer calculos
     con solo escribir directamente 2+2*3
 
