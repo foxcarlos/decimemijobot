@@ -1292,7 +1292,7 @@ def yt_a_mp3(bot, update, args):
 
     user_first_name = update.message.from_user.first_name
     if not args:
-        response = "<b>{0}</b> <i>Debes indicar el link del video eb youtube Ej:</i> <b>/yt2mp3 https://www.youtube.com/watch?v=OX7daQbqlzc</b>".format(":question:")
+        response = "<b>{0}</b> <i>Debes indicar el link del video youtube Ej:</i> <b>/yt2mp3 https://www.youtube.com/watch?v=OX7daQbqlzc</b>".format(":question:")
         bot.sendMessage(update.message.chat_id, parse_mode="html", text=emojize(response, use_aliases=True))
         return False
     else:
