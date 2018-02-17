@@ -37,6 +37,7 @@ def yt2mp3(chat_id, url):
     msg_response = []
     def convert_to_mp3(stream, file_handle):
         import os
+        import re
         try:
             nombre = os.path.split(os.path.abspath(file_handle.name))[1]
             print('Nombre', nombre)
