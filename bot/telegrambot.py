@@ -1291,8 +1291,13 @@ def yt_a_mp3(bot, update, args):
         return True
 
     user_first_name = update.message.from_user.first_name
-    msg_response = ":hourglass_flowing_sand: <i>{0}</i> <b>Espera mientras convierto el video a mp3...</b>".format(user_first_name)
-    if args:
+    if not args:
+        response = "<b>{0}</b> <i>Debes indicar el link del video eb youtube Ej:</i> <b>/yt2mp3 https://www.youtube.com/watch?v=OX7daQbqlzc</b>".format(":question:",
+                args[0])
+        bot.sendMessage(update.message.chat_id, parse_mode="html", text=emojize(response, use_aliases=True))
+        return False
+    else:
+        msg_response = ":hourglass_flowing_sand: <i>{0}</i> <b>Espera mientras convierto el video a mp3...</b>".format(user_first_name)
         bot.sendMessage(update.message.chat_id, parse_mode="html",
                 text=emojize(msg_response, use_aliases=True))
 
