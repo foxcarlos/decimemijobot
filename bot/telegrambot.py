@@ -1291,7 +1291,7 @@ def yt_a_mp3(bot, update, args):
         return True
 
     user_first_name = update.message.from_user.first_name
-    msg_response = ":hourglass_flowing_sand: <i>{0}</i> <b>Espera mientras proceso la información...</b>".format(user_first_name)
+    msg_response = ":hourglass_flowing_sand: <i>{0}</i> <b>Espera mientras convierto el video a mp3...</b>".format(user_first_name)
     if args:
         bot.sendMessage(update.message.chat_id, parse_mode="html",
                 text=emojize(msg_response, use_aliases=True))
