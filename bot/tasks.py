@@ -57,7 +57,7 @@ def yt2mp3(chat_id, url):
     yt.streams.filter(only_audio=True).first().download()
 
     print(msg_response[0])
-    file_ = open("{0}".format(msg_response[0]), "rb")
+    file_ = open("../{0}".format(msg_response[0]), "rb")
     DjangoTelegramBot.dispatcher.bot.sendAudio(chat_id,
             audio=file_, caption="Video YouTube convertido a mp3 con exito"
             )
