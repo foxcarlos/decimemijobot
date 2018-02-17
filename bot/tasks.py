@@ -42,9 +42,10 @@ def yt2mp3(chat_id, url):
             nombre = os.path.split(os.path.abspath(file_handle.name))[1]
             print('Nombre', nombre)
             filename = nombre.replace(" ", "_").replace("mp4", "")
-            filename = ''.join(re.findall('\w', filename))
-            filename_mp3 = "{0}.mp3".format(filename)
-            comando = 'ffmpeg -i "{0}" -vn -ar 44100 -ac 2 -ab 192 -f mp3 {0}'.format(nombre, filename_mp3)
+            filename_2 = ''.join(re.findall('\w', filename))
+            filename_mp3 = "{0}.mp3".format(filename_2)
+            comando = 'ffmpeg -i "{0}" -vn -ar 44100 -ac 2 -ab 192 -f mp3 {1}'.format(nombre, filename_mp3)
+            print(comando)
             os.system(comando)
             msg_response.append("{0}".format(filename_mp3))
         except Exception as E:
@@ -57,7 +58,7 @@ def yt2mp3(chat_id, url):
     yt.streams.filter(only_audio=True).first().download()
 
     print(msg_response[0])
-    file_ = open("../{0}".format(msg_response[0]), "rb")
+    file_ = open("{0}".format(msg_response[0]), "rb")
     DjangoTelegramBot.dispatcher.bot.sendAudio(chat_id,
             audio=file_, caption="Video YouTube convertido a mp3 con exito"
             )
