@@ -379,6 +379,7 @@ def callback_califica(bot, update):
 def crear_contrato(bot, update, args):
 
     buyer_seller = []
+    global inf_operacion
     inf_operacion = []
     if args:
         inf_operacion.append(' '.join(args))
