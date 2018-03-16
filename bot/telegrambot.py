@@ -838,14 +838,14 @@ def get_price_coinmarketcap(url):
 
 def yenten(bot, update):
     ytn = requests.get(URL_YTN_USD).json()[0]
-    msg_response = ''
+    response = ''
     if ytn:
-        msg_response = """El precio del Yenten es:\n:dollar: <b>Dolar:</b> {0}\n:small_orange_diamond: <b>BTC</b>: {1}\n:dollar: <b>VEF:</b> {2}""".format(
+        response = """El precio del Yenten es:\n:dollar: <b>Dolar:</b> {0}\n:small_orange_diamond: <b>BTC</b>: {1}\n:dollar: <b>VEF:</b> {2}""".format(
                 ytn.get('price_usd'), ytn.get('price_btc'),
                 float(ytn.get('price_usd')) * get_dolartoday()
                 )
     else:
-        msg_response = ':x: <b>Error al consultar criptomoneda</b>'
+        response = ':x: <b>Error al consultar criptomoneda</b>'
     bot.sendMessage(update.message.chat_id, parse_mode="html", text=emojize(response, use_aliases=True))
     usuario_nuevo(update)
 
