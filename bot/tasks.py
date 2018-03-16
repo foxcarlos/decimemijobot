@@ -37,16 +37,21 @@ def yt2mp3(chat_id, url):
     msg_response = []
     def convert_to_mp3(stream, file_handle):
         import os
+        import re
         try:
             nombre = os.path.split(os.path.abspath(file_handle.name))[1]
             print('Nombre', nombre)
-            filename = nombre.replace(" ", "_").replace("(", "").replace(")", "")
-            filename_mp3 = "{0}.mp3".format(filename)
-            comando = "ffmpeg -i '{0}' -vn -ar 44100 -ac 2 -ab 192 -f mp3 {1}".format(nombre, filename_mp3)
+            filename = nombre.replace(" ", "_").replace("mp4", "")
+            filename_2 = ''.join(re.findall('\w', filename))
+            filename_mp3 = "{0}.mp3".format(filename_2)
+            comando = 'ffmpeg -i "{0}" -vn -ar 44100 -ac 2 -ab 192 -f mp3 {1}'.format(nombre, filename_mp3)
+            print(comando)
             os.system(comando)
             msg_response.append("{0}".format(filename_mp3))
+            os.remove(nombre)
         except Exception as E:
             print('error', E)
+            os.remove(nombre)
             msg_response.append(":x: <b>Ocurrio un error al procesar el arachivo</b>")
         return msg_response
 
@@ -54,11 +59,13 @@ def yt2mp3(chat_id, url):
     yt.register_on_complete_callback(convert_to_mp3)
     yt.streams.filter(only_audio=True).first().download()
 
-    print(msg_response[0])
-    file_ = open("{0}".format(msg_response[0]), "rb")
+    archivo = msg_response[0]
+    file_ = open("{0}".format(archivo), "rb")
     DjangoTelegramBot.dispatcher.bot.sendAudio(chat_id,
-            audio=file_, caption="Video YouTube convertido a mp3 con exito"
-            )
+            audio=file_, caption=archivo)
+
+    file_.close()
+    os.remove(archivo)
 
     #DjangoTelegramBot.dispatcher.bot.sendMessage(chat_id,
     #        parse_mode="html", text=emojize(msg_response[0],

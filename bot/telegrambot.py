@@ -380,6 +380,7 @@ def callback_califica(bot, update):
 def crear_contrato(bot, update, args):
 
     buyer_seller = []
+    global inf_operacion
     inf_operacion = []
     if args:
         inf_operacion.append(' '.join(args))
@@ -1307,8 +1308,12 @@ def yt_a_mp3(bot, update, args):
         return True
 
     user_first_name = update.message.from_user.first_name
-    msg_response = ":hourglass_flowing_sand: <i>{0}</i> <b>Espera mientras proceso la información...</b>".format(user_first_name)
-    if args:
+    if not args:
+        response = "<b>{0}</b> <i>Debes indicar el link del video youtube Ej:</i> <b>/yt2mp3 https://www.youtube.com/watch?v=OX7daQbqlzc</b>".format(":question:")
+        bot.sendMessage(update.message.chat_id, parse_mode="html", text=emojize(response, use_aliases=True))
+        return False
+    else:
+        msg_response = ":hourglass_flowing_sand: <i>{0}</i> <b>Espera mientras convierto el video a mp3...</b>".format(user_first_name)
         bot.sendMessage(update.message.chat_id, parse_mode="html",
                 text=emojize(msg_response, use_aliases=True))
 
@@ -1352,6 +1357,8 @@ def help(bot, update):
     /tradec - Calificar Conrtato
     /trade2user - Listas todas las operaciones de un usuario
     /traderef - Referencias de usuario
+
+    /yt2mp3 <link youtube> - Convierte video youtube a mp3
 
     Nota: Ahora es posible hacer calculos
     con solo escribir directamente 2+2*3
