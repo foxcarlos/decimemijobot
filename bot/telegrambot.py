@@ -45,6 +45,7 @@ URL_DAS_USD = settings.CRIPTO_MONEDAS.get("URL_DAS_USD")
 URL_BTG_USD = settings.CRIPTO_MONEDAS.get("URL_BTG_USD")
 URL_XMR_USD = settings.CRIPTO_MONEDAS.get("URL_XMR_USD")
 URL_XRP_USD = settings.CRIPTO_MONEDAS.get("URL_XRP_USD")
+URL_YTN_USD = settings.CRIPTO_MONEDAS.get("URL_YTN_USD")
 URL_PRICE_USD = settings.CRIPTO_MONEDAS.get("URL_PRICE_USD")
 URL_PRICE_USD_EUR_MARKET = settings.CRIPTO_MONEDAS.get("URL_PRICE_USD_EUR_MARKET")
 URL_DOLARTODAY = settings.CRIPTO_MONEDAS.get("URL_DOLARTODAY")
@@ -834,6 +835,18 @@ def get_price(url):
 def get_price_coinmarketcap(url):
     return requests.get(url).json()[0].get("price_usd")
 
+def yenten(bot, update):
+    ytn = requests.get(URL_YTN_USD).json()[0]
+    msg_response = ''
+    if ytn:
+        msg_response = """El precio del Yenten es:\n:dollar: <b>Dolar:</b> {0}\n:small_orange_diamond: <b>BTC</b>: {1}\n:dollar: <b>VEF:</b> {2}""".format(
+                ytn.get('price_usd'), ytn.get('price_btc'),
+                float(ytn.get('price_usd')) * get_dolartoday()
+                )
+    else:
+        msg_response = ':x: <b>Error al consultar criptomoneda</b>'
+    bot.sendMessage(update.message.chat_id, parse_mode="html", text=emojize(response, use_aliases=True))
+    usuario_nuevo(update)
 
 def all_coins(bot, update):
     if not valida_autorizacion_comando(bot, update):
@@ -851,6 +864,7 @@ def all_coins(bot, update):
     btg = get_price_coinmarketcap(URL_BTG_USD)
     xmr = get_price_coinmarketcap(URL_XMR_USD)
     xrp = get_price_coinmarketcap(URL_XRP_USD)
+    ytn = get_price_coinmarketcap(URL_YTN_USD)
 
     response = """:speaker: Cripto Monedas hoy (Coinbase ):\n\n\
     :dollar: *BTC*={0:0,.2f}\n\
@@ -860,7 +874,8 @@ def all_coins(bot, update):
     :dollar: *DASH*={4:0,.2f}\n\
     :dollar: *BTGOLD*={5:0,.2f}\n\
     :dollar: *RIPPLE*={6:0,.2f}\n\
-    :dollar: *MONERO*={7:0,.2f}""".format(
+    :dollar: *MONERO*={7:0,.2f}\n\
+    :dollar: *YTN*={8:0,.2f}""".format(
                     float(btc),
                     float(eth),
                     float(ltc),
@@ -868,7 +883,8 @@ def all_coins(bot, update):
                     float(das),
                     float(btg),
                     float(xrp),
-                    float(xmr)
+                    float(xmr),
+                    float(ytn)
                     )
 
     bot.sendMessage(update.message.chat_id, parse_mode="Markdown", text=emojize(response, use_aliases=True))
@@ -1625,6 +1641,8 @@ def main():
 
     dp.add_handler(CommandHandler("allcoins", all_coins))
     dp.add_handler(CommandHandler("precio", price))
+    dp.add_handler(CommandHandler("yenten", yenten))
+    dp.add_handler(CommandHandler("ytn", yenten))
     dp.add_handler(CommandHandler("p", price))
 
     dp.add_handler(CommandHandler("grafico", historico))
