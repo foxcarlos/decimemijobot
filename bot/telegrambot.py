@@ -840,7 +840,7 @@ def yenten(bot, update):
     ytn = requests.get(URL_YTN_USD).json()[0]
     response = ''
     if ytn:
-        response = """El precio del Yenten es:\n:dollar: <b>Dolar:</b> {0:,.2f}\n:small_orange_diamond: <b>BTC</b>: {1}\n\U0001F1FB\U0001F1EA <b>VEF:</b> {2:,.2f}""".format(
+        response = """El precio del Yenten es:\n:dollar: <b>Dolar:</b> {0:,.2f}\n:small_orange_diamond: <b>BTC</b>: {1:,.8f}\n\U0001F1FB\U0001F1EA <b>VEF:</b> {2:,.2f}""".format(
                 float(ytn.get('price_usd')),
                 float(ytn.get('price_btc')),
                 float(ytn.get('price_usd')) * get_dolartoday()
