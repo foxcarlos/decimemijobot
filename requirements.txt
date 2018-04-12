@@ -11,3 +11,5 @@ emoji
 matplotlib
 numpy
 pytube
+tweepy
+bs4
