@@ -141,7 +141,7 @@ def get_price_from_twiter(chat_id, nombre):
 
 
     stuff = get_stuff(nombre)
-    hoy, ruta_img = get_tweets(stuff, 20, nombre)
+    hoy, ruta_img = get_tweets(stuff, 50, nombre)
     if hoy:
         mensaje = 'Tasa del dia'
     else:
