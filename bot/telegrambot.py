@@ -1288,17 +1288,7 @@ def dolar_procom(bot, update):
 
 def dolar_otros(bot, update, nombre):
     chat_id = update.message.chat_id
-    import ipdb; ipdb.set_trace() # BREAKPOINT
-    hoy, ruta_imagen = get_price_from_twiter.delay(chat_id, nombre)
-
-    if hoy:
-        mensaje = 'Tasa del dia'
-    else:
-        mensaje = 'Hoy no se ha publicado tasa aun, se muestra la anterior'
-
-    file_ = os.path.join(settings.BASE_DIR, ruta_img)
-    foto = open(file_, "rb")
-    bot.sendPhoto(chat_id, photo=foto, caption=mensaje)
+    get_price_from_twiter.delay(chat_id, nombre)
 
 def enviar_mensajes_grupos(bot, update, args):
     cadena_sin_el_comando = ' '.join(args)
