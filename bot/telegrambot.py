@@ -1281,7 +1281,7 @@ def dolartoday(bot, update):
     print(update.message)
 
 def dolar_airtm(bot, update):
-    dolar_otros('theairtm')
+    dolar_otros(bot, update, 'theairtm')
 
 def dolar_procom(bot, update):
     dolar_otros(bot, update, 'dolarproco')
