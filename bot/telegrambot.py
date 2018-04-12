@@ -19,7 +19,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from bot.scrapy import NoticiasPanorama
 from bot.models import Alerta, AlertaUsuario, User, Grupo, Comando, ComandoEstado, Contrato, PersonaContrato
 
-from bot.tasks import pool_message, grupo_message, yt2mp3
+from bot.tasks import pool_message, grupo_message, yt2mp3, get_price_from_twiter
 from datetime import datetime
 
 logger = logging.getLogger(__name__)
@@ -1280,6 +1280,16 @@ def dolartoday(bot, update):
     usuario_nuevo(update)
     print(update.message)
 
+def dolar_airtm(bot, update):
+    hoy, ruta_imagen = get_price_from_twiter.delay('theairtm')
+    if hoy:
+        mensaje = 'Tasa del dia'
+    else:
+        mensaje = 'Hoy no se ha publicado tasa aun, se muestra la anterior'
+
+    file_ = os.path.join(settings.BASE_DIR, ruta_imagen_tasa)
+    foto = open(file_, "rb")
+    bot.sendPhoto(update.message.chat_id, photo=foto, caption=mensaje)
 
 def enviar_mensajes_grupos(bot, update, args):
     cadena_sin_el_comando = ' '.join(args)
@@ -1670,6 +1680,7 @@ def main():
     dp.add_handler(CommandHandler("set_alarma_ethereum", set_alarma_ethereum))
     dp.add_handler(CommandHandler("set_alarma_litecoin", set_alarma_litecoin))
     dp.add_handler(CommandHandler("dolartoday", dolartoday))
+    dp.add_handler(CommandHandler("dolar_airtm", dolar_airtm))
     dp.add_handler(CommandHandler("masivo", enviar_mensajes_todos))
     dp.add_handler(CommandHandler("yt2mp3", yt_a_mp3, pass_args=True))
     dp.add_handler(CommandHandler("test_envio", test_envio, pass_args=True))
