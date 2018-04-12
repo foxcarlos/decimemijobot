@@ -6,6 +6,7 @@ from time import sleep
 from pytube import YouTube
 import os
 
+from django.conf import settings
 from emoji import emojize
 # celery -A pyloro worker -l info
 
@@ -90,7 +91,7 @@ def api_tuiter():
     return api
 
 @app.task
-def get_price_from_twiter(nombre):
+def get_price_from_twiter(chat_id, nombre):
 
     def _validar_condicion(usuario_tuiter, status):
         if usuario_tuiter == 'theairtm':
@@ -133,17 +134,26 @@ def get_price_from_twiter(nombre):
 
             if today == datetime.now().date():
                 if response_ruta:
-                    return True, response_ruta
+                    response = True, response_ruta
                     break
             else:
                 if response_ruta:
-                    return False, response_ruta
+                    response =  False, response_ruta
                     break
+        return response
 
-        return False, 'No se consiguieron Twits'
 
     stuff = get_stuff(nombre)
-    return get_tweets(stuff, 20, nombre)
+    hoy, ruta_img = get_tweets(stuff, 20, nombre)
+    if hoy:
+        mensaje = 'Tasa del dia'
+    else:
+        mensaje = 'Hoy no se ha publicado tasa aun, se muestra la anterior'
+
+    print(settings.BASE_DIR, ruta_img)
+    file_ = os.path.join(settings.BASE_DIR, ruta_img)
+    foto = open(file_, "rb")
+    bot.sendPhoto(chat_id, photo=foto, caption=mensaje)
 
 
     # html_page = urllib2.urlopen(url).read()

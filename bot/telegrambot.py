@@ -1281,15 +1281,8 @@ def dolartoday(bot, update):
     print(update.message)
 
 def dolar_airtm(bot, update):
-    hoy, ruta_imagen = get_price_from_twiter.delay('theairtm')
-    if hoy:
-        mensaje = 'Tasa del dia'
-    else:
-        mensaje = 'Hoy no se ha publicado tasa aun, se muestra la anterior'
-
-    file_ = os.path.join(settings.BASE_DIR, ruta_imagen_tasa)
-    foto = open(file_, "rb")
-    bot.sendPhoto(update.message.chat_id, photo=foto, caption=mensaje)
+    chat_id = update.message.chat_id
+    hoy, ruta_imagen = get_price_from_twiter.delay(chat_id, 'theairtm')
 
 def enviar_mensajes_grupos(bot, update, args):
     cadena_sin_el_comando = ' '.join(args)
