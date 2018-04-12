@@ -9,6 +9,11 @@ import os
 from emoji import emojize
 # celery -A pyloro worker -l info
 
+from datetime import datetime
+from bs4 import BeautifulSoup
+import urllib.request as urllib2
+import urllib
+import tweepy
 
 @app.task
 def pool_message(users, cadena_sin_el_comando):
@@ -71,4 +76,81 @@ def yt2mp3(chat_id, url):
     #        parse_mode="html", text=emojize(msg_response[0],
     #            use_aliases=True)
     #        )
+
+
+def api_tuiter():
+    consumer_key = "wz6LRrWGEj0cfOsSqNKLg"
+    consumer_secret = "JQUF9IFiFOpzjpTKYxsbKl5QV6o0baoD37fxFpBEE"
+    access_token = "23130430-jfgPU8pnQks4AuW5XpS9Wfg3IaYMd4jB88zw8nPm4"
+    access_token_secret = "8q9haKn2GrtqDmqMjxRCH0x8UEst1Ckt33AsnJYk"
+
+    auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
+    auth.set_access_token(access_token, access_token_secret)
+    api = tweepy.API(auth)
+    return api
+
+@app.task
+def get_price_from_twiter(nombre):
+
+    def _validar_condicion(usuario_tuiter, status):
+        if usuario_tuiter == 'theairtm':
+            if 'Tasa' in status.text and '#Ve' in status.text:
+                return True
+        elif usuario_tuiter == 'dolarproco':
+            if 'PRECIO DEL MERCADO PARALELO' in status.text:
+                return True
+        elif usuario_tuiter == 'MonitorDolarVe':
+            if u'paralelo en Venezuela (en Bs.)' in status.text:
+                return True
+        else:
+            return False
+        return False
+
+    def get_stuff(nombre=None):
+        api = api_tuiter()
+        stuff = tweepy.Cursor(api.user_timeline, screen_name = nombre, include_rts = True)
+        return stuff
+
+    def descargar_imagen(nombre, status):
+        if _validar_condicion(nombre, status):
+            response = ''
+            media = status.entities.get('media')
+            if media:
+                url_imagen = media[0].get('media_url')
+                if url_imagen:
+                    ruta_imagen_tasa = 'graficos/tasa_{0}.jpg'.format(nombre)
+                    urllib2.urlretrieve(url_imagen, ruta_imagen_tasa)
+                    # file_ = os.path.join(settings.BASE_DIR, ruta_imagen_tasa)
+                    # foto = open(file_, "rb")
+                    # bot.sendPhoto(update.message.chat_id, photo=foto)
+                    response = ruta_imagen_tasa
+            return response
+
+    def get_tweets(stuff, n, nombre):
+        for index, status in enumerate(stuff.items(n)):
+            today = status.created_at.date()
+            response_ruta = descargar_imagen(nombre, status)
+
+            if today == datetime.now().date():
+                if response_ruta:
+                    return True, response_ruta
+                    break
+            else:
+                if response_ruta:
+                    return False, response_ruta
+                    break
+
+        return False, 'No se consiguieron Twits'
+
+    stuff = get_stuff(nombre)
+    return get_tweets(stuff, 20, nombre)
+
+
+    # html_page = urllib2.urlopen(url).read()
+    # soup = BeautifulSoup(html_page, "html.parser")
+
+    # images = []
+    # for img in soup.findAll('img'):
+    # images.append(img.get('src'))
+    # print(img.get("src"))
 
