@@ -1288,6 +1288,7 @@ def dolar_procom(bot, update):
 
 def dolar_otros(bot, update, nombre):
     chat_id = update.message.chat_id
+    import ipdb; ipdb.set_trace() # BREAKPOINT
     hoy, ruta_imagen = get_price_from_twiter.delay(chat_id, nombre)
 
     if hoy:
