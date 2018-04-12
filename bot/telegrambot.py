@@ -1680,6 +1680,7 @@ def main():
     dp.add_handler(CommandHandler("set_alarma_litecoin", set_alarma_litecoin))
     dp.add_handler(CommandHandler("dolartoday", dolartoday))
     dp.add_handler(CommandHandler("dolar_airtm", dolar_airtm))
+    dp.add_handler(CommandHandler("dolar_procom", dolar_procom))
     dp.add_handler(CommandHandler("masivo", enviar_mensajes_todos))
     dp.add_handler(CommandHandler("yt2mp3", yt_a_mp3, pass_args=True))
     dp.add_handler(CommandHandler("test_envio", test_envio, pass_args=True))
