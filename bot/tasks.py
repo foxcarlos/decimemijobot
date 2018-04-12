@@ -121,9 +121,6 @@ def get_price_from_twiter(chat_id, nombre):
                 if url_imagen:
                     ruta_imagen_tasa = 'graficos/tasa_{0}.jpg'.format(nombre)
                     urllib2.urlretrieve(url_imagen, ruta_imagen_tasa)
-                    # file_ = os.path.join(settings.BASE_DIR, ruta_imagen_tasa)
-                    # foto = open(file_, "rb")
-                    # bot.sendPhoto(update.message.chat_id, photo=foto)
                     response = ruta_imagen_tasa
             return response
 
@@ -144,6 +141,9 @@ def get_price_from_twiter(chat_id, nombre):
 
 
     stuff = get_stuff(nombre)
+    return get_tweets(stuff, 20, nombre)
+
+    """
     hoy, ruta_img = get_tweets(stuff, 20, nombre)
     if hoy:
         mensaje = 'Tasa del dia'
@@ -153,7 +153,7 @@ def get_price_from_twiter(chat_id, nombre):
     print(settings.BASE_DIR, ruta_img)
     file_ = os.path.join(settings.BASE_DIR, ruta_img)
     foto = open(file_, "rb")
-    DjangoTelegramBot.dispatcher.bot.sendPhoto(chat_id, photo=foto, caption=mensaje)
+    DjangoTelegramBot.dispatcher.bot.sendPhoto(chat_id, photo=foto, caption=mensaje)"""
 
 
     # html_page = urllib2.urlopen(url).read()
