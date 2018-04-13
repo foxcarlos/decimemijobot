@@ -101,10 +101,16 @@ class Command(BaseCommand):
             if enviar:
                 # Envio el Alerta
                 try:
-                    DjangoTelegramBot.dispatcher.bot.sendMessage(
+                    message = DjangoTelegramBot.dispatcher.bot.sendMessage(
                             chat.chat_id,
                             mensaje_a_chat)
+
+                    chat_msg_id = message.message_id
+                    DjangoTelegramBot.dispatcher.bot.pinChatMessage(
+                            chat_id=chat.chat_id,
+                            msg_id=chat_msg_id)
                 except Exception as E:
+                    print('Error Alarmas', E)
                     continue
 
                 # Actualizo la Fecha
