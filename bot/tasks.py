@@ -155,8 +155,8 @@ def get_price_from_twiter(chat_id, nombre):
         message = DjangoTelegramBot.dispatcher.bot.sendPhoto(
                 chat_id, photo=foto, caption=mensaje)
     except:
-    file_ = os.path.join(settings.BASE_DIR, ruta_img)
-    foto = open(file_, "rb")
+        file_ = os.path.join(settings.BASE_DIR, ruta_img)
+        foto = open(file_, "rb")
 
         message = DjangoTelegramBot.dispatcher.bot.sendPhoto(
                 chat_id, photo=foto, caption=mensaje)
