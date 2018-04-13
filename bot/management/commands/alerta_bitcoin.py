@@ -106,6 +106,7 @@ class Command(BaseCommand):
                             mensaje_a_chat)
 
                     try:
+                        import ipdb; ipdb.set_trace() # BREAKPOINT
                         chat_msg_id = message.message_id
                         DjangoTelegramBot.dispatcher.bot.pinChatMessage(
                                 chat_id=chat.chat_id,
