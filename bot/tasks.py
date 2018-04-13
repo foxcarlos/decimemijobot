@@ -95,7 +95,7 @@ def get_price_from_twiter(chat_id, nombre):
 
     def _validar_condicion(usuario_tuiter, status):
         if usuario_tuiter == 'theairtm':
-            if 'Tasa' in status.text and '#Ve' in status.text:
+            if 'Tasa' in status.text and '#Ven' in status.text:
                 return True
         elif usuario_tuiter == 'dolarproco':
             if 'PRECIO DEL MERCADO PARALELO' in status.text:
@@ -150,8 +150,13 @@ def get_price_from_twiter(chat_id, nombre):
     print(settings.BASE_DIR, ruta_img)
     file_ = os.path.join(settings.BASE_DIR, ruta_img)
     foto = open(file_, "rb")
-    message = DjangoTelegramBot.dispatcher.bot.sendPhoto(
-            chat_id, photo=foto, caption=mensaje)
+    try:
+        message = DjangoTelegramBot.dispatcher.bot.sendPhoto(
+                chat_id, photo=foto, caption=mensaje)
+    except:
+        message = DjangoTelegramBot.dispatcher.bot.sendPhoto(
+                chat_id, photo=foto, caption=mensaje)
+
     chat_msg_id = message.message_id
     print(chat_msg_id)
     DjangoTelegramBot.dispatcher.bot.pinChatMessage(
