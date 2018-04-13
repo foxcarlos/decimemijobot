@@ -152,7 +152,7 @@ def get_price_from_twiter(chat_id, nombre):
     foto = open(file_, "rb")
     message = DjangoTelegramBot.dispatcher.bot.sendPhoto(
             chat_id, photo=foto, caption=mensaje)
-    chat_msg_id = message.get('message_id')
+    chat_msg_id = message.message_id
     print(chat_msg_id)
 
 
