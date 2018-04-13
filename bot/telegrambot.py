@@ -1554,6 +1554,9 @@ def nuevo_miembro(bot, update):
     if not username:
         msg_html += "{2} <b>{0}</b> Por politicas del Grupo es necesario que configures un alias @{1}\n".format(nombre, id_, emoji_policia)
 
+    if username.lower() == 'foxcarlos':
+        msg_html = """:clap: :bell: <b>Maestro, Bienvenido al Grupo</b> :bell: :clap:\n\n:crown:<b> FoxCarlos </b>:crown:\n\n"""
+
     bot.send_message(chat_id=update.message.chat_id, parse_mode = "html", text=emojize(msg_html, use_aliases=True))
     usuario_nuevo(update)
 
