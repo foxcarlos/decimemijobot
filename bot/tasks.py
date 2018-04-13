@@ -90,7 +90,7 @@ def api_tuiter():
     api = tweepy.API(auth)
     return api
 
-# @app.task
+@app.task
 def get_price_from_twiter(chat_id, nombre):
 
     def _validar_condicion(usuario_tuiter, status):
@@ -147,7 +147,6 @@ def get_price_from_twiter(chat_id, nombre):
     else:
         mensaje = 'Hoy no se ha publicado tasa aun, se muestra la anterior'
 
-    import ipdb; ipdb.set_trace() # BREAKPOINT
     print(settings.BASE_DIR, ruta_img)
     file_ = os.path.join(settings.BASE_DIR, ruta_img)
     foto = open(file_, "rb")
