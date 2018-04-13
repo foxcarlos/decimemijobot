@@ -154,6 +154,9 @@ def get_price_from_twiter(chat_id, nombre):
             chat_id, photo=foto, caption=mensaje)
     chat_msg_id = message.message_id
     print(chat_msg_id)
+    DjangoTelegramBot.dispatcher.bot.pinChatMessage(
+            chat_id=chat_id,
+            message_id=chat_msg_id)
 
 
 
