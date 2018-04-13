@@ -90,7 +90,7 @@ def api_tuiter():
     api = tweepy.API(auth)
     return api
 
-@app.task
+# @app.task
 def get_price_from_twiter(chat_id, nombre):
 
     def _validar_condicion(usuario_tuiter, status):
