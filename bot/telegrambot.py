@@ -1284,7 +1284,7 @@ def dolar_airtm(bot, update):
     dolar_otros(bot, update, 'theairtm')
 
 def dolar_procom(bot, update):
-    dolar_otros(bot, update, 'dolarproco')
+    dolar_otros(bot, update, 'dolarprocom')
 
 def dolar_otros(bot, update, nombre):
     chat_id = update.message.chat_id
