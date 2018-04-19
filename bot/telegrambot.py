@@ -944,7 +944,6 @@ def calc(bot, update):
             # Esto es para que solo pase por aqui cuando se solicite
             # cualquier moneda menos el BTC porque ese se calcula en la
             # sentecia de arriba
-            import ipdb; ipdb.set_trace() # BREAKPOINT
             if moneda.upper() != "BTC" and moneda.upper() in list(data):
                 data = get_price_usd_eur("btc", market)
                 monto, total_btc, total_dolar = valida_calcula_moneda(
@@ -1240,6 +1239,11 @@ def get_dolartoday2():
     # localbitcoin_e = float(rq.get("EUR").get("localbitcoin_ref"))
     emoji_barril = u'\U0001F6E2'
 
+    # RUB
+    #monto, btc, usd = get_rublo()
+    #"U+1F1F7"
+
+
     response = """:speaker: DolarToday hoy USD/EUR: {0}:\n\n\
     :dollar: *DolarToday*: {1:0,.2f}\n\
     :dollar: *Implicito*: {2:0,.2f}\n\
@@ -1266,14 +1270,14 @@ def get_dolartoday2():
                     oro,
                     emoji_barril
                     )
-    import ipdb; ipdb.set_trace() # BREAKPOINT
-    valor = get_rublo()
+
     return response
 
 def get_rublo():
     data = get_price_usd_eur("btc", 'coinbase')
     monto, total_btc, total_dolar = valida_calcula_moneda(
             'RUB', 1, data)
+    monto = '{0}'.format(monto)
     return monto, total_btc, total_dolar
 
 def dolartoday(bot, update):
