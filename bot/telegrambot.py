@@ -1271,9 +1271,8 @@ def get_dolartoday2():
 
 def get_rublo():
     data = get_price_usd_eur("btc", 'coinbase')
-    monto, total_btc, total_dolar = valida_calcula_moneda(
+    return monto, total_btc, total_dolar = valida_calcula_moneda(
             'RUB', 1, data)
-
 
 def dolartoday(bot, update):
     if not valida_autorizacion_comando(bot, update):
