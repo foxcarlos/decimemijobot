@@ -900,6 +900,7 @@ def get_price_usd_eur(coin_ticker, market='coinbase'):
     return response
 
 def valida_calcula_moneda(moneda, monto, data):
+    import ipdb; ipdb.set_trace() # BREAKPOINT
     if moneda == 'VEF':
         total_btc = float(monto) / (data.get("USD") * get_dolartoday())
         total_dolar = float(monto) / get_dolartoday()
