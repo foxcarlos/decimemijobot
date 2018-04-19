@@ -1265,7 +1265,14 @@ def get_dolartoday2():
                     oro,
                     emoji_barril
                     )
+    import ipdb; ipdb.set_trace() # BREAKPOINT
+    valor = get_rublo()
     return response
+
+def get_rublo():
+    data = get_price_usd_eur("btc", 'coinbase')
+    monto, total_btc, total_dolar = valida_calcula_moneda(
+            moneda.upper(), 1, data)
 
 
 def dolartoday(bot, update):
