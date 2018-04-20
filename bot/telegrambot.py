@@ -1239,7 +1239,6 @@ def get_dolartoday2():
     # localbitcoin_e = float(rq.get("EUR").get("localbitcoin_ref"))
     emoji_barril = u'\U0001F6E2'
 
-    import ipdb; ipdb.set_trace() # BREAKPOINT
     # RUB
     monto, btc, usd = get_rublo()
     rublo_vef = usd * dolartoday
@@ -1281,13 +1280,8 @@ def get_dolartoday2():
 
 def get_rublo():
     data = get_price_usd_eur("btc", 'coinbase')
-
-    total_btc = 1.0 / data.get('RUB')
-    total_dolar = 1.0 / (data.get('RUB') / data.get('USD'))
-
     monto, total_btc, total_dolar = valida_calcula_moneda(
             'RUB', 1, data)
-    # monto = '{0}'.format(monto)
     return monto, total_btc, total_dolar
 
 def dolartoday(bot, update):
