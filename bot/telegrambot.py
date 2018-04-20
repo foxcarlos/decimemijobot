@@ -1239,6 +1239,7 @@ def get_dolartoday2():
     # localbitcoin_e = float(rq.get("EUR").get("localbitcoin_ref"))
     emoji_barril = u'\U0001F6E2'
 
+    import ipdb; ipdb.set_trace() # BREAKPOINT
     # RUB
     monto, btc, usd = get_rublo()
     rublo_vef = usd * dolartoday
@@ -1256,7 +1257,7 @@ def get_dolartoday2():
     :euro: *Implicito*: {7:0,.2f}\n\
     :euro: *Dicom*: {8:0,.2f}\n\
     :euro: *Cucuta*: {9:0,.2f}\n\n\
-    {12} **: {13:0,.2f}\n\n\
+    {12} *RUB*: {13:0,.2f}\n\n\
     {14} *Petroleo* USD: {10:0,.2f}\n\
     :moneybag: *Oro* USD: {11:0,.2f}\n\
         """.format(fecha,
