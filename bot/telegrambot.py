@@ -1281,6 +1281,10 @@ def get_dolartoday2():
 
 def get_rublo():
     data = get_price_usd_eur("btc", 'coinbase')
+
+    total_btc = 1.0 / data.get(moneda)
+    total_dolar = 1.0 / (data.get(moneda) / data.get('USD'))
+
     monto, total_btc, total_dolar = valida_calcula_moneda(
             'RUB', 1, data)
     # monto = '{0}'.format(monto)
