@@ -1240,8 +1240,10 @@ def get_dolartoday2():
     emoji_barril = u'\U0001F6E2'
 
     # RUB
-    #monto, btc, usd = get_rublo()
-    #"U+1F1F7"
+    monto, btc, usd = get_rublo()
+    rublo_vef = usd * dolartoday
+    emoji_bandera_rusa = u'\U0001F1F7\U0001F1FA'
+
 
 
     response = """:speaker: DolarToday hoy USD/EUR: {0}:\n\n\
@@ -1253,8 +1255,9 @@ def get_dolartoday2():
     :euro: *DolarToday*: {6:0,.2f}\n\
     :euro: *Implicito*: {7:0,.2f}\n\
     :euro: *Dicom*: {8:0,.2f}\n\
-    :euro: *Cucuta*: {9:0,.2f}\n\n
-    {12} *Petroleo* USD: {10:0,.2f}\n\
+    :euro: *Cucuta*: {9:0,.2f}\n\n\
+    {12} **: {13:0,.2f}\n\n\
+    {14} *Petroleo* USD: {10:0,.2f}\n\
     :moneybag: *Oro* USD: {11:0,.2f}\n\
         """.format(fecha,
                     dolartoday,
@@ -1268,6 +1271,8 @@ def get_dolartoday2():
                     cucuta_e,
                     barril,
                     oro,
+                    emoji_bandera_rusa,
+                    rublo_vef,
                     emoji_barril
                     )
 
@@ -1277,7 +1282,7 @@ def get_rublo():
     data = get_price_usd_eur("btc", 'coinbase')
     monto, total_btc, total_dolar = valida_calcula_moneda(
             'RUB', 1, data)
-    monto = '{0}'.format(monto)
+    # monto = '{0}'.format(monto)
     return monto, total_btc, total_dolar
 
 def dolartoday(bot, update):
