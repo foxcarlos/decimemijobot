@@ -949,6 +949,7 @@ def calc(bot, update):
                 monto, total_btc, total_dolar = valida_calcula_moneda(
                         moneda.upper(), monto, data)
 
+                total_vef = float(monto) * (total_dolar * get_dolartoday())
                 response = """:moneybag: El calculo para <b>{0}</b> <i>{4}</i> es de :\n\n:chart_with_downwards_trend: BTC: {1:,.9f}\n:dollar: Dolares: {2:,.2f}\n\n<b>Nota:</b> Precios basados en: {3}""".format(
                         monto, total_btc, total_dolar, market.capitalize(), moneda.upper())
         except Exception as e:

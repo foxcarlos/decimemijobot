@@ -95,7 +95,8 @@ def get_price_from_twiter(chat_id, nombre):
 
     def _validar_condicion(usuario_tuiter, status):
         if usuario_tuiter == 'theairtm':
-            if 'Tasa' in status.text and '#Ven' in status.text:
+            #if 'Tasa USDTasa' in status.text and '#Ven' in status.text:
+            if 'Tasa USD' in status.text:
                 return True
         elif usuario_tuiter == 'dolarprocom':
             if 'PRECIO DEL MERCADO PARALELO' in status.text:
