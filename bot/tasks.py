@@ -177,7 +177,7 @@ def get_price_from_twiter(chat_id, nombre):
     # for img in soup.findAll('img'):
     # images.append(img.get('src'))
     # print(img.get("src"))
-
+"""
 @app.task
 def airtm_dolar_vef(chat_id):
     instancia = AirTM()
@@ -186,6 +186,6 @@ def airtm_dolar_vef(chat_id):
     dolar_airtm = instancia.obtener_precio()
     instancia.cerrar()
     print(dolar_airtm)
-    return dolar_airtm
+    return dolar_airtm"""
 
 
