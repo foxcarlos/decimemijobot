@@ -1301,10 +1301,6 @@ def dolartoday(bot, update):
 def dolar_airtm(bot, update):
     chat_id = update.message.chat_id
     # dolar_otros(bot, update, 'theairtm')
-    bot.sendMessage(update.message.chat_id, parse_mode="html",
-            text=emojize("Espere un momento mientras obtengo el precio",
-                use_aliases=True)
-            )
 
     """valor_usd_bsf = airtm_dolar_vef.delay(chat_id)
     bot.sendMessage(update.message.chat_id, parse_mode="html",
