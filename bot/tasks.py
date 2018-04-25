@@ -15,6 +15,8 @@ from bs4 import BeautifulSoup
 import urllib.request as urllib2
 import urllib
 import tweepy
+from lib.airtm import AirTM
+
 
 @app.task
 def pool_message(users, cadena_sin_el_comando):
@@ -168,7 +170,6 @@ def get_price_from_twiter(chat_id, nombre):
             message_id=chat_msg_id)
 
 
-
     # html_page = urllib2.urlopen(url).read()
     # soup = BeautifulSoup(html_page, "html.parser")
 
@@ -176,4 +177,15 @@ def get_price_from_twiter(chat_id, nombre):
     # for img in soup.findAll('img'):
     # images.append(img.get('src'))
     # print(img.get("src"))
+
+@app.task
+def airtm_dolar_vef(chat_id):
+    instancia = AirTM()
+    instancia.verfifica_login()
+    time.sleep(5)
+    dolar_airtm = instancia.obtener_precio()
+    instancia.cerrar()
+    print(dolar_airtm)
+    return dolar_airtm
+
 

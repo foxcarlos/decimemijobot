@@ -19,7 +19,8 @@ from django.core.exceptions import ObjectDoesNotExist
 from bot.scrapy import NoticiasPanorama
 from bot.models import Alerta, AlertaUsuario, User, Grupo, Comando, ComandoEstado, Contrato, PersonaContrato
 
-from bot.tasks import pool_message, grupo_message, yt2mp3, get_price_from_twiter
+from bot.tasks import pool_message, grupo_message, yt2mp3, get_price_from_twiter, airtm_dolar_vef
+
 from datetime import datetime
 
 logger = logging.getLogger(__name__)
@@ -1298,7 +1299,18 @@ def dolartoday(bot, update):
     print(update.message)
 
 def dolar_airtm(bot, update):
-    dolar_otros(bot, update, 'theairtm')
+    chat_id = update.message.chat_id
+    # dolar_otros(bot, update, 'theairtm')
+    bot.sendMessage(update.message.chat_id, parse_mode="html",
+            text=emojize("Espere un momento mientras obtengo el precio",
+                use_aliases=True)
+            )
+
+    valor_usd_bsf = airtm_dolar_vef.delay(chat_id)
+    bot.sendMessage(update.message.chat_id, parse_mode="html",
+            text=emojize(valor_usd_bsf, use_aliases=True)
+            )
+
 
 def dolar_procom(bot, update):
     dolar_otros(bot, update, 'dolarprocom')
