@@ -15,7 +15,7 @@ from bs4 import BeautifulSoup
 import urllib.request as urllib2
 import urllib
 import tweepy
-from lib.airtm import AirTM
+# from lib.airtm import AirTM
 
 
 @app.task
