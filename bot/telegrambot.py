@@ -1306,10 +1306,10 @@ def dolar_airtm(bot, update):
                 use_aliases=True)
             )
 
-    valor_usd_bsf = airtm_dolar_vef.delay(chat_id)
+    """valor_usd_bsf = airtm_dolar_vef.delay(chat_id)
     bot.sendMessage(update.message.chat_id, parse_mode="html",
             text=emojize(valor_usd_bsf, use_aliases=True)
-            )
+            )"""
 
 
 def dolar_procom(bot, update):
