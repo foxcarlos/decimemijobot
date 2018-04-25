@@ -10,7 +10,7 @@ from datetime import datetime
 import time
 import logging
 
-
+"""
 class AirTM(object):
     def __init__(self):
         '''.'''
@@ -81,3 +81,4 @@ class AirTM(object):
     def cerrar(self):
         '''.'''
         self.driver.close()
+"""
