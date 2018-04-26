@@ -15,7 +15,6 @@ from bs4 import BeautifulSoup
 import urllib.request as urllib2
 import urllib
 import tweepy
-# from lib.airtm import AirTM
 
 
 @app.task
@@ -43,6 +42,7 @@ def grupo_message(grupos, cadena_sin_el_comando):
 @app.task
 def yt2mp3(chat_id, url):
     msg_response = []
+
     def convert_to_mp3(stream, file_handle):
         import os
         import re
@@ -75,11 +75,6 @@ def yt2mp3(chat_id, url):
     file_.close()
     os.remove(archivo)
 
-    #DjangoTelegramBot.dispatcher.bot.sendMessage(chat_id,
-    #        parse_mode="html", text=emojize(msg_response[0],
-    #            use_aliases=True)
-    #        )
-
 
 def api_tuiter():
     consumer_key = "wz6LRrWGEj0cfOsSqNKLg"
@@ -92,12 +87,13 @@ def api_tuiter():
     api = tweepy.API(auth)
     return api
 
+
 @app.task
 def get_price_from_twiter(chat_id, nombre):
 
     def _validar_condicion(usuario_tuiter, status):
         if usuario_tuiter == 'theairtm':
-            #if 'Tasa USDTasa' in status.text and '#Ven' in status.text:
+            # if 'Tasa USDTasa' in status.text and '#Ven' in status.text:
             if 'Tasa USD' in status.text:
                 return True
         elif usuario_tuiter == 'dolarprocom':
@@ -112,7 +108,7 @@ def get_price_from_twiter(chat_id, nombre):
 
     def get_stuff(nombre=None):
         api = api_tuiter()
-        stuff = tweepy.Cursor(api.user_timeline, screen_name = nombre, include_rts = True)
+        stuff = tweepy.Cursor(api.user_timeline, screen_name=nombre, include_rts=True)
         return stuff
 
     def descargar_imagen(nombre, status):
@@ -138,10 +134,9 @@ def get_price_from_twiter(chat_id, nombre):
                     break
             else:
                 if response_ruta:
-                    response =  False, response_ruta
+                    response = False, response_ruta
                     break
         return response
-
 
     stuff = get_stuff(nombre)
     hoy, ruta_img = get_tweets(stuff, 50, nombre)
@@ -168,16 +163,3 @@ def get_price_from_twiter(chat_id, nombre):
     DjangoTelegramBot.dispatcher.bot.pinChatMessage(
             chat_id=chat_id,
             message_id=chat_msg_id)
-
-"""
-@app.task
-def airtm_dolar_vef(chat_id):
-    instancia = AirTM()
-    instancia.verfifica_login()
-    time.sleep(5)
-    dolar_airtm = instancia.obtener_precio()
-    instancia.cerrar()
-    print(dolar_airtm)
-    return dolar_airtm"""
-
-

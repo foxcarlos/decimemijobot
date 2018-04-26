@@ -20,7 +20,6 @@ from bot.scrapy import NoticiasPanorama
 from bot.models import Alerta, AlertaUsuario, User, Grupo, Comando, ComandoEstado, Contrato, PersonaContrato
 
 from bot.tasks import pool_message, grupo_message, yt2mp3, get_price_from_twiter
-# airtm_dolar_vef
 
 from datetime import datetime
 
@@ -1299,17 +1298,6 @@ def dolartoday(bot, update):
     usuario_nuevo(update)
     print(update.message)
 
-"""
-def dolar_airtm(bot, update):
-    chat_id = update.message.chat_id
-    # dolar_otros(bot, update, 'theairtm')
-
-    '''valor_usd_bsf = airtm_dolar_vef.delay(chat_id)
-    bot.sendMessage(update.message.chat_id, parse_mode="html",
-            text=emojize(valor_usd_bsf, use_aliases=True)
-            )'''
-"""
-
 def dolar_procom(bot, update):
     dolar_otros(bot, update, 'dolarprocom')
 
@@ -1709,7 +1697,6 @@ def main():
     dp.add_handler(CommandHandler("set_alarma_ethereum", set_alarma_ethereum))
     dp.add_handler(CommandHandler("set_alarma_litecoin", set_alarma_litecoin))
     dp.add_handler(CommandHandler("dolartoday", dolartoday))
-    dp.add_handler(CommandHandler("dolar_airtm", dolar_airtm))
     dp.add_handler(CommandHandler("dolar_procom", dolar_procom))
     dp.add_handler(CommandHandler("masivo", enviar_mensajes_todos))
     dp.add_handler(CommandHandler("yt2mp3", yt_a_mp3, pass_args=True))
