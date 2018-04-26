@@ -169,14 +169,6 @@ def get_price_from_twiter(chat_id, nombre):
             chat_id=chat_id,
             message_id=chat_msg_id)
 
-
-    # html_page = urllib2.urlopen(url).read()
-    # soup = BeautifulSoup(html_page, "html.parser")
-
-    # images = []
-    # for img in soup.findAll('img'):
-    # images.append(img.get('src'))
-    # print(img.get("src"))
 """
 @app.task
 def airtm_dolar_vef(chat_id):
