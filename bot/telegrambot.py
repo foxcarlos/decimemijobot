@@ -1477,22 +1477,27 @@ def valida_permiso_comando(bot, update):
 
 
 def set_alarma_dolartoday(bot, update):
+    usuario_nuevo(update)
     if valida_permiso_comando(bot, update):
         set_alarma(bot, update, "dolartoday")
 
 def set_alarma_dolarairtm(bot, update):
+    usuario_nuevo(update)
     if valida_permiso_comando(bot, update):
         set_alarma(bot, update, "dolarairtm")
 
 def set_alarma_bitcoin(bot, update):
+    usuario_nuevo(update)
     if valida_permiso_comando(bot, update):
         set_alarma(bot, update, "bitcoin")
 
 def set_alarma_ethereum(bot, update):
+    usuario_nuevo(update)
     if valida_permiso_comando(bot, update):
         set_alarma(bot, update, "ethereum")
 
 def set_alarma_litecoin(bot, update):
+    usuario_nuevo(update)
     if valida_permiso_comando(bot, update):
         set_alarma(bot, update, "litecoin")
 
