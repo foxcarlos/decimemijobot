@@ -1256,6 +1256,8 @@ def get_dolartoday2():
 
     response = """:speaker: DolarToday hoy USD/EUR: {0}:\n\n\
     :dollar: <b>DolarToday</b>: {1:0,.2f}\n\
+    {14} <b>Dolar LBTC</b>: {5:0,.2f}\n\
+    {14} <b>Dolar AirTM Bs</b>: {15}\n\n\
     :dollar: <b>Implicito</b>: {2:0,.2f}\n\
     :dollar: <b>Dicom</b>: {3:0,.2f}\n\
     :dollar: <b>Cucuta</b>: {4:0,.2f}\n\
@@ -1264,8 +1266,6 @@ def get_dolartoday2():
     :euro: <b>Dicom</b>: {8:0,.2f}\n\
     :euro: <b>Cucuta</b>: {9:0,.2f}\n\n\
     {12} <b>RUB Bs</b>: {13:0,.2f}\n\n\
-    {12} <b>Dolar LBTC</b>: {5:0,.2f}\n\n\
-    {14} <b>Dolar AirTM Bs</b>: {15}\n\n\
     {16} <b>Petroleo</b> USD: {10:0,.2f}\n\
     :moneybag: <b>Oro</b> USD: {11:0,.2f}\n\
         """.format(fecha,
