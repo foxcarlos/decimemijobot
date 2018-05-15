@@ -1255,7 +1255,7 @@ def get_dolartoday2():
     emoji_bandera_vzla = u'\U0001F1FB\U0001F1EA'
 
     response = """:speaker: DolarToday hoy USD/EUR: {0}:\n\n\
-    :dollar: <b>DolarToday</b>: {1:0,.2f}\n\
+    {14} <b>DolarToday</b>: {1:0,.2f}\n\
     {14} <b>Dolar LBTC</b>: {5:0,.2f}\n\
     {14} <b>Dolar AirTM Bs</b>: {15}\n\n\
     :dollar: <b>Implicito</b>: {2:0,.2f}\n\
