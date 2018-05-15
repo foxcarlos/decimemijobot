@@ -1737,6 +1737,7 @@ def main():
     dp.add_handler(CallbackQueryHandler(button_alarmas))
 
     dp.add_handler(CommandHandler("set_alarma_dolartoday", set_alarma_dolartoday))
+    dp.add_handler(CommandHandler("set_alarma_dolarairtm", set_alarma_dolarairtm))
     dp.add_handler(CommandHandler("set_alarma_ethereum", set_alarma_ethereum))
     dp.add_handler(CommandHandler("set_alarma_litecoin", set_alarma_litecoin))
     dp.add_handler(CommandHandler("dolartoday", dolartoday))
