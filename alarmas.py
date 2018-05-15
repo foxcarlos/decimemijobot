@@ -26,17 +26,17 @@ while True:
     sleep(30)
 
     print("Ejecutando Alarma dolarAirTM")
-    comando2 = "python {0} alerta_bitcoin dolarairtm".format(django_mng)
-    run_comando(comando2)
-    sleep(30)
-
-    print("Ejecutando Alarma Ethereum")
-    comando3 = "python {0} alerta_bitcoin ethereum".format(django_mng)
+    comando3 = "python {0} alerta_bitcoin dolarairtm".format(django_mng)
     run_comando(comando3)
     sleep(30)
 
-    print("Ejecutando Alarma LiteCoin")
-    comando4 = "python {0} alerta_bitcoin litecoin".format(django_mng)
+    print("Ejecutando Alarma Ethereum")
+    comando4 = "python {0} alerta_bitcoin ethereum".format(django_mng)
     run_comando(comando4)
+    sleep(30)
+
+    print("Ejecutando Alarma LiteCoin")
+    comando5 = "python {0} alerta_bitcoin litecoin".format(django_mng)
+    run_comando(comando5)
     sleep(30)
 
