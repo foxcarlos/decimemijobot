@@ -1231,7 +1231,7 @@ def get_dolartoday2():
     implicito = float(rq.get("USD").get("efectivo"))
     dicom = float(rq.get("USD").get("sicad2"))
     cucuta = float(rq.get("USD").get("efectivo_cucuta"))
-    localbitcoin = float(rq.get("USD").get("localbitcoin_ref"))
+    # localbitcoin = float(rq.get("USD").get("localbitcoin_ref"))
     barril = float(rq.get("MISC").get("petroleo").replace(",", "."))
     oro = float(rq.get("GOLD").get("rate"))
     fecha = datetime.now().strftime("%d-%m-%Y")
@@ -1244,9 +1244,13 @@ def get_dolartoday2():
     # localbitcoin_e = float(rq.get("EUR").get("localbitcoin_ref"))
     emoji_barril = u'\U0001F6E2'
 
+    # LocalBitcoin
+    # https://min-api.cryptocompare.com/data/price?fsym=USD&tsyms=VEF
+    localbitcoin = get_localbitcoin_precio("USD")
+
     # RUB
-    monto, btc, usd = get_rublo()
-    rublo_vef = usd * dolartoday
+    rublo_vef = get_localbitcoin_precio("RUB")
+
     emoji_bandera_rusa = u'\U0001F1F7\U0001F1FA'
     emoji_bandera_vzla = u'\U0001F1FB\U0001F1EA'
 
@@ -1255,12 +1259,12 @@ def get_dolartoday2():
     :dollar: <b>Implicito</b>: {2:0,.2f}\n\
     :dollar: <b>Dicom</b>: {3:0,.2f}\n\
     :dollar: <b>Cucuta</b>: {4:0,.2f}\n\
-    :dollar: <b>LocalBitcoin</b>: {5:0,.2f}\n\n\
     :euro: <b>DolarToday</b>: {6:0,.2f}\n\
     :euro: <b>Implicito</b>: {7:0,.2f}\n\
     :euro: <b>Dicom</b>: {8:0,.2f}\n\
     :euro: <b>Cucuta</b>: {9:0,.2f}\n\n\
-    {12} <b>RUB</b>: {13:0,.2f}\n\n\
+    {12} <b>RUB Bs</b>: {13:0,.2f}\n\n\
+    {12} <b>Dolar LBTC</b>: {5:0,.2f}\n\n\
     {14} <b>Dolar AirTM Bs</b>: {15}\n\n\
     {16} <b>Petroleo</b> USD: {10:0,.2f}\n\
     :moneybag: <b>Oro</b> USD: {11:0,.2f}\n\
@@ -1285,11 +1289,10 @@ def get_dolartoday2():
 
     return response
 
-def get_rublo():
-    data = get_price_usd_eur("btc", 'coinbase')
-    monto, total_btc, total_dolar = valida_calcula_moneda(
-            'RUB', 1, data)
-    return monto, total_btc, total_dolar
+def get_localbitcoin_precio(coin_ticker):
+    data = get_price_usd_eur("USD", 'coinbase')
+    monto = data.get('VEF') / data.get(coin_ticker.upper())
+    return monto
 
 def dolartoday(bot, update):
     if not valida_autorizacion_comando(bot, update):
