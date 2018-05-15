@@ -25,9 +25,7 @@ SECRET_KEY = '2+(!v-t9)skqad%3637&#kj+!04!74q$ja@@ccavtf(h0)%1x!'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-# ALLOWED_HOSTS = ['localhost', 'afcb666c.ngrok.io']
-ALLOWED_HOSTS = ["decimemijobot-foxcarlos.codeanyapp.com", "localhost"]
-
+ALLOWED_HOSTS = ["decimemijobot-foxcarlos.codeanyapp.com", "localhost", '86430a18.ngrok.io']
 # Application definition
 
 INSTALLED_APPS = [
@@ -114,9 +112,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/1.10/topics/i18n/
 
-LANGUAGE_CODE = 'es-AR'
+LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = "America/Argentina/Cordoba"  # 'UTC'
+TIME_ZONE = 'UTC'
 
 USE_I18N = True
 
@@ -175,7 +173,7 @@ DJANGO_TELEGRAMBOT = {
 
 	'BOTS' : [
         {
-            'TOKEN': '336382255:AAFUWCzL7MKz_ZHFuJczzUR_oMYxp0yPRZI', #Your bot token.
+            'TOKEN': '336382255:AAFRkDSPnTZ6wmg0EGRuq83GGh5EhlGKKIE', #'520939560:AAGhLKr-T_hIsl50scMKY6AYpzLNfnT9Wtw', #Your bot token.
 
 		   #'ALLOWED_UPDATES':(Optional[list[str]]), # List the types of
 						   #updates you want your bot to receive. For example, specify
@@ -234,3 +232,4 @@ CRIPTO_MONEDAS = {
         "URL_PRICE_USD_EUR_MARKET": "https://min-api.cryptocompare.com/data/price?fsym={0}&tsyms=USD,EUR,BTC,ARS,VEF,PEN,COP,CLP,UYU,BOB,AUD,BRL,CRC,CUC,MXN,AWG,CAD,CHE,CHW,CNY,DOP,GTQ,ILS,IQD,IRR,ISK,JPY,KRW,KPW,KWD,LBP,NIO,NZD,PYG,RUB,SVC&",
         "URL_DOLARTODAY": "https://s3.amazonaws.com/dolartoday/data.json"
         }
+

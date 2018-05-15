@@ -15,7 +15,7 @@ from bs4 import BeautifulSoup
 import urllib.request as urllib2
 import urllib
 import tweepy
-
+from lib.airtm import AirTM
 
 @app.task
 def pool_message(users, cadena_sin_el_comando):
@@ -63,17 +63,20 @@ def yt2mp3(chat_id, url):
             msg_response.append(":x: <b>Ocurrio un error al procesar el arachivo</b>")
         return msg_response
 
-    yt = YouTube(url)
-    yt.register_on_complete_callback(convert_to_mp3)
-    yt.streams.filter(only_audio=True).first().download()
+    try:
+        yt = YouTube(url)
+        yt.register_on_complete_callback(convert_to_mp3)
+        yt.streams.filter(only_audio=True).first().download()
 
-    archivo = msg_response[0]
-    file_ = open("{0}".format(archivo), "rb")
-    DjangoTelegramBot.dispatcher.bot.sendAudio(chat_id,
-            audio=file_, caption=archivo)
+        archivo = msg_response[0]
+        file_ = open("{0}".format(archivo), "rb")
+        DjangoTelegramBot.dispatcher.bot.sendAudio(chat_id,
+                audio=file_, caption=archivo)
 
-    file_.close()
-    os.remove(archivo)
+        file_.close()
+        os.remove(archivo)
+    except Exception as E:
+        print(E)
 
 
 def api_tuiter():
@@ -88,13 +91,12 @@ def api_tuiter():
     return api
 
 
-@app.task
-def get_price_from_twiter(chat_id, nombre):
+# @app.task
+def get_price_from_twiter(nombre):
 
     def _validar_condicion(usuario_tuiter, status):
         if usuario_tuiter == 'theairtm':
-            # if 'Tasa USDTasa' in status.text and '#Ven' in status.text:
-            if 'Tasa USD' in status.text:
+            if 'Tasa' in status.text and '#Ven' in status.text:
                 return True
         elif usuario_tuiter == 'dolarprocom':
             if 'PRECIO DEL MERCADO PARALELO' in status.text:
@@ -127,25 +129,41 @@ def get_price_from_twiter(chat_id, nombre):
         for index, status in enumerate(stuff.items(n)):
             today = status.created_at.date()
             response_ruta = descargar_imagen(nombre, status)
+            texto = status.text
 
-            if today == datetime.now().date():
-                if response_ruta:
-                    response = True, response_ruta
+            if response_ruta:
+                if today == datetime.now().date():
+                    response = True, response_ruta, texto
+                    break
+                else:
+                    response = False, response_ruta, texto
                     break
             else:
-                if response_ruta:
-                    response = False, response_ruta
-                    break
+                response = False, '', 'No disponible'
+        return response
+
+    def parsear_tasa(texto):
+        response = ''
+        texto_descomponer = texto.split() if len(texto.split()) >= 4 else ''
+        if texto_descomponer:
+            tasa = texto_descomponer[0] if texto_descomponer[0].lower() == 'tasa' else ''
+            moneda = texto_descomponer[3] if texto_descomponer[3].lower() == 'bsf' else ''
+            if tasa and moneda:
+                response = texto_descomponer[2]
         return response
 
     stuff = get_stuff(nombre)
-    hoy, ruta_img = get_tweets(stuff, 50, nombre)
+    hoy, ruta_img, texto = get_tweets(stuff, 50, nombre)
+    return parsear_tasa(texto)
+
+    """
     if hoy:
         mensaje = 'Tasa del dia'
     else:
         mensaje = 'Hoy no se ha publicado tasa aun, se muestra la anterior'
 
     print(settings.BASE_DIR, ruta_img)
+
     file_ = os.path.join(settings.BASE_DIR, ruta_img)
     foto = open(file_, "rb")
     try:
@@ -163,3 +181,23 @@ def get_price_from_twiter(chat_id, nombre):
     DjangoTelegramBot.dispatcher.bot.pinChatMessage(
             chat_id=chat_id,
             message_id=chat_msg_id)
+            """
+
+@app.task
+def airtm_dolar_vef(chat_id):
+    # instancia = AirTM()
+
+    if not instancia.verificar_instancia_abierta():
+        instancia.abrir_navegador()
+
+    instancia.verfifica_login()
+    sleep(5)
+    dolar_airtm = instancia.obtener_precio()
+    instancia.cerrar()
+    print(dolar_airtm)
+
+    if dolar_airtm:
+        response = """El precio del Dolar AirTM es:\n\n\U0001F1FB\U0001F1EA <b>VEF:</b> {0:,.2f}""".format(dolar_airtm)
+    else:
+        response = ':x: <b>Error al consultar AirTM</b>'
+    DjangoTelegramBot.dispatcher.bot.sendMessage(chat_id, parse_mode="html", text=emojize(response, use_aliases=True))

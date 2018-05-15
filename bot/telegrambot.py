@@ -19,8 +19,9 @@ from django.core.exceptions import ObjectDoesNotExist
 from bot.scrapy import NoticiasPanorama
 from bot.models import Alerta, AlertaUsuario, User, Grupo, Comando, ComandoEstado, Contrato, PersonaContrato
 
-from bot.tasks import pool_message, grupo_message, yt2mp3, get_price_from_twiter
+from bot.tasks import pool_message, grupo_message, yt2mp3, get_price_from_twiter, airtm_dolar_vef
 
+from lib.airtm import AirTM
 from datetime import datetime
 
 logger = logging.getLogger(__name__)
@@ -756,6 +757,8 @@ def ayuda_set_alarma():
     - set_alarma_bitcoin
     - set_alarma_ethereum
     - set_alarma_litecoin
+    - set_alarma_dolarairtm
+    - set_alarma_dolartoday
 
     Ejemplo para modo de uso:
 
@@ -856,7 +859,7 @@ def all_coins(bot, update):
         mensaje_valida_autorizacion_comando(bot, update)
         return True
 
-    # bot.sendMessage(update.message.chat_id, text="Consultando... En un momento te muestro la informacion...!")
+    bot.sendMessage(update.message.chat_id, text="Consultando... En un momento te muestro la informacion...!")
     bot.sendChatAction(update.message.chat_id, "upload_document")
 
     btc = get_price(URL_BTC_USD)
@@ -1245,22 +1248,22 @@ def get_dolartoday2():
     monto, btc, usd = get_rublo()
     rublo_vef = usd * dolartoday
     emoji_bandera_rusa = u'\U0001F1F7\U0001F1FA'
-
-
+    emoji_bandera_vzla = u'\U0001F1FB\U0001F1EA'
 
     response = """:speaker: DolarToday hoy USD/EUR: {0}:\n\n\
-    :dollar: *DolarToday*: {1:0,.2f}\n\
-    :dollar: *Implicito*: {2:0,.2f}\n\
-    :dollar: *Dicom*: {3:0,.2f}\n\
-    :dollar: *Cucuta*: {4:0,.2f}\n\
-    :dollar: *LocalBitcoin*: {5:0,.2f}\n\n\
-    :euro: *DolarToday*: {6:0,.2f}\n\
-    :euro: *Implicito*: {7:0,.2f}\n\
-    :euro: *Dicom*: {8:0,.2f}\n\
-    :euro: *Cucuta*: {9:0,.2f}\n\n\
-    {12} *RUB*: {13:0,.2f}\n\n\
-    {14} *Petroleo* USD: {10:0,.2f}\n\
-    :moneybag: *Oro* USD: {11:0,.2f}\n\
+    :dollar: <b>DolarToday</b>: {1:0,.2f}\n\
+    :dollar: <b>Implicito</b>: {2:0,.2f}\n\
+    :dollar: <b>Dicom</b>: {3:0,.2f}\n\
+    :dollar: <b>Cucuta</b>: {4:0,.2f}\n\
+    :dollar: <b>LocalBitcoin</b>: {5:0,.2f}\n\n\
+    :euro: <b>DolarToday</b>: {6:0,.2f}\n\
+    :euro: <b>Implicito</b>: {7:0,.2f}\n\
+    :euro: <b>Dicom</b>: {8:0,.2f}\n\
+    :euro: <b>Cucuta</b>: {9:0,.2f}\n\n\
+    {12} <b>RUB</b>: {13:0,.2f}\n\n\
+    {14} <b>Dolar AirTM Bs</b>: {15}\n\n\
+    {16} <b>Petroleo</b> USD: {10:0,.2f}\n\
+    :moneybag: <b>Oro</b> USD: {11:0,.2f}\n\
         """.format(fecha,
                     dolartoday,
                     implicito,
@@ -1275,6 +1278,8 @@ def get_dolartoday2():
                     oro,
                     emoji_bandera_rusa,
                     rublo_vef,
+                    emoji_bandera_vzla,
+                    get_price_from_twiter('theairtm').strip(),
                     emoji_barril
                     )
 
@@ -1292,14 +1297,48 @@ def dolartoday(bot, update):
         return True
 
     user_first_name = update.message.from_user.first_name
-    bot.sendMessage(update.message.chat_id, parse_mode="Markdown", text=emojize(get_dolartoday2(),
-        use_aliases=True)
-        )
+    bot.sendMessage(update.message.chat_id, parse_mode="html",
+            text=emojize(get_dolartoday2(), use_aliases=True)
+            )
     usuario_nuevo(update)
     print(update.message)
 
+
+# instancia = AirTM()
+def dolar_airtm_scrapy(bot, update):
+    chat_id = update.message.chat_id
+
+    """
+    import time
+    if not instancia.verificar_instancia_abierta():
+        instancia.abrir_navegador()
+        time.sleep(20)
+
+    try:
+        instancia.verfifica_login()
+    except:
+        pass
+
+    time.sleep(5)
+    try:
+        dolar_airtm = instancia.obtener_precio()
+    except:
+        dolar_airtm = ''
+
+    # bot.sendMessage(update.message.chat_id, text="Consultando... En un momento te muestro la informacion...!")
+    if dolar_airtm:
+        response = '''El precio del Dolar AirTM es:\n\n\U0001F1FB\U0001F1EA <b>VEF:</b> {0:,.2f}'''.format(dolar_airtm)
+    else:
+        response = ':x: <b>Error al consultar AirTM</b>'
+    """
+    response = ':x: <b>Lo siento,  Modulo en mantenimiento</b>'
+    bot.sendMessage(chat_id, parse_mode="html", text=emojize(response, use_aliases=True))
+
 def dolar_procom(bot, update):
     dolar_otros(bot, update, 'dolarprocom')
+
+def dolar_airtm(bot, update):
+    dolar_otros(bot, update, 'theairtm')
 
 def dolar_otros(bot, update, nombre):
     chat_id = update.message.chat_id
@@ -1361,6 +1400,7 @@ def help(bot, update):
     /set_alarma_ethereum - Configura alertas
     /set_alarma_litecoin - Configura alertas
     /set_alarma_dolartoday - Configura alertas
+    /set_alarma_dolarairtm - Configura alertas
 
     /precio <coin_ticker> <market> - Ej: /precio btc coinbase
     /precio <coin_ticker> - Ej: /precio btc
@@ -1440,21 +1480,21 @@ def set_alarma_dolartoday(bot, update):
     if valida_permiso_comando(bot, update):
         set_alarma(bot, update, "dolartoday")
 
+def set_alarma_dolarairtm(bot, update):
+    if valida_permiso_comando(bot, update):
+        set_alarma(bot, update, "dolarairtm")
 
 def set_alarma_bitcoin(bot, update):
     if valida_permiso_comando(bot, update):
         set_alarma(bot, update, "bitcoin")
 
-
 def set_alarma_ethereum(bot, update):
     if valida_permiso_comando(bot, update):
         set_alarma(bot, update, "ethereum")
 
-
 def set_alarma_litecoin(bot, update):
     if valida_permiso_comando(bot, update):
         set_alarma(bot, update, "litecoin")
-
 
 def set_alarma(bot, update, alerta):
     response = ""
@@ -1569,8 +1609,11 @@ def nuevo_miembro(bot, update):
     if not username:
         msg_html += "{2} <b>{0}</b> Por politicas del Grupo es necesario que configures un alias @{1}\n".format(nombre, id_, emoji_policia)
 
-    if username.lower() == 'foxcarlos':
-        msg_html = """:clap: :bell: <b>Maestro, Bienvenido al Grupo</b> :bell: :clap:\n\n:crown:<b> FoxCarlos </b>:crown:\n\n"""
+    try:
+        if username.lower() == 'foxcarlos':
+            msg_html = """:clap: :bell: <b>Maestro, Bienvenido al Grupo</b> :bell: :clap:\n\n:crown:<b> FoxCarlos </b>:crown:\n\n"""
+    except:
+        pass
 
     bot.send_message(chat_id=update.message.chat_id, parse_mode = "html", text=emojize(msg_html, use_aliases=True))
     usuario_nuevo(update)
@@ -1697,6 +1740,7 @@ def main():
     dp.add_handler(CommandHandler("set_alarma_ethereum", set_alarma_ethereum))
     dp.add_handler(CommandHandler("set_alarma_litecoin", set_alarma_litecoin))
     dp.add_handler(CommandHandler("dolartoday", dolartoday))
+    dp.add_handler(CommandHandler("dolar_airtm", dolar_airtm))
     dp.add_handler(CommandHandler("dolar_procom", dolar_procom))
     dp.add_handler(CommandHandler("masivo", enviar_mensajes_todos))
     dp.add_handler(CommandHandler("yt2mp3", yt_a_mp3, pass_args=True))
@@ -1717,4 +1761,3 @@ def main():
 
     # log all errors
     dp.add_error_handler(error)
-

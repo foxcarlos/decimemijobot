@@ -11,6 +11,7 @@ from django.db.models import Q
 import requests
 from datetime import datetime, timedelta
 from emoji import emojize
+from bot.tasks import get_price_from_twiter
 
 
 URL_BTC_USD = settings.CRIPTO_MONEDAS.get("URL_BTC_USD")
@@ -48,6 +49,11 @@ class Command(BaseCommand):
             ultimo_precio = float(self.get_price(URL_ETH_USD))
         elif comando == 'litecoin':
             ultimo_precio = float(self.get_price(URL_LTC_USD))
+        elif comando == 'dolarairtm':
+            try:
+                ultimo_precio = float(get_price_from_twiter('theairtm').replace(',', ''))
+            except:
+                ultimo_precio = 0
         else:
             ultimo_precio = 0
         return ultimo_precio
@@ -107,9 +113,9 @@ class Command(BaseCommand):
 
                     try:
                         chat_msg_id = message.message_id
-                        DjangoTelegramBot.dispatcher.bot.pinChatMessage(
-                                chat_id=chat.chat_id,
-                                message_id=chat_msg_id)
+                        # DjangoTelegramBot.dispatcher.bot.pinChatMessage(
+                        #        chat_id=chat.chat_id,
+                        #        message_id=chat_msg_id)
                     except:
                         pass
 
@@ -132,5 +138,7 @@ class Command(BaseCommand):
             self.generar_alerta("ethereum")
         elif 'litecoin' in options.get("comando"):
             self.generar_alerta("litecoin")
+        elif 'dolarairtm' in options.get("comando"):
+            self.generar_alerta("dolarairtm")
 
         self.stdout.write('Ejecutando comando')

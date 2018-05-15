@@ -10,14 +10,18 @@ from datetime import datetime
 import time
 import logging
 
-"""
+
 class AirTM(object):
     def __init__(self):
         '''.'''
 
-        self.driver = webdriver.Firefox(executable_path="/usr/local/bin/geckodriver")
-        url = 'https://www.airtm.io/email-prompt'
-        self.driver.get(url)
+        # self.driver = webdriver.Firefox(executable_path="/usr/local/bin/geckodriver")
+        # url = 'https://www.airtm.io/email-prompt'
+        # self.driver.get(url)
+        # self.driver.set_window_size(1024, 600)
+        # self.driver.maximize_window()
+
+        # self.driver = ''
         self.logger = logging.getLogger(__name__)
         self.logger.setLevel(logging.INFO)
 
@@ -31,6 +35,20 @@ class AirTM(object):
 
         # add the handlers to the logger
         self.logger.addHandler(handler)
+
+    def verificar_instancia_abierta(self):
+        try:
+            if self.driver:
+                return True
+            else:
+                return False
+        except:
+            return False
+
+    def abrir_navegador(self):
+        self.driver = webdriver.Firefox(executable_path="/usr/local/bin/geckodriver")
+        url = 'https://www.airtm.io/email-prompt'
+        self.driver.get(url)
         time.sleep(10)
 
     def verfifica_login(self):
@@ -41,7 +59,7 @@ class AirTM(object):
                 self.login()
         except Exception as e:
             print(e)
-            self.ocurrio_una_excepcion(e)
+            # self.ocurrio_una_excepcion(e)
             self.login()
 
     def login(self):
@@ -52,12 +70,12 @@ class AirTM(object):
         usuario.send_keys('garciadiazca@gmail.com')
         usuario.send_keys(Keys.RETURN)
 
-        time.sleep(10)
+        time.sleep(8)
 
         clave = self.driver.find_element_by_id("password")
         clave.send_keys('clipper56!?16')
         clave.send_keys(Keys.RETURN)
-        time.sleep(10)
+        time.sleep(8)
 
     def obtener_precio(self):
         dolar_airtm = 0
@@ -69,16 +87,16 @@ class AirTM(object):
                 dolar_airtm = float(get_vef)
             except Exception as e:
                 self.ocurrio_una_excepcion(e)
-        self.cerrar()
+        # self.cerrar()
         return dolar_airtm
 
     def ocurrio_una_excepcion(self, error):
         '''.'''
 
         self.logger.error(error, exc_info=True)
-        self.cerrar()
+        # self.cerrar()
 
     def cerrar(self):
         '''.'''
         self.driver.close()
-"""
+

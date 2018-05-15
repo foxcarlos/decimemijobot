@@ -10,7 +10,6 @@ def run_comando(comando):
         os.system(comando)
     except Exceptions as e:
         pass
-   
 
 while True:
     base = settings.BASE_DIR
@@ -23,6 +22,11 @@ while True:
 
     print("Ejecutando Alarma dolartoday")
     comando2 = "python {0} alerta_bitcoin dolartoday".format(django_mng)
+    run_comando(comando2)
+    sleep(30)
+
+    print("Ejecutando Alarma dolarAirTM")
+    comando2 = "python {0} alerta_bitcoin dolarairtm".format(django_mng)
     run_comando(comando2)
     sleep(30)
 

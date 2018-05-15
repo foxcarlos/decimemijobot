@@ -10,7 +10,8 @@ grafico - <coin_ticker> <market>
 clc - <coin_ticker> <monto> - Calcula el valor del BTC de un monto of coin pasado
 ban - banear un usuario del grupo
 set_alarma_bitcoin - <estado> Ej: /set_alarma_bitcoin on
-set_alarma_dolartoday - <estado> Ej: /set_alarma_bitcoin on
+set_alarma_dolarairtm - <estado> Ej: /set_alarma_dolarairtm on
+set_alarma_dolartoday - <estado> Ej: /set_alarma_dolartoday on
 set_alarma_ethereum - <estado> Ej: /set_alarma_ethereum on
 set_alarma_litecoin - <estado> Ej: /set_alarma_litecoin on
 ban - reply al usuario y esribir /ban
