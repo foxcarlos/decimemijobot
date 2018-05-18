@@ -146,10 +146,12 @@ def get_price_from_twiter(nombre):
         response = ''
         texto_descomponer = texto.split() if len(texto.split()) >= 4 else ''
         if texto_descomponer:
-            tasa = texto_descomponer[0] if texto_descomponer[0].lower() == 'tasa' else ''
-            moneda = texto_descomponer[3] if texto_descomponer[3].lower() == 'bsf' else ''
+            tasa = [float(palabra.replace(',', '')) for palabra in texto.split() if len(palabra)>4 and palabra.replace(',', '').replace('.', '').isdigit()]
+            # tasa = texto_descomponer[0] if texto_descomponer[0].lower() == 'tasa' or texto_descomponer[0].upper() == u'ACTUALIZACIÓN' else ''
+            # moneda = texto_descomponer[3] if texto_descomponer[3].lower() == 'bsf' else ''
+            moneda = 'tasa' in texto.lower() and 'bsf' in texto.lower() and '#ven' in texto.lower()
             if tasa and moneda:
-                response = texto_descomponer[2]
+                response = str(tasa[0])
         return response
 
     stuff = get_stuff(nombre)
