@@ -1306,37 +1306,6 @@ def dolartoday(bot, update):
     usuario_nuevo(update)
     print(update.message)
 
-
-# instancia = AirTM()
-def dolar_airtm_scrapy(bot, update):
-    chat_id = update.message.chat_id
-
-    """
-    import time
-    if not instancia.verificar_instancia_abierta():
-        instancia.abrir_navegador()
-        time.sleep(20)
-
-    try:
-        instancia.verfifica_login()
-    except:
-        pass
-
-    time.sleep(5)
-    try:
-        dolar_airtm = instancia.obtener_precio()
-    except:
-        dolar_airtm = ''
-
-    # bot.sendMessage(update.message.chat_id, text="Consultando... En un momento te muestro la informacion...!")
-    if dolar_airtm:
-        response = '''El precio del Dolar AirTM es:\n\n\U0001F1FB\U0001F1EA <b>VEF:</b> {0:,.2f}'''.format(dolar_airtm)
-    else:
-        response = ':x: <b>Error al consultar AirTM</b>'
-    """
-    response = ':x: <b>Lo siento,  Modulo en mantenimiento</b>'
-    bot.sendMessage(chat_id, parse_mode="html", text=emojize(response, use_aliases=True))
-
 def dolar_procom(bot, update):
     dolar_otros(bot, update, 'dolarprocom')
 
