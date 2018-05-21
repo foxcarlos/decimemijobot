@@ -121,7 +121,7 @@ def get_price_from_twiter(nombre):
                 url_imagen = media[0].get('media_url')
                 if url_imagen:
                     ruta_imagen_tasa = 'graficos/tasa_{0}.jpg'.format(nombre)
-                    urllib2.urlretrieve(url_imagen, ruta_imagen_tasa)
+                    # urllib2.urlretrieve(url_imagen, ruta_imagen_tasa)
                     response = ruta_imagen_tasa
             return response
 
