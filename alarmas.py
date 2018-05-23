@@ -4,7 +4,6 @@ from sampleproject import settings
 import os
 from time import sleep
 
-
 def run_comando(comando):
     try:
         os.system(comando)
