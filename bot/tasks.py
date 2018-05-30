@@ -244,7 +244,7 @@ def arepacoin(chat_id, dolartoday):
     precio_vef_arepa_airtm,
     precio_btc_arepa  = get_price_arepacoin(dolartoday)
 
-    response = """El precio de ArepaCoin es:\n\n\U0001F1FB\U0001F1EA <b>VEF Dolartoday:</b> {0:,.2f}\n\U0001F1FB\U0001F1EA <b>VEF AirTM:</b> {2:,.2f}\n<b>:dollar: USD:</b> {1:,.8f}\n\U00020BF <b>BTC</b> {0:,.9f}\n""".format(precio_vef_arepa, precio_usd_arepa, precio_vef_arepa_airtm)
+    response = """El precio de ArepaCoin es:\n\n\U0001F1FB\U0001F1EA <b>VEF Dolartoday:</b> {0:,.2f}\n\U0001F1FB\U0001F1EA <b>VEF AirTM:</b> {2:,.2f}\n<b>:dollar: USD:</b> {1:,.8f}\n\U000020BF <b>BTC</b> {0:,.9f}\n""".format(precio_vef_arepa, precio_usd_arepa, precio_vef_arepa_airtm)
 
     DjangoTelegramBot.dispatcher.bot.sendMessage(chat_id, parse_mode="html", text=emojize(response, use_aliases=True))
 
