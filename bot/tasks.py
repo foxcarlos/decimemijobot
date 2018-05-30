@@ -209,8 +209,6 @@ def airtm_dolar_vef(chat_id):
     DjangoTelegramBot.dispatcher.bot.sendMessage(chat_id, parse_mode="html", text=emojize(response, use_aliases=True))
 
 def get_price_arepacoin(dolartoday):
-
-    import ipdb; ipdb.set_trace() # BREAKPOINT
     precio_dtd = dolartoday if dolartoday else 0
     precio_usd_arepa = 0
     precio_vef_arepa = 0
@@ -228,7 +226,7 @@ def get_price_arepacoin(dolartoday):
 @app.task
 def arepacoin(chat_id, dolartoday):
     precio_usd_arepa, precio_vef_arepa = get_price_arepacoin(dolartoday)
-    response = """El precio de ArepaCoin es:\n\n\U0001F1FB\U0001F1EA <b>VEF:</b> {0:,.2f}\n<b>:dollar: USD:</b> {1:,.2f}""".format(precio_vef_arepa, precio_usd_arepa)
+    response = """El precio de ArepaCoin es:\n\n\U0001F1FB\U0001F1EA <b>VEF:</b> {0:,.2f}\n<b>:dollar: USD:</b> {1:,.8f}""".format(precio_vef_arepa, precio_usd_arepa)
 
     DjangoTelegramBot.dispatcher.bot.sendMessage(chat_id, parse_mode="html", text=emojize(response, use_aliases=True))
 
