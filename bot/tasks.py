@@ -153,7 +153,7 @@ def get_price_from_twiter(nombre):
             tasa = [float(palabra.replace(',', '')) for palabra in texto.split() if len(palabra)>4 and palabra.replace(',', '').replace('.', '').isdigit()]
             # tasa = texto_descomponer[0] if texto_descomponer[0].lower() == 'tasa' or texto_descomponer[0].upper() == u'ACTUALIZACIÓN' else ''
             # moneda = texto_descomponer[3] if texto_descomponer[3].lower() == 'bsf' else ''
-            moneda = 'tasa' in texto.lower() and 'bsf' in texto.lower() and '#ven' in texto.lower()
+            moneda = 'tasa' in texto.lower() and 'bs' in texto.lower() and '#ven' in texto.lower()
             if tasa and moneda:
                 response = str(tasa[0])
         return response
