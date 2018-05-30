@@ -210,6 +210,10 @@ def airtm_dolar_vef(chat_id):
 
 def get_price_arepacoin(dolartoday):
     precio_dtd = dolartoday if dolartoday else 0
+    precio_airtm = float(get_price_from_twiter('theairtm').strip()) if \
+            get_price_from_twiter('theairtm') else 0
+    dolartoday if dolartoday else 0
+
     precio_usd_arepa = 0
     precio_vef_arepa = 0
     URL = "https://coinlib.io/coin/AREPA/ArepaCoin"
@@ -220,13 +224,14 @@ def get_price_arepacoin(dolartoday):
     if resultado:
         precio_usd_arepa = float(resultado[0].text.replace( u'\xa0', '').replace(u'\n$', ''))
         precio_vef_arepa = precio_usd_arepa * precio_dtd
+        precio_vef_arepa_airtm = precio_usd_arepa * precio_airtm
 
-    return precio_usd_arepa, precio_vef_arepa
+    return precio_usd_arepa, precio_vef_arepa, precio_vef_arepa_airtm
 
 @app.task
 def arepacoin(chat_id, dolartoday):
-    precio_usd_arepa, precio_vef_arepa = get_price_arepacoin(dolartoday)
-    response = """El precio de ArepaCoin es:\n\n\U0001F1FB\U0001F1EA <b>VEF:</b> {0:,.2f}\n<b>:dollar: USD:</b> {1:,.8f}""".format(precio_vef_arepa, precio_usd_arepa)
+    precio_usd_arepa, precio_vef_arepa, precio_vef_arepa_airtm  = get_price_arepacoin(dolartoday)
+    response = """El precio de ArepaCoin es:\n\n\U0001F1FB\U0001F1EA <b>VEF Dolartoday:</b> {0:,.2f}\n\U0001F1FB\U0001F1EA <b>VEF AirTM:</b> {0:,.2f}\n<b>:dollar: USD:</b> {1:,.8f}""".format(precio_vef_arepa, precio_usd_arepa, precio_vef_arepa_airtm)
 
     DjangoTelegramBot.dispatcher.bot.sendMessage(chat_id, parse_mode="html", text=emojize(response, use_aliases=True))
 

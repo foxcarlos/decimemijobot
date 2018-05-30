@@ -1253,11 +1253,12 @@ def get_dolartoday2():
 
     emoji_bandera_rusa = u'\U0001F1F7\U0001F1FA'
     emoji_bandera_vzla = u'\U0001F1FB\U0001F1EA'
+    precio_airtm = get_price_from_twiter('theairtm').strip()
 
     response = """:speaker: DolarToday hoy USD/EUR: {0}:\n\n\
     {14} <b>DolarToday</b>: {1:0,.2f}\n\
     {14} <b>Dolar LBTC</b>: {5:0,.2f}\n\
-    {14} <b>Dolar AirTM Bs</b>: {15}\n\n\
+    {14} <b>Dolar AirTM Bs</b>: {15:0,.2f}\n\n\
     :dollar: <b>Implicito</b>: {2:0,.2f}\n\
     :dollar: <b>Dicom</b>: {3:0,.2f}\n\
     :dollar: <b>Cucuta</b>: {4:0,.2f}\n\
@@ -1283,7 +1284,7 @@ def get_dolartoday2():
                     emoji_bandera_rusa,
                     rublo_vef,
                     emoji_bandera_vzla,
-                    get_price_from_twiter('theairtm').strip(),
+                    float(precio_airtm) if precio_airtm else 0,
                     emoji_barril
                     )
 
