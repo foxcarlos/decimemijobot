@@ -203,3 +203,30 @@ def airtm_dolar_vef(chat_id):
     else:
         response = ':x: <b>Error al consultar AirTM</b>'
     DjangoTelegramBot.dispatcher.bot.sendMessage(chat_id, parse_mode="html", text=emojize(response, use_aliases=True))
+
+def get_price_arepacoin(dolartoday):
+    import requests
+    from lxml import html
+
+    precio_dtd = dolartoday if dolartoday else 0
+    precio_usd_arepa = 0
+    precio_vef_arepa = 0
+    URL = "https://coinlib.io/coin/AREPA/ArepaCoin"
+
+    page = requests.get(URL)
+    tree = html.fromstring(page.content)
+    resultado = tree.xpath('//*[@id="coin-main-price"]')
+    if resultado:
+        precio_usd_arepa = float(resultado[0].text.replace( u'\xa0', '').replace(u'\n$', ''))
+        precio_vef_arepa = precio_usd_arepa * precio_dtd
+
+    return precio_usd_arepa, precio_vef_arepa
+
+@app.task
+def arepacoin(chat_id, dolartoday):
+    precio_usd_arepa, precio_vef_arepa = get_price_arepacoin(dolartoday)
+    response = """El precio de ArepaCoin es:\n\n\U0001F1FB\U0001F1EA <b>VEF:</b> {0:,.2f}\n\<b>:dollar: USD:</b> {1:,.2f}""".format(precio_vef_arepa, precio_usd_arepa)
+
+    DjangoTelegramBot.dispatcher.bot.sendMessage(chat_id, parse_mode="html", text=emojize(response, use_aliases=True))
+
+

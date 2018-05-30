@@ -13,3 +13,4 @@ numpy
 pytube
 tweepy
 bs4
+lxml
