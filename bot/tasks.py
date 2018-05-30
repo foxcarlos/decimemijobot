@@ -224,7 +224,7 @@ def get_price_arepacoin(dolartoday):
     page = requests.get(URL)
     tree = html.fromstring(page.content)
     resultado_usd = tree.xpath('//*[@id="coin-main-price"]')
-    resultado_btc = tree.xpath('//*[@id="altprice-859"'])
+    resultado_btc = tree.xpath('//*[@id="altprice-859"]')
 
     if resultado_btc:
         precio_btc_arepa = float(resultado_btc[0].text.replace('BTC', '').strip())
