@@ -1309,8 +1309,9 @@ def dolartoday(bot, update):
 def dolar_procom(bot, update):
     dolar_otros(bot, update, 'dolarprocom')
 
-def dolar_airtm(bot, update):
-    dolar_otros(bot, update, 'theairtm')
+def arepacoin(bot, update):
+    chat_id = update.message.chat_id
+    get_price_arepacoin(chat_id, get_dolartoday())
 
 def dolar_otros(bot, update, nombre):
     chat_id = update.message.chat_id
@@ -1718,7 +1719,7 @@ def main():
     dp.add_handler(CommandHandler("set_alarma_ethereum", set_alarma_ethereum))
     dp.add_handler(CommandHandler("set_alarma_litecoin", set_alarma_litecoin))
     dp.add_handler(CommandHandler("dolartoday", dolartoday))
-    dp.add_handler(CommandHandler("dolar_airtm", dolar_airtm))
+    dp.add_handler(CommandHandler("arepacoin", arepacoin))
     dp.add_handler(CommandHandler("dolar_procom", dolar_procom))
     dp.add_handler(CommandHandler("masivo", enviar_mensajes_todos))
     dp.add_handler(CommandHandler("yt2mp3", yt_a_mp3, pass_args=True))
