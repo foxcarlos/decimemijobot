@@ -1,20 +1,24 @@
 # -*- encoding: utf-8 -*-
 
-from django_telegrambot.apps import DjangoTelegramBot
-from sampleproject.celery import app
+import requests
+from lxml import html
 from time import sleep
 from pytube import YouTube
 import os
-
-from django.conf import settings
-from emoji import emojize
-# celery -A pyloro worker -l info
-
 from datetime import datetime
-from bs4 import BeautifulSoup
 import urllib.request as urllib2
 import urllib
+
+from django_telegrambot.apps import DjangoTelegramBot
+from sampleproject.celery import app
+
+from django.conf import settings
+# celery -A pyloro worker -l info
+
+from emoji import emojize
+from bs4 import BeautifulSoup
 import tweepy
+
 from lib.airtm import AirTM
 
 @app.task
@@ -205,8 +209,6 @@ def airtm_dolar_vef(chat_id):
     DjangoTelegramBot.dispatcher.bot.sendMessage(chat_id, parse_mode="html", text=emojize(response, use_aliases=True))
 
 def get_price_arepacoin(dolartoday):
-    import requests
-    from lxml import html
 
     precio_dtd = dolartoday if dolartoday else 0
     precio_usd_arepa = 0
