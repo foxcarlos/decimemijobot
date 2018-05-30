@@ -216,22 +216,35 @@ def get_price_arepacoin(dolartoday):
 
     precio_usd_arepa = 0
     precio_vef_arepa = 0
+    precio_btc_arepa = 0
+    precio_vef_arepa_airtm = 0
+
     URL = "https://coinlib.io/coin/AREPA/ArepaCoin"
 
     page = requests.get(URL)
     tree = html.fromstring(page.content)
-    resultado = tree.xpath('//*[@id="coin-main-price"]')
-    if resultado:
-        precio_usd_arepa = float(resultado[0].text.replace( u'\xa0', '').replace(u'\n$', ''))
-        precio_vef_arepa = precio_usd_arepa * precio_dtd
-        precio_vef_arepa_airtm = precio_usd_arepa * precio_airtm
+    resultado_usd = tree.xpath('//*[@id="coin-main-price"]')
+    resultado_btc = tree.xpath('//*[@id="altprice-859"'])
 
-    return precio_usd_arepa, precio_vef_arepa, precio_vef_arepa_airtm
+    if resultado_btc:
+        precio_btc_arepa = float(resultado_btc[0].text.replace('BTC', '').strip())
+
+    if resultado_usd:
+        precio_usd_arepa = float(resultado_usd[0].text.replace( u'\xa0', '').replace(u'\n$', ''))
+
+    precio_vef_arepa = precio_usd_arepa * precio_dtd
+    precio_vef_arepa_airtm = precio_usd_arepa * precio_airtm
+
+    return precio_usd_arepa, precio_vef_arepa, precio_vef_arepa_airtm, precio_btc_arepa
 
 @app.task
 def arepacoin(chat_id, dolartoday):
-    precio_usd_arepa, precio_vef_arepa, precio_vef_arepa_airtm  = get_price_arepacoin(dolartoday)
-    response = """El precio de ArepaCoin es:\n\n\U0001F1FB\U0001F1EA <b>VEF Dolartoday:</b> {0:,.2f}\n\U0001F1FB\U0001F1EA <b>VEF AirTM:</b> {2:,.2f}\n<b>:dollar: USD:</b> {1:,.8f}""".format(precio_vef_arepa, precio_usd_arepa, precio_vef_arepa_airtm)
+    precio_usd_arepa,
+    precio_vef_arepa,
+    precio_vef_arepa_airtm,
+    precio_btc_arepa  = get_price_arepacoin(dolartoday)
+
+    response = """El precio de ArepaCoin es:\n\n\U0001F1FB\U0001F1EA <b>VEF Dolartoday:</b> {0:,.2f}\n\U0001F1FB\U0001F1EA <b>VEF AirTM:</b> {2:,.2f}\n<b>:dollar: USD:</b> {1:,.8f}\n\U00020BF <b>BTC</b> {0:,.9f}\n""".format(precio_vef_arepa, precio_usd_arepa, precio_vef_arepa_airtm)
 
     DjangoTelegramBot.dispatcher.bot.sendMessage(chat_id, parse_mode="html", text=emojize(response, use_aliases=True))
 
