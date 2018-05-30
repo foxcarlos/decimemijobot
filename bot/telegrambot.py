@@ -1311,7 +1311,7 @@ def dolar_procom(bot, update):
 
 def arepacoin(bot, update):
     chat_id = update.message.chat_id
-    get_price_arepacoin(chat_id, get_dolartoday())
+    arepacoin.delay(chat_id, get_dolartoday())
 
 def dolar_otros(bot, update, nombre):
     chat_id = update.message.chat_id
