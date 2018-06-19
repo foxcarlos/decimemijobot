@@ -45,6 +45,7 @@ $ mkvirtualenv para_python2
 
 = Install the dependencies =
 ```sh
+$ sudo apt-get install xvfb
 $ pip install -r requirements.txt
 ```
 
