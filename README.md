@@ -1,15 +1,13 @@
-# Modulos Odoo para Cotesma
-
-Todos los Moculos hechos para Cotesma.
+# Bot FoxBOT
 
   - Usa Celery y Redis para ejecutar procesos en background para AFIP
   
 
 ### Installation
 
-pyLoro requires python v2 to run.
+pyLoro requires python v3 to run.
 ```sh
-$ sudo apt-get install python2.7 python2.7-doc
+$ sudo apt-get install python3.6 python3.6-doc
 ```
 
 ### Installation Redis Server
