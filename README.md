@@ -21,7 +21,7 @@ $ redis-cli ping
 
 = Repo =
 ```sh
-$ git@gitlab.com:foxcarlos/cotesma_addons.git
+$ git clone https://github.com/foxcarlos/foxbot.git
 ```
 = Prepare Virtual Env =
 ```sh
