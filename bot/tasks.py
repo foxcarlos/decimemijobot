@@ -208,6 +208,17 @@ def airtm_dolar_vef(chat_id):
         response = ':x: <b>Error al consultar AirTM</b>'
     DjangoTelegramBot.dispatcher.bot.sendMessage(chat_id, parse_mode="html", text=emojize(response, use_aliases=True))
 
+def get_dolar_gobierno():
+    dolar_gobierno = ''
+    URL = 'https://www.casadecambiozoom.com/'
+    ruta ='/html/body/div[3]/div/div[2]/a/font'
+    page = requests.get(URL)
+    tree = html.fromstring(page.content)
+    resultado_bs = tree.xpath(ruta)
+    if resultado_bs:
+        dolar_gobierno = resultado_bs[0].text.replace('Bs.', '').strip()
+    return dolar_gobierno
+
 def get_price_arepacoin(dolartoday):
     precio_dtd = dolartoday if dolartoday else 0
     precio_airtm = float(get_price_from_twiter('theairtm').strip()) if \
@@ -241,7 +252,7 @@ def get_price_arepacoin(dolartoday):
 def arepacoin(chat_id, dolartoday):
     precio_usd_arepa, precio_vef_arepa, precio_vef_arepa_airtm, precio_btc_arepa  = get_price_arepacoin(dolartoday)
 
-    response = """El precio de ArepaCoin es:\n\n\U0001F1FB\U0001F1EA <b>VEF Dolartoday:</b> {0:,.2f}\n\U0001F1FB\U0001F1EA <b>VEF AirTM:</b> {2:,.2f}\n<b>:dollar: USD:</b> {1:,.8f}\n\U000020BF <b>BTC</b> {3:,.9f}\n""".format(precio_vef_arepa, precio_usd_arepa, precio_vef_arepa_airtm, precio_btc_arepa)
+    response = """El precio de ArepaCoin es:\n\n\U0001F1FB\U0001F1EA <b>VEF Dolartoday:</b> {0:,.2f}\n\U0001F1FB\U0001F1EA <b>VEF AirTM:</b> {2:,.2f}\n<b>:dollar: USD:</b> {1:,.8f}\n\U000020BF <b>BTC</b> {3:,.8f}\n""".format(precio_vef_arepa, precio_usd_arepa, precio_vef_arepa_airtm, precio_btc_arepa)
 
     DjangoTelegramBot.dispatcher.bot.sendMessage(chat_id, parse_mode="html", text=emojize(response, use_aliases=True))
 

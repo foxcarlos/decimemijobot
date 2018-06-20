@@ -4,12 +4,12 @@ import os
 import requests
 import logging
 from emoji import emojize
+from lxml import html
 
 from telegram.ext import CommandHandler, MessageHandler, Filters, CallbackQueryHandler
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, ReplyKeyboardMarkup, InlineQuery
 from django_telegrambot.apps import DjangoTelegramBot
 from random import randint
-
 
 from django.conf import settings
 from django.db.models import Count, Q
@@ -1222,6 +1222,16 @@ def get_dolartoday():
     msg_response = rq.get('USD').get('transferencia')
     return msg_response
 
+def get_dolar_gobierno():
+    dolar_gobierno = ''
+    URL = 'https://www.casadecambiozoom.com/'
+    ruta ='/html/body/div[3]/div/div[2]/a/font'
+    page = requests.get(URL)
+    tree = html.fromstring(page.content)
+    resultado_bs = tree.xpath(ruta)
+    if resultado_bs:
+        dolar_gobierno = resultado_bs[0].text.replace('Bs.', '').strip()
+    return dolar_gobierno
 
 def get_dolartoday2():
     rq = requests.get(URL_DOLARTODAY).json()
@@ -1254,8 +1264,10 @@ def get_dolartoday2():
     emoji_bandera_rusa = u'\U0001F1F7\U0001F1FA'
     emoji_bandera_vzla = u'\U0001F1FB\U0001F1EA'
     precio_airtm = get_price_from_twiter('theairtm').strip()
+    precio_dolar_gobierno = get_dolar_gobierno()
 
     response = """:speaker: DolarToday hoy USD/EUR: {0}:\n\n\
+    {14} <b>Casas Cambio Vzla</b>: {17}\n\
     {14} <b>DolarToday</b>: {1:0,.2f}\n\
     {14} <b>Dolar LBTC</b>: {5:0,.2f}\n\
     {14} <b>Dolar AirTM Bs</b>: {15:0,.2f}\n\n\
@@ -1285,7 +1297,8 @@ def get_dolartoday2():
                     rublo_vef,
                     emoji_bandera_vzla,
                     float(precio_airtm) if precio_airtm else 0,
-                    emoji_barril
+                    emoji_barril,
+                    precio_dolar_gobierno
                     )
 
     return response
