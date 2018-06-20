@@ -3,6 +3,7 @@
 
 from __future__ import unicode_literals
 
+import django
 from django.db import models
 from datetime import timedelta, datetime
 from random import randint
@@ -108,7 +109,7 @@ class AlertaUsuario(models.Model):
     porcentaje_cambio = models.IntegerField(default=0,
             verbose_name="Porcentaje de cambio en la tasa",
             help_text="Numero entero")
-    ultima_actualizacion = models.DateTimeField(default=datetime.now(), blank=True, null=True)
+    ultima_actualizacion = models.DateTimeField(default=django.utils.timezone.now(), blank=True, null=True)
     ultimo_precio = models.FloatField(default=0.0)
 
     def __str__(self):
