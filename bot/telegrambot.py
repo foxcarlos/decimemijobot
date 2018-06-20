@@ -1267,7 +1267,7 @@ def get_dolartoday2():
     precio_dolar_gobierno = get_dolar_gobierno()
 
     response = """:speaker: DolarToday hoy USD/EUR: {0}:\n\n\
-    {14} <b>Casas Cambio Vzla</b>: {17}\n\
+    {14} <b>Casas Cambio</b>: {17}\n\
     {14} <b>DolarToday</b>: {1:0,.2f}\n\
     {14} <b>Dolar LBTC</b>: {5:0,.2f}\n\
     {14} <b>Dolar AirTM Bs</b>: {15:0,.2f}\n\n\
