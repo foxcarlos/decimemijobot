@@ -1683,7 +1683,7 @@ def location(bot, update):
 
     update.message.reply_text(
             'Excelente {0} ya tengo tu ubicacion: Lat-{1} Lon-{2}'.format(
-                user, user_location.latitude, user_location.longitude)
+                user.first_name, user_location.latitude, user_location.longitude)
             )
 
 def unknown(bot, update):
