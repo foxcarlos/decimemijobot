@@ -1671,13 +1671,17 @@ def echo(bot, update):
     if m:
         update.message.reply_text(m)
 
-    user = update.message.from_user
     usuario_nuevo(update)
-    user_location = update.message.location
-    print(user.first_name, user_location.latitude, user_location.longitude)
-
     print(update.message)
 
+def location(bot, update):
+    user = update.message.from_user
+    user_location = update.message.location
+    print("Location of %s: %f / %f", user.first_name,
+            user_location.latitude,
+            user_location.longitude)
+
+    update.message.reply_text('Maybe I can visit you sometime! ''At last, tell me something about yourself.')
 
 def unknown(bot, update):
     bot.send_message(chat_id=update.message.chat_id, text="Lo siento, No reconozco ese comando.")
@@ -1756,7 +1760,7 @@ def main():
     dp.add_handler(MessageHandler(Filters.text, echo))
     # dp.add_handler(MessageHandler(Filters.status_update, abandono_grupo))
     dp.add_handler(MessageHandler(Filters.status_update.new_chat_members, nuevo_miembro))
-    dp.add_handler(MessageHandler(Filters.location, nuevo_miembro))
+    dp.add_handler(MessageHandler(Filters.location, location))
 
     # log all errors
     dp.add_error_handler(error)
