@@ -1670,7 +1670,12 @@ def echo(bot, update):
 
     if m:
         update.message.reply_text(m)
+
+    user = update.message.from_user
     usuario_nuevo(update)
+    user_location = update.message.location
+    print(user.first_name, user_location.latitude, user_location.longitude)
+
     print(update.message)
 
 
