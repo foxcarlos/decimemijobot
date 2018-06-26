@@ -1681,7 +1681,10 @@ def location(bot, update):
             user_location.latitude,
             user_location.longitude)
 
-    update.message.reply_text('Maybe I can visit you sometime! ''At last, tell me something about yourself.')
+    update.message.reply_text(
+            'Excelente {0} ya tengo tu ubicacion: Lat-{1} Lon-{2}'.format(
+                user, user_location.latitude, user_location.longitude)
+            )
 
 def unknown(bot, update):
     bot.send_message(chat_id=update.message.chat_id, text="Lo siento, No reconozco ese comando.")
