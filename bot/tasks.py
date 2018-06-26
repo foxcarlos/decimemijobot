@@ -208,6 +208,17 @@ def airtm_dolar_vef(chat_id):
         response = ':x: <b>Error al consultar AirTM</b>'
     DjangoTelegramBot.dispatcher.bot.sendMessage(chat_id, parse_mode="html", text=emojize(response, use_aliases=True))
 
+def get_dolar_gobierno():
+    dolar_gobierno = ''
+    URL = 'https://www.casadecambiozoom.com/'
+    ruta ='/html/body/div[3]/div/div[2]/a/font'
+    page = requests.get(URL)
+    tree = html.fromstring(page.content)
+    resultado_bs = tree.xpath(ruta)
+    if resultado_bs:
+        dolar_gobierno = resultado_bs[0].text.replace('Bs.', '').strip()
+    return dolar_gobierno
+
 def get_price_arepacoin(dolartoday):
     precio_dtd = dolartoday if dolartoday else 0
     precio_airtm = float(get_price_from_twiter('theairtm').strip()) if \
