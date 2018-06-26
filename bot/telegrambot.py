@@ -1738,6 +1738,7 @@ def main():
     dp.add_handler(MessageHandler(Filters.text, echo))
     # dp.add_handler(MessageHandler(Filters.status_update, abandono_grupo))
     dp.add_handler(MessageHandler(Filters.status_update.new_chat_members, nuevo_miembro))
+    dp.add_handler(MessageHandler(Filters.location, nuevo_miembro))
 
     # log all errors
     dp.add_error_handler(error)
