@@ -415,6 +415,15 @@ def callback_button(bot, update):
     query = update.callback_query
 
     metodo = query.data.split(',')
+    if 'simular' in metodo:
+        if 'tomar' in  metodo:
+            msg = """Felicidades has aceptado el pedido, ahora por favor enviame tu ubicacion para indicarle al cliente"""
+            query.edit_message_text(msg)
+
+        if 'omitir' in  metodo:
+            msg = """Pedido omitido"""
+            query.edit_message_text(msg)
+
     if metodo[0] == 'contrato':
         opcion = metodo[1]
         if opcion == "aceptar":
