@@ -110,7 +110,7 @@ def buscar_user(bot, update, args):
     return lista_user
 
 def trade2user(bot, update, args):
-    if len(args) <1:
+    if len(args) < 1:
         msg_response = """
         :no_entry_sign: Debes mencionar la persona a quien quieres consultar\n:bulb: Ejemplo:\n
         <b>/trade2user @FoxCarlos</b>\n
@@ -1674,6 +1674,14 @@ def echo(bot, update):
     usuario_nuevo(update)
     print(update.message)
 
+def simular(bot, update):
+    from time import sleep
+    sleep(5)
+    reply_keyboard = [['Tomar', 'Omitir']]
+    bot.sendMessage(chat_id=update.message.chat_id,
+            text='Hola! hay un pedido desde Plaza San Martin hasta Chacra 30 para envio de un lapiz',
+            reply_markup=ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True))
+
 def location(bot, update):
     user = update.message.from_user
     user_location = update.message.location
@@ -1763,6 +1771,8 @@ def main():
     dp.add_handler(MessageHandler(Filters.text, echo))
     # dp.add_handler(MessageHandler(Filters.status_update, abandono_grupo))
     dp.add_handler(MessageHandler(Filters.status_update.new_chat_members, nuevo_miembro))
+
+    dp.add_handler(CommandHandler("simular", simular))
     dp.add_handler(MessageHandler(Filters.location, location))
 
     # log all errors
