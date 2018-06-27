@@ -1740,6 +1740,8 @@ def main():
     dp.add_handler(CommandHandler("graph", historico))
     dp.add_handler(CommandHandler("chart", historico))
 
+    dp.add_handler(CommandHandler("simular", simular))
+
     dp.add_handler(CommandHandler("calc", calc))
     dp.add_handler(CommandHandler("clc", calc))
 
@@ -1772,7 +1774,6 @@ def main():
     # dp.add_handler(MessageHandler(Filters.status_update, abandono_grupo))
     dp.add_handler(MessageHandler(Filters.status_update.new_chat_members, nuevo_miembro))
 
-    dp.add_handler(CommandHandler("simular", simular))
     dp.add_handler(MessageHandler(Filters.location, location))
 
     # log all errors
