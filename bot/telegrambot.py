@@ -1677,10 +1677,22 @@ def echo(bot, update):
 def simular(bot, update):
     from time import sleep
     sleep(5)
+
+    keyboard = [[
+        InlineKeyboardButton("Tomar", callback_data='simular,tomar'),
+        InlineKeyboardButton("Omitir", callback_data='simular,omitir')],
+        ]
+
+    reply_markup = InlineKeyboardMarkup(keyboard)
+
+    """
     reply_keyboard = [['Tomar', 'Omitir']]
+    reply_markup = ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True)
+    """
+
     bot.sendMessage(chat_id=update.message.chat_id,
             text='Hola! hay un pedido desde Plaza San Martin hasta Chacra 30 para envio de un lapiz',
-            reply_markup=ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True))
+            reply_markup=reply_markup)
 
 def location(bot, update):
     user = update.message.from_user
