@@ -926,6 +926,16 @@ def valida_calcula_moneda(moneda, monto, data):
 
     return monto, total_btc, total_dolar
 
+def calc_arepa(monto=0, moneda=''):
+    from bot.tasks import get_price_arepacoin
+
+    precio_usd_arepa, precio_vef_arepa, precio_vef_arepa_airtm, precio_btc_arepa = get_price_arepacoin(get_dolartoday())
+
+
+    response = """:moneybag: El calculo de <b>{0}</b> <i>{6}</i> es :\n\n:dollar: Dolar: {1:,.8f}\n:euro: Euro: {2:,.8f}\n:small_orange_diamond: BTC: {3:,.8f}\n\U0001F1FB\U0001F1EA  VEF AirTM: {4:,.2f}\n\U0001F1FB\U0001F1EA  VEF: {5:,.2f}""".format(
+            monto, precio_usd_arepa*monto, 0, precio_btc_arepa*monto, precio_vef_arepa*monto, precio_vef_arepa_airtm*monto, moneda.upper())
+    return response
+
 def calc(bot, update):
     market = 'coinbase'
     parameters = update.message.text
@@ -965,6 +975,10 @@ def calc(bot, update):
                 total_vef = float(monto) * (total_dolar * get_dolartoday())
                 response = """:moneybag: El calculo para <b>{0}</b> <i>{4}</i> es de :\n\n:chart_with_downwards_trend: BTC: {1:,.9f}\n:dollar: Dolares: {2:,.2f}\n\n<b>Nota:</b> Precios basados en: {3}""".format(
                         monto, total_btc, total_dolar, market.capitalize(), moneda.upper())
+
+            if moneda.upper() == 'AREPA':
+                response = calc_arepa(monto, 'arepa')
+
         except Exception as e:
             response = 'Verifica que el monto tenga como separacion decimal . Ej: /clc btc 0.001'
 
