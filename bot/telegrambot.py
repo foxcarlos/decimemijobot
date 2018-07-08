@@ -937,6 +937,7 @@ def calc_arepa(monto=0, moneda=''):
     return response
 
 def calc(bot, update):
+    import ipdb; ipdb.set_trace() # BREAKPOINT
     market = 'coinbase'
     parameters = update.message.text
     cadena_sin_el_comando = ' '.join(parameters.split()[1:])
