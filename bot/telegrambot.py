@@ -929,6 +929,7 @@ def valida_calcula_moneda(moneda, monto, data):
 def calc_arepa(monto=0, moneda=''):
     from bot.tasks import get_price_arepacoin
 
+    monto = float(monto)
     precio_usd_arepa, precio_vef_arepa, precio_vef_arepa_airtm, precio_btc_arepa = get_price_arepacoin(get_dolartoday())
 
 
@@ -937,7 +938,6 @@ def calc_arepa(monto=0, moneda=''):
     return response
 
 def calc(bot, update):
-    import ipdb; ipdb.set_trace() # BREAKPOINT
     market = 'coinbase'
     parameters = update.message.text
     cadena_sin_el_comando = ' '.join(parameters.split()[1:])
