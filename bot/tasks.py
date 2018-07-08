@@ -241,7 +241,7 @@ def get_price_arepacoin(dolartoday):
         precio_btc_arepa = float(resultado_btc[0].text.replace('BTC', '').strip())
 
     if resultado_usd:
-        precio_usd_arepa = float(resultado_usd[0].text.replace( u'\xa0', '').replace(u'\n$', ''))
+        precio_usd_arepa = float(resultado_usd[0].text.replace( u'\xa0', '').replace(u'\n', '').replace('$', ''))
 
     precio_vef_arepa = precio_usd_arepa * precio_dtd
     precio_vef_arepa_airtm = precio_usd_arepa * precio_airtm
