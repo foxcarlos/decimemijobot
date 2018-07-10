@@ -8,18 +8,22 @@ import os
 from datetime import datetime
 import urllib.request as urllib2
 import urllib
-
-from django_telegrambot.apps import DjangoTelegramBot
-from sampleproject.celery import app
-
-from django.conf import settings
-# celery -A pyloro worker -l info
-
 from emoji import emojize
 from bs4 import BeautifulSoup
 import tweepy
 
+from django_telegrambot.apps import DjangoTelegramBot
+from sampleproject.celery import app
+
+from django.conf.settings import CRIPTO_MONEDAS
+# celery -A pyloro worker -l info
+
+
 from lib.airtm import AirTM
+
+
+URL_AREPA_BTC_USD = CRIPTO_MONEDAS.get("URL_AREPACOIN")
+
 
 @app.task
 def pool_message(users, cadena_sin_el_comando):
@@ -150,7 +154,7 @@ def get_price_from_twiter(nombre):
         response = ''
         texto_descomponer = texto.split() if len(texto.split()) >= 4 else ''
         if texto_descomponer:
-            tasa = [float(palabra.replace(',', '')) for palabra in texto.split() if len(palabra)>4 and palabra.replace(',', '').replace('.', '').isdigit()]
+            tasa = [float(palabra.replace(',', '')) for palabra in texto.split() if len(palabra) > 4 and palabra.replace(',', '').replace('.', '').isdigit()]
             # tasa = texto_descomponer[0] if texto_descomponer[0].lower() == 'tasa' or texto_descomponer[0].upper() == u'ACTUALIZACIÓN' else ''
             # moneda = texto_descomponer[3] if texto_descomponer[3].lower() == 'bsf' else ''
             moneda = 'tasa' in texto.lower() and 'bs' in texto.lower() and '#ven' in texto.lower()
@@ -162,32 +166,6 @@ def get_price_from_twiter(nombre):
     hoy, ruta_img, texto = get_tweets(stuff, 50, nombre)
     return parsear_tasa(texto)
 
-    """
-    if hoy:
-        mensaje = 'Tasa del dia'
-    else:
-        mensaje = 'Hoy no se ha publicado tasa aun, se muestra la anterior'
-
-    print(settings.BASE_DIR, ruta_img)
-
-    file_ = os.path.join(settings.BASE_DIR, ruta_img)
-    foto = open(file_, "rb")
-    try:
-        message = DjangoTelegramBot.dispatcher.bot.sendPhoto(
-                chat_id=chat_id, photo=foto, caption=mensaje)
-    except:
-        file_ = os.path.join(settings.BASE_DIR, ruta_img)
-        foto = open(file_, "rb")
-
-        message = DjangoTelegramBot.dispatcher.bot.sendPhoto(
-                chat_id=chat_id, photo=foto, caption=mensaje)
-
-    chat_msg_id = message.message_id
-    print(chat_msg_id)
-    DjangoTelegramBot.dispatcher.bot.pinChatMessage(
-            chat_id=chat_id,
-            message_id=chat_msg_id)
-            """
 
 @app.task
 def airtm_dolar_vef(chat_id):
@@ -219,7 +197,7 @@ def get_dolar_gobierno():
         dolar_gobierno = resultado_bs[0].text.replace('Bs.', '').strip()
     return dolar_gobierno
 
-def get_price_arepacoin(dolartoday):
+def get_price_arepacoin2(dolartoday):
     precio_dtd = dolartoday if dolartoday else 0
     precio_airtm = float(get_price_from_twiter('theairtm').strip()) if \
             get_price_from_twiter('theairtm') else 0
@@ -241,7 +219,34 @@ def get_price_arepacoin(dolartoday):
         precio_btc_arepa = float(resultado_btc[0].text.replace('BTC', '').strip())
 
     if resultado_usd:
-        precio_usd_arepa = float(resultado_usd[0].text.replace( u'\xa0', '').replace(u'\n', '').replace('$', ''))
+        precio_usd_arepa = float(resultado_usd[0].text.replace(u'\xa0', '').replace(u'\n', '').replace('$', ''))
+
+    precio_vef_arepa = precio_usd_arepa * precio_dtd
+    precio_vef_arepa_airtm = precio_usd_arepa * precio_airtm
+
+    return precio_usd_arepa, precio_vef_arepa, precio_vef_arepa_airtm, precio_btc_arepa
+
+def get_price_arepacoin(dolartoday):
+    precio_dtd = dolartoday if dolartoday else 0
+    precio_airtm = float(get_price_from_twiter('theairtm').strip()) if \
+            get_price_from_twiter('theairtm') else 0
+    dolartoday if dolartoday else 0
+
+    precio_usd_arepa = 0
+    precio_vef_arepa = 0
+    precio_btc_arepa = 0
+    precio_vef_arepa_airtm = 0
+
+    coincap_data = requests.get(URL_AREPA_BTC_USD).json()
+    coincap_json = coincap_data.get('data') if \
+            coincap_data.get('status') == 'success' else {}
+
+    arepa_values = [coin for coin in coincap_json \
+            if coin.get('name').lower() == 'arepacoin'][0]
+
+    if arepa_values:
+        precio_btc_arepa = arepa_values.get('price_btc')
+        precio_usd_arepa = arepa_values.get('price_usd')
 
     precio_vef_arepa = precio_usd_arepa * precio_dtd
     precio_vef_arepa_airtm = precio_usd_arepa * precio_airtm
@@ -255,5 +260,3 @@ def arepacoin(chat_id, dolartoday):
     response = """El precio de ArepaCoin es:\n\n\U0001F1FB\U0001F1EA <b>VEF Dolartoday:</b> {0:,.2f}\n\U0001F1FB\U0001F1EA <b>VEF AirTM:</b> {2:,.2f}\n<b>:dollar: USD:</b> {1:,.8f}\n\U000020BF <b>BTC</b> {3:,.8f}\n""".format(precio_vef_arepa, precio_usd_arepa, precio_vef_arepa_airtm, precio_btc_arepa)
 
     DjangoTelegramBot.dispatcher.bot.sendMessage(chat_id, parse_mode="html", text=emojize(response, use_aliases=True))
-
-
