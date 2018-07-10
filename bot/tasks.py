@@ -15,14 +15,14 @@ import tweepy
 from django_telegrambot.apps import DjangoTelegramBot
 from sampleproject.celery import app
 
-from django.conf.settings import CRIPTO_MONEDAS
+from django.conf import settings
 # celery -A pyloro worker -l info
 
 
 from lib.airtm import AirTM
 
 
-URL_AREPA_BTC_USD = CRIPTO_MONEDAS.get("URL_AREPACOIN")
+URL_AREPA_BTC_USD = settings.CRIPTO_MONEDAS.get("URL_AREPACOIN")
 
 
 @app.task
