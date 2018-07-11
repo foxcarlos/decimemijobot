@@ -252,7 +252,7 @@ def get_price_wcc():
 @app.task
 def wolfclover(chat_id):
 
-    tasa, vef, usd, btc = wcc()
+    tasa, vef, usd, btc = get_price_wcc()
     response = """El precio de WolfClover es:\n\n\<b>Tasa:</b>{0}\n
     U0001F1FB\U0001F1EA <b>VEF:</b> {1}\n\
     <b>:dollar: USD:</b> {2}\n\
