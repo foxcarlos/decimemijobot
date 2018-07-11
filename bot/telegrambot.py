@@ -1347,6 +1347,10 @@ def dolartoday(bot, update):
 def dolar_procom(bot, update):
     dolar_otros(bot, update, 'dolarprocom')
 
+def wolfclover_coin(bot, update):
+    chat_id = update.message.chat_id
+    wolfclover.delay(chat_id)
+
 def arepa_coin(bot, update):
     chat_id = update.message.chat_id
     arepacoin.delay(chat_id, get_dolartoday())
@@ -1791,6 +1795,7 @@ def main():
     dp.add_handler(CommandHandler("set_alarma_ethereum", set_alarma_ethereum))
     dp.add_handler(CommandHandler("set_alarma_litecoin", set_alarma_litecoin))
     dp.add_handler(CommandHandler("dolartoday", dolartoday))
+    dp.add_handler(CommandHandler("wolfclover", wolfclover_coin))
     dp.add_handler(CommandHandler("arepacoin", arepa_coin))
     dp.add_handler(CommandHandler("dolar_procom", dolar_procom))
     dp.add_handler(CommandHandler("masivo", enviar_mensajes_todos))

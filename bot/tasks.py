@@ -1,4 +1,7 @@
 # -*- encoding: utf-8 -*-
+from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
+from pyvirtualdisplay import Display
 
 import requests
 from lxml import html
@@ -225,6 +228,38 @@ def get_price_arepacoin2(dolartoday):
     precio_vef_arepa_airtm = precio_usd_arepa * precio_airtm
 
     return precio_usd_arepa, precio_vef_arepa, precio_vef_arepa_airtm, precio_btc_arepa
+
+def get_price_wcc():
+
+    vdisplay = Display(visible=0, size=(1024, 768))
+    vdisplay.start()
+
+    driver = webdriver.Firefox(executable_path="/usr/local/bin/geckodriver")
+    url = "https://wolfclover.com/calculadora/"
+    driver.get(url)
+
+    wcc = driver.find_element_by_id("txt_clover")
+    wcc.send_keys('1')
+
+    tasa_dolar = driver.find_element_by_id("lbl_usdvef").text.replace('.', ',')
+    btc = driver.find_element_by_id("txt_cryptocoin").get_attribute("value")
+    vef = driver.find_element_by_id("txt_currency").get_attribute("value")
+    usd = driver.find_element_by_id("txt_usd").get_attribute("value")
+
+    vdisplay.stop()
+    return tasa_dolar, vef, usd, btc
+
+@app.task
+def wolfclover(chat_id):
+
+    tasa, vef, usd, btc = wcc()
+    response = """El precio de WolfClover es:\n\n\<b>Tasa:</b>{0}\n
+    U0001F1FB\U0001F1EA <b>VEF:</b> {1}\n\
+    <b>:dollar: USD:</b> {2}\n\
+    U000020BF <b>BTC</b> {3}\n""".format(tasa, vef, usd, btc)
+
+    DjangoTelegramBot.dispatcher.bot.sendMessage(chat_id, parse_mode="html",
+            text=emojize(response, use_aliases=True))
 
 def get_price_arepacoin(dolartoday):
     precio_dtd = dolartoday if dolartoday else 0
