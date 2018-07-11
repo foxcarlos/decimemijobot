@@ -19,7 +19,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from bot.scrapy import NoticiasPanorama
 from bot.models import Alerta, AlertaUsuario, User, Grupo, Comando, ComandoEstado, Contrato, PersonaContrato
 
-from bot.tasks import pool_message, grupo_message, yt2mp3, get_price_from_twiter, airtm_dolar_vef, arepacoin
+from bot.tasks import pool_message, grupo_message, yt2mp3, get_price_from_twiter, airtm_dolar_vef, arepacoin, wolfclover
 
 from lib.airtm import AirTM
 from datetime import datetime
