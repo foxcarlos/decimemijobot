@@ -251,9 +251,12 @@ def get_price_wcc():
 
 @app.task
 def wolfclover(chat_id):
+    response = ":hourglass_flowing_sand: <b>Consultando Wcc...</b>"
+    DjangoTelegramBot.dispatcher.bot.sendMessage(chat_id, parse_mode="html",
+            text=emojize(response, use_aliases=True))
 
     tasa, vef, usd, btc = get_price_wcc()
-    response = """El precio de WolfClover es:\n\n<b>Tasa:</b>{0}\n\n\U0001F1FB\U0001F1EA <b>VEF:</b> {1}\n<b>:dollar: USD:</b> {2}\n:small_orange_diamond: <b>BTC</b> {3}\n""".format(tasa, vef, usd, btc)
+    response = """El precio de WolfClover es:\n<b>Tasa:</b>{0}\n\n\U0001F1FB\U0001F1EA <b>VEF:</b> {1}\n<b>:dollar: USD:</b> {2}\n:small_orange_diamond: <b>BTC</b> {3}\n""".format(tasa, vef, usd, btc)
 
     DjangoTelegramBot.dispatcher.bot.sendMessage(chat_id, parse_mode="html",
             text=emojize(response, use_aliases=True))
