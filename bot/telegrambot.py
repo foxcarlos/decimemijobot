@@ -1410,6 +1410,8 @@ def help(bot, update):
     /allcoins - Precios de varias criptos
     /bitcoin - Muestra el Precio(segun coinbase)
     /dolartoday
+    /arepacoin - arepacoin
+    /wcc - WolfClover Coin
 
     /set_alarma_bitcoin - Configura alertas
     /set_alarma_ethereum - Configura alertas
