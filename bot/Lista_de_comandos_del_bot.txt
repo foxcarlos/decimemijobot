@@ -6,6 +6,7 @@ dolartoday - Precio del Dolar Venezuela
 allcoins - Precio de algunas las cripto monedas
 yenten - Precio Yenten
 arepacoin - Precio ArepaCoin
+wcc - Precio Wolf Clover Coin
 precio - <coin_ticker> <Market> Ej: /precio btc coinbase
 grafico - <coin_ticker> <market>
 clc - <coin_ticker> <monto> - Calcula el valor del BTC de un monto of coin pasado
