@@ -926,7 +926,7 @@ def valida_calcula_moneda(moneda, monto, data):
 
     return monto, total_btc, total_dolar
 
-def calc_wcc(monto=0, moneda='wcc'):
+def calc_wcc(monto=0, moneda='wolfc'):
     import ipdb; ipdb.set_trace() # BREAKPOINT
     precio_usd_wcc, precio_vef_wcc, precio_vef_wcc_airtm, precio_btc_wcc = 0.005, 13200, 0, 0.000001
 
@@ -988,8 +988,8 @@ def calc(bot, update):
             if moneda.upper() == 'AREPA':
                 response = calc_arepa(monto, 'arepa')
 
-            if moneda.upper() == 'WCC':
-                response = calc_wcc(monto, 'wcc')
+            if moneda.upper() == 'WOLFC':
+                response = calc_wcc(monto, 'wolfc')
 
         except Exception as e:
             response = 'Verifica que el monto tenga como separacion decimal . Ej: /clc btc 0.001'
