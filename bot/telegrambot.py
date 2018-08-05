@@ -927,7 +927,7 @@ def valida_calcula_moneda(moneda, monto, data):
     return monto, total_btc, total_dolar
 
 def calc_wcc(monto=0, moneda='wolfc'):
-    import ipdb; ipdb.set_trace() # BREAKPOINT
+    monto = float(monto)
     precio_usd_wcc, precio_vef_wcc, precio_vef_wcc_airtm, precio_btc_wcc = 0.005, 13200, 0, 0.000001
 
     response = """:moneybag: El calculo de <b>{0}</b> <i>{6}</i> es :\n\n:dollar: Dolar: {1:,.8f}\n:euro: Euro: {2:,.8f}\n:small_orange_diamond: BTC: {3:,.8f}\n\U0001F1FB\U0001F1EA  VEF WCC: {4:,.2f}\n\U0001F1FB\U0001F1EA  VEF DolarToday: {5:,.2f}\n\n <b>Precios basados en (https://wolfclover.com/calculadora/)</b>""".format(
