@@ -946,7 +946,6 @@ def calc_arepa(monto=0, moneda=''):
     return response
 
 def calc(bot, update):
-    import ipdb; ipdb.set_trace() # BREAKPOINT
     market = 'coinbase'
     parameters = update.message.text
     cadena_sin_el_comando = ' '.join(parameters.split()[1:])
@@ -989,8 +988,8 @@ def calc(bot, update):
             if moneda.upper() == 'AREPA':
                 response = calc_arepa(monto, 'arepa')
 
-            if moneda.upper() == 'WOLFC':
-                response = calc_wcc(monto, 'wolfc')
+            if moneda.upper() == 'WCC':
+                response = calc_wcc(monto, 'wcc')
 
         except Exception as e:
             response = 'Verifica que el monto tenga como separacion decimal . Ej: /clc btc 0.001'
