@@ -988,7 +988,7 @@ def calc(bot, update):
                 response = calc_arepa(monto, 'arepa')
 
             if moneda.upper() == 'WCC':
-                response = calc_arepa(monto, 'wcc')
+                response = calc_wcc(monto, 'wcc')
 
         except Exception as e:
             response = 'Verifica que el monto tenga como separacion decimal . Ej: /clc btc 0.001'
