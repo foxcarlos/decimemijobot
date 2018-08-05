@@ -926,6 +926,13 @@ def valida_calcula_moneda(moneda, monto, data):
 
     return monto, total_btc, total_dolar
 
+def calc_wcc(monto=0, moneda='wcc'):
+    precio_usd_wcc, precio_vef_wcc, precio_vef_wcc_airtm, precio_btc_wcc = 0.005, 13200, 0, 0.000001
+
+    response = """:moneybag: El calculo de <b>{0}</b> <i>{6}</i> es :\n\n:dollar: Dolar: {1:,.8f}\n:euro: Euro: {2:,.8f}\n:small_orange_diamond: BTC: {3:,.8f}\n\U0001F1FB\U0001F1EA  VEF WCC: {4:,.2f}\n\U0001F1FB\U0001F1EA  VEF DolarToday: {5:,.2f}\n\n <b>Precios basados en (https://wolfclover.com/calculadora/)</b>""".format(
+            monto, precio_usd_wcc*monto, 0, precio_btc_wcc*monto, precio_vef_wcc*monto, precio_vef_wcc_airtm*monto, moneda.upper())
+    return response
+
 def calc_arepa(monto=0, moneda=''):
     from bot.tasks import get_price_arepacoin
 
@@ -979,6 +986,9 @@ def calc(bot, update):
 
             if moneda.upper() == 'AREPA':
                 response = calc_arepa(monto, 'arepa')
+
+            if moneda.upper() == 'WCC':
+                response = calc_arepa(monto, 'wcc')
 
         except Exception as e:
             response = 'Verifica que el monto tenga como separacion decimal . Ej: /clc btc 0.001'

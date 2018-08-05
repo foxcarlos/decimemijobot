@@ -50,6 +50,25 @@ def grupo_message(grupos, cadena_sin_el_comando):
         sleep(3)
 
 
+def yt2mp3_2(chat_id, url):
+    import youtube_dl
+    ydl_opts = {
+            'format': 'worstaudio[ext=mp3]/worst',
+            'outtmpl': '%(title)s.mp3',
+            'noplaylist' : True,}
+
+    ydl = youtube_dl.YoutubeDL(ydl_opts)
+    descargar_archivo = ydl.extract_info(url)
+
+    if descargar_archivo.get('title'):
+        archivo = os.path.join(settings.BASE_DIR,
+                '{0}.mp3'.format(descargar_archivo.get('title')))
+
+        import ipdb; ipdb.set_trace() # BREAKPOINT
+        file_ = open("{0}".format(archivo), "rb")
+        DjangoTelegramBot.dispatcher.bot.sendAudio(chat_id,
+            audio=file_, caption=archivo)
+
 @app.task
 def yt2mp3(chat_id, url):
     msg_response = []
