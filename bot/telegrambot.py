@@ -51,6 +51,7 @@ URL_YTN_USD = settings.CRIPTO_MONEDAS.get("URL_YTN_USD")
 URL_PRICE_USD = settings.CRIPTO_MONEDAS.get("URL_PRICE_USD")
 URL_PRICE_USD_EUR_MARKET = settings.CRIPTO_MONEDAS.get("URL_PRICE_USD_EUR_MARKET")
 URL_DOLARTODAY = settings.CRIPTO_MONEDAS.get("URL_DOLARTODAY")
+URL_WCC = settings.CRIPTO_MONEDAS.get("URL_WCC")
 
 global buyer_seller
 global inf_operacion
@@ -1269,23 +1270,23 @@ def get_dolar_gobierno():
     return dolar_gobierno
 
 def get_dolartoday2():
-    rq = requests.get(URL_DOLARTODAY).json()
+    rq = requests.get(URL_DOLARTODAY)  # .json()
 
     # USD
-    dolartoday = float(rq.get('USD').get('transferencia'))
-    implicito = float(rq.get("USD").get("efectivo"))
-    dicom = float(rq.get("USD").get("sicad2"))
-    cucuta = float(rq.get("USD").get("efectivo_cucuta"))
+    dolartoday = float(rq.json().get('USD').get('transferencia'))
+    implicito = float(rq.json().get("USD").get("efectivo"))
+    dicom = float(rq.json().get("USD").get("sicad2"))
+    cucuta = float(rq.json().get("USD").get("efectivo_cucuta"))
     # localbitcoin = float(rq.get("USD").get("localbitcoin_ref"))
-    barril = float(rq.get("MISC").get("petroleo").replace(",", "."))
-    oro = float(rq.get("GOLD").get("rate"))
+    barril = float(rq.json().get("MISC").get("petroleo").replace(",", "."))
+    oro = float(rq.json().get("GOLD").get("rate"))
     fecha = datetime.now().strftime("%d-%m-%Y")
 
     # EUR
-    dolartoday_e = float(rq.get('EUR').get('transferencia'))
-    implicito_e = float(rq.get("EUR").get("efectivo"))
-    dicom_e = float(rq.get("EUR").get("sicad2"))
-    cucuta_e = float(rq.get("EUR").get("efectivo_cucuta"))
+    dolartoday_e = float(rq.json().get('EUR').get('transferencia'))
+    implicito_e = float(rq.json().get("EUR").get("efectivo"))
+    dicom_e = float(rq.json().get("EUR").get("sicad2"))
+    cucuta_e = float(rq.json().get("EUR").get("efectivo_cucuta"))
     # localbitcoin_e = float(rq.get("EUR").get("localbitcoin_ref"))
     emoji_barril = u'\U0001F6E2'
 
@@ -1299,7 +1300,7 @@ def get_dolartoday2():
     emoji_bandera_rusa = u'\U0001F1F7\U0001F1FA'
     emoji_bandera_vzla = u'\U0001F1FB\U0001F1EA'
     precio_airtm = get_price_from_twiter('theairtm').strip()
-    precio_dolar_gobierno = get_dolar_gobierno()
+    precio_dolar_gobierno = 0  # get_dolar_gobierno()
 
     response = """:speaker: DolarToday hoy USD/EUR: {0}:\n\n\
     {14} <b>Casas Cambio</b>: {17}\n\
@@ -1358,9 +1359,17 @@ def dolartoday(bot, update):
 def dolar_procom(bot, update):
     dolar_otros(bot, update, 'dolarprocom')
 
+def get_price_wcc():
+    response = 0
+    rq = requests.get(URL_WCC).json()
+    if rq.get('success'):
+        precio = rq.get('result').get('High') if rq.get('result').get('Last') else '0'
+        response = float(precio)
+    return response
+  
 def wolfclover_coin(bot, update):
     chat_id = update.message.chat_id
-    wolfclover.delay(chat_id)
+    wolfclover.delay(chat_id, get_dolartoday())
 
 def arepa_coin(bot, update):
     chat_id = update.message.chat_id

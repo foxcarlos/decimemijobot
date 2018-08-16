@@ -232,6 +232,7 @@ CRIPTO_MONEDAS = {
         "URL_PRICE_USD_EUR_MARKET": "https://min-api.cryptocompare.com/data/price?fsym={0}&tsyms=USD,EUR,BTC,ARS,VEF,PEN,COP,CLP,UYU,BOB,AUD,BRL,CRC,CUC,MXN,AWG,CAD,CHE,CHW,CNY,DOP,GTQ,ILS,IQD,IRR,ISK,JPY,KRW,KPW,KWD,LBP,NIO,NZD,PYG,RUB,SVC&",
         "URL_DOLARTODAY": "https://s3.amazonaws.com/dolartoday/data.json",
         "URL_LOCALBITCOIN": "https://min-api.cryptocompare.com/data/price?fsym=USD&tsyms=VEF",
-        "URL_AREPACOIN": "https://www.latamcoincap.io/api/v1/prices/ticker"
+        "URL_AREPACOIN": "https://www.latamcoincap.io/api/v1/prices/ticker",
+        "URL_WCC": "https://trade.thexchanger.io/api/v1/public/getmarketsummary?market=BTC-WCC"
         }
 

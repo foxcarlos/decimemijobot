@@ -24,9 +24,9 @@ from django.conf import settings
 
 from lib.airtm import AirTM
 
-
 URL_AREPA_BTC_USD = settings.CRIPTO_MONEDAS.get("URL_AREPACOIN")
-
+URL_WCC = settings.CRIPTO_MONEDAS.get("URL_WCC")
+URL_PRICE_USD_EUR_MARKET = settings.CRIPTO_MONEDAS.get("URL_PRICE_USD_EUR_MARKET")
 
 @app.task
 def pool_message(users, cadena_sin_el_comando):
@@ -248,37 +248,38 @@ def get_price_arepacoin2(dolartoday):
 
     return precio_usd_arepa, precio_vef_arepa, precio_vef_arepa_airtm, precio_btc_arepa
 
-def get_price_wcc():
+def get_price_wcc(dolartoday):
+    def get_price_usd_eur(coin_ticker, market='coinbase'):
+        url = URL_PRICE_USD_EUR_MARKET.format(coin_ticker.upper())
+        data = requests.get(url)
+        response = data.json() if data else ''
+        return response
+  
+    precio_dtd = dolartoday if dolartoday else 0
+    precio_airtm = float(get_price_from_twiter('theairtm').strip()) if \
+            get_price_from_twiter('theairtm') else 0
+    dolartoday if dolartoday else 0
 
-    vdisplay = Display(visible=0, size=(1024, 768))
-    vdisplay.start()
+    precio_usd_wcc = 0
+    precio_vef_wcc = 0
+    precio_btc_wcc = 0
+    precio_vef_wcc_airtm = 0
 
-    driver = webdriver.Firefox(executable_path="/usr/local/bin/geckodriver")
-    url = "https://wolfclover.com/calculadora/"
-    driver.get(url)
+    rq = requests.get(URL_WCC).json()
+    if rq.get('success'):
+        precio_btc_wcc = float(rq.get('result').get('High') if rq.get('result').get('Last') else '0')
+    
+    precio_usd_wcc = float(get_price_usd_eur("BTC", "bitfinex").get('USD')) * precio_btc_wcc
+    precio_vef_wcc = precio_usd_wcc * precio_dtd
+    precio_vef_wcc_airtm = precio_usd_wcc * precio_airtm
 
-    wcc = driver.find_element_by_id("txt_clover")
-    wcc.send_keys('1')
-
-    tasa_dolar = driver.find_element_by_id("lbl_usdvef").text.replace('.', ',')
-    btc = driver.find_element_by_id("txt_cryptocoin").get_attribute("value")
-    vef = driver.find_element_by_id("txt_currency").get_attribute("value")
-    usd = driver.find_element_by_id("txt_usd").get_attribute("value")
-
-    vdisplay.stop()
-    return tasa_dolar, vef, usd, btc
+    return precio_usd_wcc, precio_vef_wcc, precio_vef_wcc_airtm, precio_btc_wcc
 
 @app.task
-def wolfclover(chat_id):
-    response = ":hourglass_flowing_sand: <b>Consultando Wcc...</b>"
-    DjangoTelegramBot.dispatcher.bot.sendMessage(chat_id, parse_mode="html",
-            text=emojize(response, use_aliases=True))
-
-    tasa, vef, usd, btc = get_price_wcc()
-    response = """El precio de WolfClover es:\n<b>Tasa:</b>{0}\n\n\U0001F1FB\U0001F1EA <b>VEF:</b> {1}\n<b>:dollar: USD:</b> {2}\n:small_orange_diamond: <b>BTC</b> {3}\n""".format(tasa, vef, usd, btc)
-
-    DjangoTelegramBot.dispatcher.bot.sendMessage(chat_id, parse_mode="html",
-            text=emojize(response, use_aliases=True))
+def wolfclover(chat_id, dolartoday):
+    precio_usd_arepa, precio_vef_arepa, precio_vef_arepa_airtm, precio_btc_arepa  = get_price_wcc(dolartoday)
+    response = """El precio de WolfCloverCoin es:\n\n\U0001F1FB\U0001F1EA <b>VEF Dolartoday:</b> {0:,.2f}\n\U0001F1FB\U0001F1EA <b>VEF AirTM:</b> {2:,.2f}\n<b>:dollar: USD:</b> {1:,.8f}\n\U000020BF <b>BTC</b> {3:,.8f}\n\n <b>Precios Basados en https://trade.thexchanger.io</b>""".format(precio_vef_arepa, precio_usd_arepa, precio_vef_arepa_airtm, precio_btc_arepa)
+    DjangoTelegramBot.dispatcher.bot.sendMessage(chat_id, parse_mode="html", text=emojize(response, use_aliases=True))
 
 def get_price_arepacoin(dolartoday):
     precio_dtd = dolartoday if dolartoday else 0

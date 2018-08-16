@@ -36,8 +36,8 @@ class Command(BaseCommand):
 
     def obtener_precio_dolar_paralelo_venezuela(self):
         rq = requests.get('https://s3.amazonaws.com/dolartoday/data.json')
-        devuelto = rq.json()
-        response = devuelto['USD']['transferencia']
+        devuelto = rq
+        response = devuelto.json()['USD']['transferencia']
         return response
 
     def obtener_precio(self, comando):
@@ -129,7 +129,7 @@ class Command(BaseCommand):
                         ultimo_precio=precio_actual)
 
     def handle(self, *args, **options):
-
+        import ipdb;ipdb.set_trace()
         if 'dolartoday' in options.get("comando"):
             self.generar_alerta('dolartoday')
         elif 'bitcoin' in options.get("comando"):
