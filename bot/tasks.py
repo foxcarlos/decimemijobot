@@ -216,7 +216,7 @@ def get_dolar_gobierno():
     tree = html.fromstring(page.content)
     resultado_bs = tree.xpath(ruta)
     if resultado_bs:
-        dolar_gobierno = resultado_bs[0].text.replace('Bs.', '').strip()
+        dolar_gobierno = resultado_bs[0].text.replace('Bs.S.', '').strip()
     return dolar_gobierno
 
 def get_price_arepacoin2(dolartoday):

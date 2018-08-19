@@ -1266,7 +1266,7 @@ def get_dolar_gobierno():
     tree = html.fromstring(page.content)
     resultado_bs = tree.xpath(ruta)
     if resultado_bs:
-        dolar_gobierno = resultado_bs[0].text.replace('Bs.', '').strip()
+        dolar_gobierno = resultado_bs[0].text.replace('Bs.S.', '').strip()
     return dolar_gobierno
 
 def get_dolartoday2():
@@ -1300,10 +1300,10 @@ def get_dolartoday2():
     emoji_bandera_rusa = u'\U0001F1F7\U0001F1FA'
     emoji_bandera_vzla = u'\U0001F1FB\U0001F1EA'
     precio_airtm = get_price_from_twiter('theairtm').strip()
-    precio_dolar_gobierno = 0  # get_dolar_gobierno()
+    precio_dolar_gobierno = get_dolar_gobierno()
 
     response = """:speaker: DolarToday hoy USD/EUR: {0}:\n\n\
-    {14} <b>Casas Cambio</b>: {17}\n\
+    {14} <b>Casas Cambio Bs S.</b>: {17}\n\
     {14} <b>DolarToday</b>: {1:0,.2f}\n\
     {14} <b>Dolar LBTC</b>: {5:0,.2f}\n\
     {14} <b>Dolar AirTM Bs</b>: {15:0,.2f}\n\n\
