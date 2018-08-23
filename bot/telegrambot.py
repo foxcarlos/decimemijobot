@@ -19,7 +19,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from bot.scrapy import NoticiasPanorama
 from bot.models import Alerta, AlertaUsuario, User, Grupo, Comando, ComandoEstado, Contrato, PersonaContrato
 
-from bot.tasks import pool_message, grupo_message, yt2mp3, get_price_from_twiter, airtm_dolar_vef, arepacoin, wolfclover
+from bot.tasks import pool_message, grupo_message, yt2mp3, get_price_from_twiter, airtm_dolar_vef, arepacoin, wolfclover, get_price_arepacoin, get_price_wcc
 
 from lib.airtm import AirTM
 from datetime import datetime
@@ -842,10 +842,8 @@ def button_alarmas(bot, update):
             chat_id=query.message.chat_id,
             message_id=query.message.message_id)
 
-
 def get_price(url):
     return requests.get(url).json().get("data").get("rates").get("USD")
-
 
 def get_price_coinmarketcap(url):
     return requests.get(url).json()[0].get("price_usd")
@@ -929,18 +927,16 @@ def valida_calcula_moneda(moneda, monto, data):
 
 def calc_wcc(monto=0, moneda='wolfc'):
     monto = float(monto)
-    precio_usd_wcc, precio_vef_wcc, precio_vef_wcc_airtm, precio_btc_wcc = 0.005, 13200, 0, 0.000001
+    # precio_usd_wcc, precio_vef_wcc, precio_vef_wcc_airtm, precio_btc_wcc = 0.005, 0.2961, 0, 0.000001
+    precio_usd_wcc, precio_vef_wcc, precio_vef_wcc_airtm, precio_btc_wcc = get_price_wcc(get_dolartoday())
 
-    response = """:moneybag: El calculo de <b>{0}</b> <i>{6}</i> es :\n\n:dollar: Dolar: {1:,.8f}\n:euro: Euro: {2:,.8f}\n:small_orange_diamond: BTC: {3:,.8f}\n\U0001F1FB\U0001F1EA  VEF WCC: {4:,.2f}\n\U0001F1FB\U0001F1EA  VEF DolarToday: {5:,.2f}\n\n <b>Precios basados en (https://wolfclover.com/calculadora/)</b>""".format(
+    response = """:moneybag: El calculo de <b>{0}</b> <i>{6}</i> es :\n\n:dollar: Dolar: {1:,.8f}\n:euro: Euro: {2:,.8f}\n:small_orange_diamond: BTC: {3:,.8f}\n\U0001F1FB\U0001F1EA  VEF WCC: {4:,.2f}\n\U0001F1FB\U0001F1EA  VEF DolarToday: {5:,.2f}\n\n <b>Precios basados en (https://trade.thexchanger.io)</b>""".format(
             monto, precio_usd_wcc*monto, 0, precio_btc_wcc*monto, precio_vef_wcc*monto, precio_vef_wcc_airtm*monto, moneda.upper())
     return response
 
 def calc_arepa(monto=0, moneda=''):
-    from bot.tasks import get_price_arepacoin
-
     monto = float(monto)
     precio_usd_arepa, precio_vef_arepa, precio_vef_arepa_airtm, precio_btc_arepa = get_price_arepacoin(get_dolartoday())
-
 
     response = """:moneybag: El calculo de <b>{0}</b> <i>{6}</i> es :\n\n:dollar: Dolar: {1:,.8f}\n:euro: Euro: {2:,.8f}\n:small_orange_diamond: BTC: {3:,.8f}\n\U0001F1FB\U0001F1EA  VEF AirTM: {4:,.2f}\n\U0001F1FB\U0001F1EA  VEF: {5:,.2f}\n\n <b>Precios basados en (LatamCoinCap, DolarToday,DolarAirTM)</b>""".format(
             monto, precio_usd_arepa*monto, 0, precio_btc_arepa*monto, precio_vef_arepa*monto, precio_vef_arepa_airtm*monto, moneda.upper())
@@ -969,7 +965,7 @@ def calc(bot, update):
                 btc = data.get('BTC')
                 valores.append(btc)
 
-                total_euros, total_dolar, total_btc = [float(symbol)*float(monto) for symbol in valores]
+                total_euros, total_dolar, total_btc = [float(symbol) * float(monto) for symbol in valores]
                 total_vef = float(monto) * (data.get("USD") * get_dolartoday())
                 response = """:moneybag: El calculo de <b>{0}</b> <i>{5}</i> es :\n\n:dollar: Dolar: {1:,.2f}\n:euro: Euro: {2:,.2f}\n:small_orange_diamond: BTC: {3:,.6f}\n\U0001F1FB\U0001F1EA  VEF: {4:,.2f} """.format(
                         monto, total_dolar, total_euros, total_btc, total_vef, moneda.upper())
@@ -986,10 +982,10 @@ def calc(bot, update):
                 response = """:moneybag: El calculo para <b>{0}</b> <i>{4}</i> es de :\n\n:chart_with_downwards_trend: BTC: {1:,.9f}\n:dollar: Dolares: {2:,.2f}\n\n<b>Nota:</b> Precios basados en: {3}""".format(
                         monto, total_btc, total_dolar, market.capitalize(), moneda.upper())
 
-            if moneda.upper() == 'AREPA':
+            elif moneda.upper() == 'AREPA':
                 response = calc_arepa(monto, 'arepa')
 
-            if moneda.upper() == 'WCC':
+            elif moneda.upper() == 'WCC':
                 response = calc_wcc(monto, 'wcc')
 
         except Exception as e:
@@ -1269,6 +1265,17 @@ def get_dolar_gobierno():
         dolar_gobierno = resultado_bs[0].text.replace('Bs.S.', '').strip()
     return dolar_gobierno
 
+def get_dicom_gobierno():
+    dolar_gobierno = ''
+    URL = 'https://www.dicom.gob.ve/'
+    ruta ='//*[@class="moneda moneda-eur even last"]//p[@class="value"]'
+    page = requests.get(URL)
+    tree = html.fromstring(page.content)
+    resultado_eur = tree.xpath(ruta)
+    if resultado_eur:
+        eur_dicom_gobierno = resultado_eur[0].text.replace(',', '.')
+    return eur_dicom_gobierno
+
 def get_dolartoday2():
     rq = requests.get(URL_DOLARTODAY)  # .json()
 
@@ -1285,7 +1292,7 @@ def get_dolartoday2():
     # EUR
     dolartoday_e = float(rq.json().get('EUR').get('transferencia'))
     implicito_e = float(rq.json().get("EUR").get("efectivo"))
-    dicom_e = float(rq.json().get("EUR").get("sicad2"))
+    dicom_e = float(get_dicom_gobierno())  # float(rq.json().get("EUR").get("sicad2"))
     cucuta_e = float(rq.json().get("EUR").get("efectivo_cucuta"))
     # localbitcoin_e = float(rq.get("EUR").get("localbitcoin_ref"))
     emoji_barril = u'\U0001F6E2'
@@ -1302,18 +1309,13 @@ def get_dolartoday2():
     precio_airtm = get_price_from_twiter('theairtm').strip()
     precio_dolar_gobierno = get_dolar_gobierno()
 
-    response = """:speaker: DolarToday hoy USD/EUR: {0}:\n\n\
-    {14} <b>Casas Cambio Bs S.</b>: {17}\n\
+    response = """:speaker: FoxBot Today USD/EUR: {0}:\n\n\
+    {14} <b>Casas Cambio</b>: {17}\n\
     {14} <b>DolarToday</b>: {1:0,.2f}\n\
     {14} <b>Dolar LBTC</b>: {5:0,.2f}\n\
-    {14} <b>Dolar AirTM Bs</b>: {15:0,.2f}\n\n\
-    :dollar: <b>Implicito</b>: {2:0,.2f}\n\
-    :dollar: <b>Dicom</b>: {3:0,.2f}\n\
-    :dollar: <b>Cucuta</b>: {4:0,.2f}\n\
+    {14} <b>Dolar AirTM</b>: {15:0,.2f}\n\n\
     :euro: <b>DolarToday</b>: {6:0,.2f}\n\
-    :euro: <b>Implicito</b>: {7:0,.2f}\n\
     :euro: <b>Dicom</b>: {8:0,.2f}\n\
-    :euro: <b>Cucuta</b>: {9:0,.2f}\n\n\
     {12} <b>RUB Bs</b>: {13:0,.2f}\n\n\
     {16} <b>Petroleo</b> USD: {10:0,.2f}\n\
     :moneybag: <b>Oro</b> USD: {11:0,.2f}\n\
@@ -1359,13 +1361,14 @@ def dolartoday(bot, update):
 def dolar_procom(bot, update):
     dolar_otros(bot, update, 'dolarprocom')
 
+"""
 def get_price_wcc():
     response = 0
     rq = requests.get(URL_WCC).json()
     if rq.get('success'):
         precio = rq.get('result').get('High') if rq.get('result').get('Last') else '0'
         response = float(precio)
-    return response
+    return response"""
   
 def wolfclover_coin(bot, update):
     chat_id = update.message.chat_id

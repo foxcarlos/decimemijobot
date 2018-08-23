@@ -267,7 +267,7 @@ def get_price_wcc(dolartoday):
 
     rq = requests.get(URL_WCC).json()
     if rq.get('success'):
-        precio_btc_wcc = float(rq.get('result').get('High') if rq.get('result').get('Last') else '0')
+        precio_btc_wcc = float(rq.get('result').get('Last') if rq.get('result').get('Last') else '0')
     
     precio_usd_wcc = float(get_price_usd_eur("BTC", "bitfinex").get('USD')) * precio_btc_wcc
     precio_vef_wcc = precio_usd_wcc * precio_dtd
