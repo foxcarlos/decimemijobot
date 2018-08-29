@@ -129,7 +129,6 @@ class Command(BaseCommand):
                         ultimo_precio=precio_actual)
 
     def handle(self, *args, **options):
-        import ipdb;ipdb.set_trace()
         if 'dolartoday' in options.get("comando"):
             self.generar_alerta('dolartoday')
         elif 'bitcoin' in options.get("comando"):

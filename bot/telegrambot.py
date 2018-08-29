@@ -973,6 +973,7 @@ def calc(bot, update):
             # Esto es para que solo pase por aqui cuando se solicite
             # cualquier moneda menos el BTC porque ese se calcula en la
             # sentecia de arriba
+            # import ipdb;ipdb.set_trace()
             if moneda.upper() != "BTC" and moneda.upper() in list(data):
                 data = get_price_usd_eur("btc", market)
                 monto, total_btc, total_dolar = valida_calcula_moneda(
