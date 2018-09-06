@@ -297,15 +297,20 @@ def get_price_arepacoin(dolartoday):
     precio_vef_arepa_airtm = 0
 
     coincap_data = requests.get(URL_AREPA_BTC_USD).json()
-    coincap_json = coincap_data.get('data') if \
-            coincap_data.get('status') == 'success' else {}
+    # coincap_json = coincap_data.get('data') if \
+    #        coincap_data.get('status') == 'success' else {}
+      
+    coincap_json = coincap_data[0] if coincap_data else {}
 
-    arepa_values = [coin for coin in coincap_json \
-            if coin.get('name').lower() == 'arepacoin'][0]
+    # arepa_values = [coin for coin in coincap_json \
+    #        if coin.get('name').lower() == 'arepacoin'][0]
 
-    if arepa_values:
-        precio_btc_arepa = arepa_values.get('price_btc')
-        precio_usd_arepa = arepa_values.get('price_usd')
+    if coincap_json:
+        try:
+            precio_btc_arepa = float(coincap_json.get('price_btc')) if coincap_json.get('price_btc') else 0
+            precio_usd_arepa = float(coincap_json.get('price_usd')) if coincap_json.get('price_usd') else 0
+        except:
+            pass
 
     precio_vef_arepa = precio_usd_arepa * precio_dtd
     precio_vef_arepa_airtm = precio_usd_arepa * precio_airtm

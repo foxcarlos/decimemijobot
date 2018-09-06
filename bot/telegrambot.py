@@ -939,7 +939,7 @@ def calc_arepa(monto=0, moneda=''):
     monto = float(monto)
     precio_usd_arepa, precio_vef_arepa, precio_vef_arepa_airtm, precio_btc_arepa = get_price_arepacoin(get_dolartoday())
 
-    response = """:moneybag: El calculo de <b>{0}</b> <i>{6}</i> es :\n\n:dollar: Dolar: {1:,.8f}\n:euro: Euro: {2:,.8f}\n\u0243 BTC: {3:,.8f}\n\U0001F1FB\U0001F1EA  VEF AirTM: {4:,.2f}\n\U0001F1FB\U0001F1EA  VEF: {5:,.2f}\n\n <b>Precios basados en (LatamCoinCap, DolarToday,DolarAirTM)</b>""".format(
+    response = """:moneybag: El calculo de <b>{0}</b> <i>{6}</i> es :\n\n:dollar: Dolar: {1:,.8f}\n:euro: Euro: {2:,.8f}\n\u0243 BTC: {3:,.8f}\n\U0001F1FB\U0001F1EA  VEF AirTM: {4:,.2f}\n\U0001F1FB\U0001F1EA  VEF: {5:,.2f}\n\n <b>Precios basados en (CoinMarketCap, DolarToday,DolarAirTM)</b>""".format(
             monto, precio_usd_arepa*monto, 0, precio_btc_arepa*monto, precio_vef_arepa*monto, precio_vef_arepa_airtm*monto, moneda.upper())
     return response
   
