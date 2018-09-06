@@ -126,7 +126,7 @@ def get_price_from_twiter(nombre):
 
     def _validar_condicion(usuario_tuiter, status):
         if usuario_tuiter == 'theairtm':
-            if 'Tasa' in status.text and '#Ven' in status.text:
+            if 'tasa' in status.text.lower() and '#ven' in status.text.lower():
                 return True
         elif usuario_tuiter == 'dolarprocom':
             if 'PRECIO DEL MERCADO PARALELO' in status.text:
@@ -158,10 +158,14 @@ def get_price_from_twiter(nombre):
     def get_tweets(stuff, n, nombre):
         for index, status in enumerate(stuff.items(n)):
             today = status.created_at.date()
-            response_ruta = descargar_imagen(nombre, status)
+            # response_ruta = descargar_imagen(nombre, status)
+            # Por ahora se harcodea esta opcion, no recuerdo que funcion hacia
+            # descargar imagen
+            response_ruta = True
             texto = status.text
 
-            if response_ruta:
+            #if response_ruta:
+            if _validar_condicion(nombre, status):
                 if today == datetime.now().date():
                     response = True, response_ruta, texto
                     break
