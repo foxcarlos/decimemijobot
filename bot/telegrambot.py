@@ -1350,7 +1350,7 @@ def get_dolartoday2():
 
 def get_localbitcoin_precio(coin_ticker):
     data = get_price_usd_eur("USD", 'coinbase')
-    monto = data.get('VEF') / data.get(coin_ticker.upper())
+    monto = data.get('VES') / data.get(coin_ticker.upper())
     return monto
 
 def dolartoday(bot, update):
