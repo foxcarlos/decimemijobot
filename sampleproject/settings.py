@@ -229,7 +229,7 @@ CRIPTO_MONEDAS = {
         "URL_YTN_USD": "https://api.coinmarketcap.com/v1/ticker/yenten/",
         "URL_BTC_ALL_EXC": "https://www.cryptocompare.com/api/data/coinsnapshot/?fsym=BTC&tsym=USD",
         "URL_PRICE_USD": "https://www.cryptocompare.com/api/data/coinsnapshot/",
-        "URL_PRICE_USD_EUR_MARKET": "https://min-api.cryptocompare.com/data/price?fsym={0}&tsyms=USD,EUR,BTC,ARS,VEF,PEN,COP,CLP,UYU,BOB,AUD,BRL,CRC,CUC,MXN,AWG,CAD,CHE,CHW,CNY,DOP,GTQ,ILS,IQD,IRR,ISK,JPY,KRW,KPW,KWD,LBP,NIO,NZD,PYG,RUB,SVC&",
+        "URL_PRICE_USD_EUR_MARKET": "https://min-api.cryptocompare.com/data/price?fsym={0}&tsyms=USD,EUR,BTC,ARS,VEF,VES,PEN,COP,CLP,UYU,BOB,AUD,BRL,CRC,CUC,MXN,AWG,CAD,CHE,CHW,CNY,DOP,GTQ,ILS,IQD,IRR,ISK,JPY,KRW,KPW,KWD,LBP,NIO,NZD,PYG,RUB,SVC&",
         "URL_DOLARTODAY": "https://s3.amazonaws.com/dolartoday/data.json",
         "URL_LOCALBITCOIN": "https://min-api.cryptocompare.com/data/price?fsym=USD&tsyms=VEF",
         "URL_AREPACOIN": "https://www.latamcoincap.io/api/v1/prices/ticker",

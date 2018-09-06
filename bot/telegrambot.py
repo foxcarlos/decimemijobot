@@ -19,7 +19,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from bot.scrapy import NoticiasPanorama
 from bot.models import Alerta, AlertaUsuario, User, Grupo, Comando, ComandoEstado, Contrato, PersonaContrato
 
-from bot.tasks import pool_message, grupo_message, yt2mp3, get_price_from_twiter, airtm_dolar_vef, arepacoin, wolfclover, get_price_arepacoin, get_price_wcc
+from bot.tasks import pool_message, grupo_message, yt2mp3, get_price_from_twiter, arepacoin, wolfclover, get_price_arepacoin, get_price_wcc
 
 from lib.airtm import AirTM
 from datetime import datetime
@@ -365,7 +365,7 @@ def callback_califica(bot, update):
                 calif1 = contrato[0].comentario
                 calif2 = contrato[1].comentario
 
-                msg_response3 = """:pushpin: Contrato finalizado\n\n:small_orange_diamond:<b>Contrato:</b><b>{0}</b>\n\n:small_orange_diamond:<b>Operacion:</b> {1}\n\n:small_orange_diamond:<b>#Ref:</b> @{2} fue calif. como {5}\n\n:small_orange_diamond:<b>#Ref:</b> @{4} fue calif. como {3}\n\n:bulb: <b>Tips:</b>\n\n- Si quieres saber mas acerca de la operacion puedes consultar el contrato con el siguiente comando:\n\n - Ejecuta:\n <b>/tradeb {0}</b>
+                msg_response3 = """:pushpin: Contrato finalizado\n\n\u0243<b>Contrato:</b><b>{0}</b>\n\n\u0243<b>Operacion:</b> {1}\n\n\u0243<b>#Ref:</b> @{2} fue calif. como {5}\n\n\u0243<b>#Ref:</b> @{4} fue calif. como {3}\n\n:bulb: <b>Tips:</b>\n\n- Si quieres saber mas acerca de la operacion puedes consultar el contrato con el siguiente comando:\n\n - Ejecuta:\n <b>/tradeb {0}</b>
                 """.format(contrato_id, operacion, user1,
                         calif1, user2, calif2)
                 bot.sendMessage(grupo_chat_id, parse_mode="html",
@@ -852,7 +852,8 @@ def yenten(bot, update):
     ytn = requests.get(URL_YTN_USD).json()[0]
     response = ''
     if ytn:
-        response = """El precio del Yenten es:\n:dollar: <b>Dolar:</b> {0:,.2f}\n:small_orange_diamond: <b>BTC</b>: {1:,.8f}\n\U0001F1FB\U0001F1EA <b>VEF:</b> {2:,.2f}""".format(
+        #response = """El precio del Yenten es:\n:dollar: <b>Dolar:</b> {0:,.2f}\n\u0243 <b>BTC</b>: {1:,.8f}\n\U0001F1FB\U0001F1EA <b>VEF:</b> {2:,.2f}""".format(
+        response = """El precio del Yenten es:\n:dollar: <b>Dolar:</b> {0:,.2f}\n\u0243 <b>BTC</b>: {1:,.8f}\n\U0001F1FB\U0001F1EA <b>VEF:</b> {2:,.2f}""".format(
                 float(ytn.get('price_usd')),
                 float(ytn.get('price_btc')),
                 float(ytn.get('price_usd')) * get_dolartoday()
@@ -930,7 +931,7 @@ def calc_wcc(monto=0, moneda='wolfc'):
     # precio_usd_wcc, precio_vef_wcc, precio_vef_wcc_airtm, precio_btc_wcc = 0.005, 0.2961, 0, 0.000001
     precio_usd_wcc, precio_vef_wcc, precio_vef_wcc_airtm, precio_btc_wcc = get_price_wcc(get_dolartoday())
 
-    response = """:moneybag: El calculo de <b>{0}</b> <i>{6}</i> es :\n\n:dollar: Dolar: {1:,.8f}\n:euro: Euro: {2:,.8f}\n:small_orange_diamond: BTC: {3:,.8f}\n\U0001F1FB\U0001F1EA  VEF WCC: {4:,.2f}\n\U0001F1FB\U0001F1EA  VEF DolarToday: {5:,.2f}\n\n <b>Precios basados en (https://trade.thexchanger.io)</b>""".format(
+    response = """:moneybag: El calculo de <b>{0}</b> <i>{6}</i> es :\n\n:dollar: Dolar: {1:,.8f}\n:euro: Euro: {2:,.8f}\n\u0243 BTC: {3:,.8f}\n\U0001F1FB\U0001F1EA  VEF WCC: {4:,.2f}\n\U0001F1FB\U0001F1EA  VEF DolarToday: {5:,.2f}\n\n <b>Precios basados en (https://trade.thexchanger.io)</b>""".format(
             monto, precio_usd_wcc*monto, 0, precio_btc_wcc*monto, precio_vef_wcc*monto, precio_vef_wcc_airtm*monto, moneda.upper())
     return response
 
@@ -938,10 +939,52 @@ def calc_arepa(monto=0, moneda=''):
     monto = float(monto)
     precio_usd_arepa, precio_vef_arepa, precio_vef_arepa_airtm, precio_btc_arepa = get_price_arepacoin(get_dolartoday())
 
-    response = """:moneybag: El calculo de <b>{0}</b> <i>{6}</i> es :\n\n:dollar: Dolar: {1:,.8f}\n:euro: Euro: {2:,.8f}\n:small_orange_diamond: BTC: {3:,.8f}\n\U0001F1FB\U0001F1EA  VEF AirTM: {4:,.2f}\n\U0001F1FB\U0001F1EA  VEF: {5:,.2f}\n\n <b>Precios basados en (LatamCoinCap, DolarToday,DolarAirTM)</b>""".format(
+    response = """:moneybag: El calculo de <b>{0}</b> <i>{6}</i> es :\n\n:dollar: Dolar: {1:,.8f}\n:euro: Euro: {2:,.8f}\n\u0243 BTC: {3:,.8f}\n\U0001F1FB\U0001F1EA  VEF AirTM: {4:,.2f}\n\U0001F1FB\U0001F1EA  VEF: {5:,.2f}\n\n <b>Precios basados en (LatamCoinCap, DolarToday,DolarAirTM)</b>""".format(
             monto, precio_usd_arepa*monto, 0, precio_btc_arepa*monto, precio_vef_arepa*monto, precio_vef_arepa_airtm*monto, moneda.upper())
     return response
+  
+def func_calc(params, market='coinbase'):
+    response = ''
+    try:
+        moneda, monto = params
+        data = get_price_usd_eur(moneda.upper(), market)
+        if data.get('Response') != "Error":
+            valores = []  # data.values()
+            eur = data.get('EUR')
+            valores.append(eur)
+            usd = data.get('USD')
+            valores.append(usd)
+            btc = data.get('BTC') if data.get('BTC') else 0
+            valores.append(btc)
 
+            total_euros, total_dolar, total_btc = [float(symbol) * float(monto) for symbol in valores]
+            total_vef = float(monto) * (data.get("USD") * get_dolartoday())
+            response = """:moneybag: El calculo de <b>{0}</b> <i>{5}</i> es :\n\n:dollar: Dolar: {1:,.2f}\n:euro: Euro: {2:,.2f}\n\u0243 BTC: {3:,.6f}\n\U0001F1FB\U0001F1EA  VEF: {4:,.2f} """.format(
+                    monto, total_dolar, total_euros, total_btc, total_vef, moneda.upper())
+
+        # Esto es para que solo pase por aqui cuando se solicite
+        # cualquier moneda menos el BTC porque ese se calcula en la
+        # sentecia de arriba
+        # import ipdb;ipdb.set_trace()
+        if moneda.upper() != "BTC" and moneda.upper() in list(data):
+            data = get_price_usd_eur("btc", market)
+            monto, total_btc, total_dolar = valida_calcula_moneda(
+                    moneda.upper(), monto, data)
+
+            total_vef = float(monto) * (total_dolar * get_dolartoday())
+            response = """:moneybag: El calculo para <b>{0}</b> <i>{4}</i> es de :\n\n:chart_with_downwards_trend: BTC: {1:,.9f}\n:dollar: Dolares: {2:,.2f}\n\n<b>Nota:</b> Precios basados en: {3}""".format(
+                    monto, total_btc, total_dolar, market.capitalize(), moneda.upper())
+
+        elif moneda.upper() == 'AREPA':
+            response = calc_arepa(monto, 'arepa')
+
+        elif moneda.upper() == 'WCC':
+            response = calc_wcc(monto, 'wcc')
+
+    except Exception as e:
+        response = 'Verifica que el monto tenga como separacion decimal . Ej: /clc btc 0.001'
+    return response
+    
 def calc(bot, update):
     market = 'coinbase'
     parameters = update.message.text
@@ -953,44 +996,7 @@ def calc(bot, update):
     if not params:
         response = "<b>{0}</b> Debes indicar <b>/clc coin_ticker monto</b>\n\n<i>Ej</i>: /clc btc 0.0002 \n\nSi desea calcular VEF a bitcoin y Dolar ejecute\n\n/clc vef 2500000\n\n Tambien puedes calcular en moneda de otro pais Ej. <b>/clc USD 1000</b>".format(":question:")
     else:
-        try:
-            moneda, monto = params
-            data = get_price_usd_eur(moneda.upper(), market)
-            if data.get('Response') != "Error":
-                valores = []  # data.values()
-                eur = data.get('EUR')
-                valores.append(eur)
-                usd = data.get('USD')
-                valores.append(usd)
-                btc = data.get('BTC')
-                valores.append(btc)
-
-                total_euros, total_dolar, total_btc = [float(symbol) * float(monto) for symbol in valores]
-                total_vef = float(monto) * (data.get("USD") * get_dolartoday())
-                response = """:moneybag: El calculo de <b>{0}</b> <i>{5}</i> es :\n\n:dollar: Dolar: {1:,.2f}\n:euro: Euro: {2:,.2f}\n:small_orange_diamond: BTC: {3:,.6f}\n\U0001F1FB\U0001F1EA  VEF: {4:,.2f} """.format(
-                        monto, total_dolar, total_euros, total_btc, total_vef, moneda.upper())
-
-            # Esto es para que solo pase por aqui cuando se solicite
-            # cualquier moneda menos el BTC porque ese se calcula en la
-            # sentecia de arriba
-            # import ipdb;ipdb.set_trace()
-            if moneda.upper() != "BTC" and moneda.upper() in list(data):
-                data = get_price_usd_eur("btc", market)
-                monto, total_btc, total_dolar = valida_calcula_moneda(
-                        moneda.upper(), monto, data)
-
-                total_vef = float(monto) * (total_dolar * get_dolartoday())
-                response = """:moneybag: El calculo para <b>{0}</b> <i>{4}</i> es de :\n\n:chart_with_downwards_trend: BTC: {1:,.9f}\n:dollar: Dolares: {2:,.2f}\n\n<b>Nota:</b> Precios basados en: {3}""".format(
-                        monto, total_btc, total_dolar, market.capitalize(), moneda.upper())
-
-            elif moneda.upper() == 'AREPA':
-                response = calc_arepa(monto, 'arepa')
-
-            elif moneda.upper() == 'WCC':
-                response = calc_wcc(monto, 'wcc')
-
-        except Exception as e:
-            response = 'Verifica que el monto tenga como separacion decimal . Ej: /clc btc 0.001'
+        response = func_calc(params)
 
     bot.sendMessage(update.message.chat_id, parse_mode="html",
             text=emojize(response, use_aliases=True))
