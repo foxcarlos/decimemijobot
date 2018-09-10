@@ -1273,12 +1273,17 @@ def get_dolar_gobierno():
     return dolar_gobierno
 
 def get_dicom_gobierno():
-    dolar_gobierno = ''
+    eur_dicom_gobierno = '0'
+    resultado_eur = ''
     URL = 'https://www.dicom.gob.ve/'
     ruta ='//*[@class="moneda moneda-eur even last"]//p[@class="value"]'
-    page = requests.get(URL)
-    tree = html.fromstring(page.content)
-    resultado_eur = tree.xpath(ruta)
+    try:
+        page = requests.get(URL)
+        tree = html.fromstring(page.content)
+        resultado_eur = tree.xpath(ruta)
+    except:
+        pass
+
     if resultado_eur:
         eur_dicom_gobierno = resultado_eur[0].text.replace(',', '.')
     return eur_dicom_gobierno
