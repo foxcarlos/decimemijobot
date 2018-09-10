@@ -121,6 +121,7 @@ class Command(BaseCommand):
 
                 except Exception as E:
                     print('Error Alarmas', E)
+                    AlertaUsuario.objects.filter(chat_id=chat.chat_id).delete()
                     continue
 
                 # Actualizo la Fecha
