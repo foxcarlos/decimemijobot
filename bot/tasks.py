@@ -18,7 +18,7 @@ import tweepy
 from django_telegrambot.apps import DjangoTelegramBot
 from sampleproject.celery import app
 
-from bot.telegrambot import get_dicom_gobierno,get_localbitcoin_precio, get_dolar_gobierno
+from bot.telegrambot import get_dicom_gobierno, get_localbitcoin_precio, get_dolar_gobierno
 from django.conf import settings
 # celery -A pyloro worker -l info
 
