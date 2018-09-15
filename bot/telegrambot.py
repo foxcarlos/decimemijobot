@@ -19,7 +19,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from bot.scrapy import NoticiasPanorama
 from bot.models import Alerta, AlertaUsuario, User, Grupo, Comando, ComandoEstado, Contrato, PersonaContrato
 
-from bot.tasks import pool_message, grupo_message, yt2mp3, get_price_from_twiter, arepacoin, wolfclover, get_price_arepacoin, get_price_wcc, get_dolartoday_comando
+from bot.tasks import pool_message, grupo_message, yt2mp3, get_price_from_twiter, arepacoin, wolfclover, get_price_arepacoin, get_price_wcc, get_dolartoday_comando, get_price_usd_eur
 
 from lib.airtm import AirTM
 from datetime import datetime
@@ -905,12 +905,6 @@ def all_coins(bot, update):
     bot.sendMessage(update.message.chat_id, parse_mode="Markdown", text=emojize(response, use_aliases=True))
     usuario_nuevo(update)
 
-
-def get_price_usd_eur(coin_ticker, market='coinbase'):
-    url = URL_PRICE_USD_EUR_MARKET.format(coin_ticker.upper())
-    data = requests.get(url)
-    response = data.json() if data else ''
-    return response
 
 def valida_calcula_moneda(moneda, monto, data):
     if moneda == 'VEF':

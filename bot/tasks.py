@@ -30,6 +30,12 @@ URL_WCC = settings.CRIPTO_MONEDAS.get("URL_WCC")
 URL_PRICE_USD_EUR_MARKET = settings.CRIPTO_MONEDAS.get("URL_PRICE_USD_EUR_MARKET")
 URL_DOLARTODAY = settings.CRIPTO_MONEDAS.get("URL_DOLARTODAY")
 
+def get_price_usd_eur(coin_ticker, market='coinbase'):
+    url = URL_PRICE_USD_EUR_MARKET.format(coin_ticker.upper())
+    data = requests.get(url)
+    response = data.json() if data else ''
+    return response
+
 def get_dolar_gobierno():
     dolar_gobierno = '0'
     URL = 'https://www.casadecambiozoom.com/'
