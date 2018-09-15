@@ -1262,12 +1262,16 @@ def get_dolartoday():
     return msg_response
 
 def get_dolar_gobierno():
-    dolar_gobierno = ''
+    dolar_gobierno = '0'
     URL = 'https://www.casadecambiozoom.com/'
     ruta ='/html/body/div[3]/div/div[2]/a/font'
-    page = requests.get(URL)
-    tree = html.fromstring(page.content)
-    resultado_bs = tree.xpath(ruta)
+    try:
+        page = requests.get(URL)
+        tree = html.fromstring(page.content)
+        resultado_bs = tree.xpath(ruta)
+    except:
+        resultado_bs = 0
+
     if resultado_bs:
         dolar_gobierno = resultado_bs[0].text.replace('Bs.S.', '').strip()
     return dolar_gobierno
