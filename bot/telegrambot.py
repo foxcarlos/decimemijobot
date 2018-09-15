@@ -19,7 +19,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from bot.scrapy import NoticiasPanorama
 from bot.models import Alerta, AlertaUsuario, User, Grupo, Comando, ComandoEstado, Contrato, PersonaContrato
 
-from bot.tasks import pool_message, grupo_message, yt2mp3, get_price_from_twiter, arepacoin, wolfclover, get_price_arepacoin, get_price_wcc
+from bot.tasks import pool_message, grupo_message, yt2mp3, get_price_from_twiter, arepacoin, wolfclover, get_price_arepacoin, get_price_wcc, get_dolartoday_comando
 
 from lib.airtm import AirTM
 from datetime import datetime
@@ -942,7 +942,7 @@ def calc_arepa(monto=0, moneda=''):
     response = """:moneybag: El calculo de <b>{0}</b> <i>{6}</i> es :\n\n:dollar: Dolar: {1:,.8f}\n:euro: Euro: {2:,.8f}\n\u0243 BTC: {3:,.8f}\n\U0001F1FB\U0001F1EA  VEF AirTM: {4:,.2f}\n\U0001F1FB\U0001F1EA  VEF: {5:,.2f}\n\n <b>Precios basados en (CoinMarketCap, DolarToday,DolarAirTM)</b>""".format(
             monto, precio_usd_arepa*monto, 0, precio_btc_arepa*monto, precio_vef_arepa*monto, precio_vef_arepa_airtm*monto, moneda.upper())
     return response
-  
+
 def func_calc(params, market='coinbase'):
     response = ''
     try:
@@ -984,7 +984,7 @@ def func_calc(params, market='coinbase'):
     except Exception as e:
         response = 'Verifica que el monto tenga como separacion decimal . Ej: /clc btc 0.001'
     return response
-    
+
 def calc(bot, update):
     market = 'coinbase'
     parameters = update.message.text
@@ -1368,9 +1368,15 @@ def dolartoday(bot, update):
         return True
 
     user_first_name = update.message.from_user.first_name
+
+    # Ahora se le pasa a una tarea
+    get_dolartoday_comando.delay(update.message.chat_id)
+
+    """
     bot.sendMessage(update.message.chat_id, parse_mode="html",
             text=emojize(get_dolartoday2(), use_aliases=True)
             )
+    """
     usuario_nuevo(update)
     print(update.message)
 
