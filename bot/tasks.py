@@ -18,7 +18,7 @@ import tweepy
 from django_telegrambot.apps import DjangoTelegramBot
 from sampleproject.celery import app
 
-from bot.telegrambot import get_dicom_gobierno, get_localbitcoin_precio, get_dolar_gobierno
+# from bot.telegrambot import get_dicom_gobierno, get_localbitcoin_precio, get_dolar_gobierno
 from django.conf import settings
 # celery -A pyloro worker -l info
 
@@ -29,6 +29,42 @@ URL_AREPA_BTC_USD = settings.CRIPTO_MONEDAS.get("URL_AREPACOIN")
 URL_WCC = settings.CRIPTO_MONEDAS.get("URL_WCC")
 URL_PRICE_USD_EUR_MARKET = settings.CRIPTO_MONEDAS.get("URL_PRICE_USD_EUR_MARKET")
 URL_DOLARTODAY = settings.CRIPTO_MONEDAS.get("URL_DOLARTODAY")
+
+def get_dolar_gobierno():
+    dolar_gobierno = '0'
+    URL = 'https://www.casadecambiozoom.com/'
+    ruta ='/html/body/div[3]/div/div[2]/a/font'
+    try:
+        page = requests.get(URL)
+        tree = html.fromstring(page.content)
+        resultado_bs = tree.xpath(ruta)
+    except:
+        resultado_bs = 0
+
+    if resultado_bs:
+        dolar_gobierno = resultado_bs[0].text.replace('Bs.S.', '').strip()
+    return dolar_gobierno
+
+def get_localbitcoin_precio(coin_ticker):
+    data = get_price_usd_eur("USD", 'coinbase')
+    monto = data.get('VES') / data.get(coin_ticker.upper())
+    return monto
+
+def get_dicom_gobierno():
+    eur_dicom_gobierno = '0'
+    resultado_eur = ''
+    URL = 'https://www.dicom.gob.ve/'
+    ruta ='//*[@class="moneda moneda-eur even last"]//p[@class="value"]'
+    try:
+        page = requests.get(URL)
+        tree = html.fromstring(page.content)
+        resultado_eur = tree.xpath(ruta)
+    except:
+        pass
+
+    if resultado_eur:
+        eur_dicom_gobierno = resultado_eur[0].text.replace(',', '.')
+    return eur_dicom_gobierno
 
 @app.task
 def pool_message(users, cadena_sin_el_comando):
