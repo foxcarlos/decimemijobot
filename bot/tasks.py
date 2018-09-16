@@ -41,7 +41,7 @@ def get_dolar_gobierno():
     URL = 'https://www.casadecambiozoom.com/'
     ruta ='/html/body/div[3]/div/div[2]/a/font'
     try:
-        page = requests.get(URL)
+        page = requests.get(URL, timeout=10)
         tree = html.fromstring(page.content)
         resultado_bs = tree.xpath(ruta)
     except:
