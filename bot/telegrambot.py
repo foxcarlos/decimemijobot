@@ -19,7 +19,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from bot.scrapy import NoticiasPanorama
 from bot.models import Alerta, AlertaUsuario, User, Grupo, Comando, ComandoEstado, Contrato, PersonaContrato
 
-from bot.tasks import pool_message, grupo_message, yt2mp3, get_price_from_twiter, arepacoin, wolfclover, get_price_arepacoin, get_price_wcc
+from bot.tasks import pool_message, grupo_message, yt2mp3, get_price_from_twiter, arepacoin, wolfclover, get_price_arepacoin, get_price_wcc, get_dolartoday_comando, get_price_usd_eur
 
 from lib.airtm import AirTM
 from datetime import datetime
@@ -906,12 +906,6 @@ def all_coins(bot, update):
     usuario_nuevo(update)
 
 
-def get_price_usd_eur(coin_ticker, market='coinbase'):
-    url = URL_PRICE_USD_EUR_MARKET.format(coin_ticker.upper())
-    data = requests.get(url)
-    response = data.json() if data else ''
-    return response
-
 def valida_calcula_moneda(moneda, monto, data):
     if moneda == 'VEF':
         total_btc = float(monto) / (data.get("USD") * get_dolartoday())
@@ -942,7 +936,7 @@ def calc_arepa(monto=0, moneda=''):
     response = """:moneybag: El calculo de <b>{0}</b> <i>{6}</i> es :\n\n:dollar: Dolar: {1:,.8f}\n:euro: Euro: {2:,.8f}\n\u0243 BTC: {3:,.8f}\n\U0001F1FB\U0001F1EA  VEF AirTM: {4:,.2f}\n\U0001F1FB\U0001F1EA  VEF: {5:,.2f}\n\n <b>Precios basados en (CoinMarketCap, DolarToday,DolarAirTM)</b>""".format(
             monto, precio_usd_arepa*monto, 0, precio_btc_arepa*monto, precio_vef_arepa*monto, precio_vef_arepa_airtm*monto, moneda.upper())
     return response
-  
+
 def func_calc(params, market='coinbase'):
     response = ''
     try:
@@ -984,7 +978,7 @@ def func_calc(params, market='coinbase'):
     except Exception as e:
         response = 'Verifica que el monto tenga como separacion decimal . Ej: /clc btc 0.001'
     return response
-    
+
 def calc(bot, update):
     market = 'coinbase'
     parameters = update.message.text
@@ -1261,97 +1255,6 @@ def get_dolartoday():
     msg_response = rq.get('USD').get('transferencia')
     return msg_response
 
-def get_dolar_gobierno():
-    dolar_gobierno = ''
-    URL = 'https://www.casadecambiozoom.com/'
-    ruta ='/html/body/div[3]/div/div[2]/a/font'
-    page = requests.get(URL)
-    tree = html.fromstring(page.content)
-    resultado_bs = tree.xpath(ruta)
-    if resultado_bs:
-        dolar_gobierno = resultado_bs[0].text.replace('Bs.S.', '').strip()
-    return dolar_gobierno
-
-def get_dicom_gobierno():
-    dolar_gobierno = ''
-    URL = 'https://www.dicom.gob.ve/'
-    ruta ='//*[@class="moneda moneda-eur even last"]//p[@class="value"]'
-    page = requests.get(URL)
-    tree = html.fromstring(page.content)
-    resultado_eur = tree.xpath(ruta)
-    if resultado_eur:
-        eur_dicom_gobierno = resultado_eur[0].text.replace(',', '.')
-    return eur_dicom_gobierno
-
-def get_dolartoday2():
-    rq = requests.get(URL_DOLARTODAY)  # .json()
-
-    # USD
-    dolartoday = float(rq.json().get('USD').get('transferencia'))
-    implicito = float(rq.json().get("USD").get("efectivo"))
-    dicom = float(rq.json().get("USD").get("sicad2"))
-    cucuta = float(rq.json().get("USD").get("efectivo_cucuta"))
-    # localbitcoin = float(rq.get("USD").get("localbitcoin_ref"))
-    barril = float(rq.json().get("MISC").get("petroleo").replace(",", "."))
-    oro = float(rq.json().get("GOLD").get("rate"))
-    fecha = datetime.now().strftime("%d-%m-%Y")
-
-    # EUR
-    dolartoday_e = float(rq.json().get('EUR').get('transferencia'))
-    implicito_e = float(rq.json().get("EUR").get("efectivo"))
-    dicom_e = float(get_dicom_gobierno())  # float(rq.json().get("EUR").get("sicad2"))
-    cucuta_e = float(rq.json().get("EUR").get("efectivo_cucuta"))
-    # localbitcoin_e = float(rq.get("EUR").get("localbitcoin_ref"))
-    emoji_barril = u'\U0001F6E2'
-
-    # LocalBitcoin
-    # https://min-api.cryptocompare.com/data/price?fsym=USD&tsyms=VEF
-    localbitcoin = get_localbitcoin_precio("USD")
-
-    # RUB
-    rublo_vef = get_localbitcoin_precio("RUB")
-
-    emoji_bandera_rusa = u'\U0001F1F7\U0001F1FA'
-    emoji_bandera_vzla = u'\U0001F1FB\U0001F1EA'
-    precio_airtm = get_price_from_twiter('theairtm').strip()
-    precio_dolar_gobierno = get_dolar_gobierno()
-
-    response = """:speaker: FoxBot Today USD/EUR: {0}:\n\n\
-    {14} <b>Casas Cambio</b>: {17}\n\
-    {14} <b>DolarToday</b>: {1:0,.2f}\n\
-    {14} <b>Dolar LBTC</b>: {5:0,.2f}\n\
-    {14} <b>Dolar AirTM</b>: {15:0,.2f}\n\n\
-    :euro: <b>DolarToday</b>: {6:0,.2f}\n\
-    :euro: <b>Dicom</b>: {8:0,.2f}\n\
-    {12} <b>RUB Bs</b>: {13:0,.2f}\n\n\
-    {16} <b>Petroleo</b> USD: {10:0,.2f}\n\
-    :moneybag: <b>Oro</b> USD: {11:0,.2f}\n\
-        """.format(fecha,
-                    dolartoday,
-                    implicito,
-                    dicom,
-                    cucuta,
-                    localbitcoin,
-                    dolartoday_e,
-                    implicito_e,
-                    dicom_e,
-                    cucuta_e,
-                    barril,
-                    oro,
-                    emoji_bandera_rusa,
-                    rublo_vef,
-                    emoji_bandera_vzla,
-                    float(precio_airtm) if precio_airtm else 0,
-                    emoji_barril,
-                    precio_dolar_gobierno
-                    )
-
-    return response
-
-def get_localbitcoin_precio(coin_ticker):
-    data = get_price_usd_eur("USD", 'coinbase')
-    monto = data.get('VES') / data.get(coin_ticker.upper())
-    return monto
 
 def dolartoday(bot, update):
     if not valida_autorizacion_comando(bot, update):
@@ -1359,9 +1262,15 @@ def dolartoday(bot, update):
         return True
 
     user_first_name = update.message.from_user.first_name
+
+    # Ahora se le pasa a una tarea
+    get_dolartoday_comando.delay(update.message.chat_id)
+
+    """
     bot.sendMessage(update.message.chat_id, parse_mode="html",
             text=emojize(get_dolartoday2(), use_aliases=True)
             )
+    """
     usuario_nuevo(update)
     print(update.message)
 

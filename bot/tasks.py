@@ -18,6 +18,7 @@ import tweepy
 from django_telegrambot.apps import DjangoTelegramBot
 from sampleproject.celery import app
 
+# from bot.telegrambot import get_dicom_gobierno, get_localbitcoin_precio, get_dolar_gobierno
 from django.conf import settings
 # celery -A pyloro worker -l info
 
@@ -27,6 +28,49 @@ from lib.airtm import AirTM
 URL_AREPA_BTC_USD = settings.CRIPTO_MONEDAS.get("URL_AREPACOIN")
 URL_WCC = settings.CRIPTO_MONEDAS.get("URL_WCC")
 URL_PRICE_USD_EUR_MARKET = settings.CRIPTO_MONEDAS.get("URL_PRICE_USD_EUR_MARKET")
+URL_DOLARTODAY = settings.CRIPTO_MONEDAS.get("URL_DOLARTODAY")
+
+def get_price_usd_eur(coin_ticker, market='coinbase'):
+    url = URL_PRICE_USD_EUR_MARKET.format(coin_ticker.upper())
+    data = requests.get(url)
+    response = data.json() if data else ''
+    return response
+
+def get_dolar_gobierno():
+    dolar_gobierno = '0'
+    URL = 'https://www.casadecambiozoom.com/'
+    ruta ='/html/body/div[3]/div/div[2]/a/font'
+    try:
+        page = requests.get(URL, timeout=10)
+        tree = html.fromstring(page.content)
+        resultado_bs = tree.xpath(ruta)
+    except:
+        resultado_bs = 0
+
+    if resultado_bs:
+        dolar_gobierno = resultado_bs[0].text.replace('Bs.S.', '').strip()
+    return dolar_gobierno
+
+def get_localbitcoin_precio(coin_ticker):
+    data = get_price_usd_eur("USD", 'coinbase')
+    monto = data.get('VES') / data.get(coin_ticker.upper())
+    return monto
+
+def get_dicom_gobierno():
+    eur_dicom_gobierno = '0'
+    resultado_eur = ''
+    URL = 'https://www.dicom.gob.ve/'
+    ruta ='//*[@class="moneda moneda-eur even last"]//p[@class="value"]'
+    try:
+        page = requests.get(URL)
+        tree = html.fromstring(page.content)
+        resultado_eur = tree.xpath(ruta)
+    except:
+        pass
+
+    if resultado_eur:
+        eur_dicom_gobierno = resultado_eur[0].text.replace(',', '.')
+    return eur_dicom_gobierno
 
 @app.task
 def pool_message(users, cadena_sin_el_comando):
@@ -178,9 +222,9 @@ def get_price_from_twiter(nombre):
 
     def parsear_tasa(texto):
         response = ''
-        texto_descomponer = texto.split() if len(texto.split()) >= 4 else ''
+        texto_descomponer = texto.split() if len(texto.split()) >= 3 else ''
         if texto_descomponer:
-            tasa = [float(palabra.replace(',', '')) for palabra in texto.split() if len(palabra) > 4 and palabra.replace(',', '').replace('.', '').isdigit()]
+            tasa = [float(palabra.replace(',', '')) for palabra in texto.split() if len(palabra) > 3 and palabra.replace(',', '').replace('.', '').isdigit()]
             # tasa = texto_descomponer[0] if texto_descomponer[0].lower() == 'tasa' or texto_descomponer[0].upper() == u'ACTUALIZACIÓN' else ''
             # moneda = texto_descomponer[3] if texto_descomponer[3].lower() == 'bsf' else ''
             moneda = 'tasa' in texto.lower() and 'bs.s' in texto.lower() and '#ven' in texto.lower()
@@ -211,17 +255,6 @@ def airtm_dolar_vef(chat_id):
     else:
         response = ':x: <b>Error al consultar AirTM</b>'
     DjangoTelegramBot.dispatcher.bot.sendMessage(chat_id, parse_mode="html", text=emojize(response, use_aliases=True))
-
-def get_dolar_gobierno():
-    dolar_gobierno = ''
-    URL = 'https://www.casadecambiozoom.com/'
-    ruta ='/html/body/div[3]/div/div[2]/a/font'
-    page = requests.get(URL)
-    tree = html.fromstring(page.content)
-    resultado_bs = tree.xpath(ruta)
-    if resultado_bs:
-        dolar_gobierno = resultado_bs[0].text.replace('Bs.S.', '').strip()
-    return dolar_gobierno
 
 def get_price_arepacoin2(dolartoday):
     precio_dtd = dolartoday if dolartoday else 0
@@ -258,7 +291,7 @@ def get_price_wcc(dolartoday):
         data = requests.get(url)
         response = data.json() if data else ''
         return response
-  
+
     precio_dtd = dolartoday if dolartoday else 0
     precio_airtm = float(get_price_from_twiter('theairtm').strip()) if \
             get_price_from_twiter('theairtm') else 0
@@ -272,7 +305,7 @@ def get_price_wcc(dolartoday):
     rq = requests.get(URL_WCC).json()
     if rq.get('success'):
         precio_btc_wcc = float(rq.get('result').get('Last') if rq.get('result').get('Last') else '0')
-    
+
     precio_usd_wcc = float(get_price_usd_eur("BTC", "bitfinex").get('USD')) * precio_btc_wcc
     precio_vef_wcc = precio_usd_wcc * precio_dtd
     precio_vef_wcc_airtm = precio_usd_wcc * precio_airtm
@@ -299,7 +332,7 @@ def get_price_arepacoin(dolartoday):
     coincap_data = requests.get(URL_AREPA_BTC_USD).json()
     # coincap_json = coincap_data.get('data') if \
     #        coincap_data.get('status') == 'success' else {}
-      
+
     coincap_json = coincap_data[0] if coincap_data else {}
 
     # arepa_values = [coin for coin in coincap_json \
@@ -324,3 +357,74 @@ def arepacoin(chat_id, dolartoday):
     response = """El precio de ArepaCoin es:\n\n\U0001F1FB\U0001F1EA <b>VEF Dolartoday:</b> {0:,.2f}\n\U0001F1FB\U0001F1EA <b>VEF AirTM:</b> {2:,.2f}\n<b>:dollar: USD:</b> {1:,.8f}\n\u0243 <b>BTC</b> {3:,.8f}\n""".format(precio_vef_arepa, precio_usd_arepa, precio_vef_arepa_airtm, precio_btc_arepa)
 
     DjangoTelegramBot.dispatcher.bot.sendMessage(chat_id, parse_mode="html", text=emojize(response, use_aliases=True))
+
+def get_dolartoday_parse():
+    rq = requests.get(URL_DOLARTODAY)  # .json()
+
+    # USD
+    dolartoday = float(rq.json().get('USD').get('transferencia'))
+    implicito = float(rq.json().get("USD").get("efectivo"))
+    dicom = float(rq.json().get("USD").get("sicad2"))
+    cucuta = float(rq.json().get("USD").get("efectivo_cucuta"))
+    barril = float(rq.json().get("MISC").get("petroleo").replace(",", "."))
+    oro = float(rq.json().get("GOLD").get("rate"))
+    fecha = datetime.now().strftime("%d-%m-%Y")
+
+    # EUR
+    dolartoday_e = float(rq.json().get('EUR').get('transferencia'))
+    implicito_e = float(rq.json().get("EUR").get("efectivo"))
+    dicom_e = float(get_dicom_gobierno())  # float(rq.json().get("EUR").get("sicad2"))
+    cucuta_e = float(rq.json().get("EUR").get("efectivo_cucuta"))
+    emoji_barril = u'\U0001F6E2'
+
+    # LocalBitcoin
+    # https://min-api.cryptocompare.com/data/price?fsym=USD&tsyms=VEF
+    localbitcoin = get_localbitcoin_precio("USD")
+
+    # RUB
+    rublo_vef = get_localbitcoin_precio("RUB")
+
+    emoji_bandera_rusa = u'\U0001F1F7\U0001F1FA'
+    emoji_bandera_vzla = u'\U0001F1FB\U0001F1EA'
+    precio_airtm = get_price_from_twiter('theairtm').strip()
+    precio_dolar_gobierno = get_dolar_gobierno()
+
+    response = """:speaker: FoxBot Today USD/EUR: {0}:\n\n\
+    {14} <b>Casas Cambio</b>: {17}\n\
+    {14} <b>DolarToday</b>: {1:0,.2f}\n\
+    {14} <b>Dolar LBTC</b>: {5:0,.2f}\n\
+    {14} <b>Dolar AirTM</b>: {15:0,.2f}\n\n\
+    :euro: <b>DolarToday</b>: {6:0,.2f}\n\
+    :euro: <b>Dicom</b>: {8:0,.2f}\n\
+    {12} <b>RUB Bs</b>: {13:0,.2f}\n\n\
+    {16} <b>Petroleo</b> USD: {10:0,.2f}\n\
+    :moneybag: <b>Oro</b> USD: {11:0,.2f}\n\
+        """.format(fecha,
+                    dolartoday,
+                    implicito,
+                    dicom,
+                    cucuta,
+                    localbitcoin,
+                    dolartoday_e,
+                    implicito_e,
+                    dicom_e,
+                    cucuta_e,
+                    barril,
+                    oro,
+                    emoji_bandera_rusa,
+                    rublo_vef,
+                    emoji_bandera_vzla,
+                    float(precio_airtm) if precio_airtm else 0,
+                    emoji_barril,
+                    precio_dolar_gobierno
+                    )
+
+    return response
+
+@app.task
+def get_dolartoday_comando(chat_id):
+
+    DjangoTelegramBot.dispatcher.bot.sendMessage(chat_id,
+            parse_mode="html",
+            text=emojize(get_dolartoday_parse(), use_aliases=True)
+            )

@@ -25,7 +25,7 @@ SECRET_KEY = '2+(!v-t9)skqad%3637&#kj+!04!74q$ja@@ccavtf(h0)%1x!'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["foxbot-foxcarlos.codeanyapp.com", "localhost", '86430a18.ngrok.io']
+ALLOWED_HOSTS = ['ec2-18-236-66-28.us-west-2.compute.amazonaws.com', "foxbot-foxcarlos.codeanyapp.com", "localhost", '86430a18.ngrok.io']
 # Application definition
 
 INSTALLED_APPS = [
