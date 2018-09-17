@@ -1,4 +1,4 @@
-autor - Acerca de
+
 donar - Si deseas hacer una donacion
 help - Lista de comandos disponibles
 bitcoin - Precio Bitcoin
@@ -10,16 +10,22 @@ wcc - Precio Wolf Clover Coin
 precio - <coin_ticker> <Market> Ej: /precio btc coinbase
 grafico - <coin_ticker> <market>
 clc - <coin_ticker> <monto> - Calcula el valor del BTC de un monto of coin pasado
-ban - banear un usuario del grupo
+clc - <VES> <monto> - Calcula cuantos BTC y Dolar son los Bs Soberanos pasado en monto
+yt2mp3 - Convierte video youtube a mp3
+
 set_alarma_bitcoin - <estado> Ej: /set_alarma_bitcoin on
 set_alarma_dolarairtm - <estado> Ej: /set_alarma_dolarairtm on
 set_alarma_dolartoday - <estado> Ej: /set_alarma_dolartoday on
 set_alarma_ethereum - <estado> Ej: /set_alarma_ethereum on
 set_alarma_litecoin - <estado> Ej: /set_alarma_litecoin on
+
+
+autor - Acerca de
+ban - banear un usuario del grupo
 ban - reply al usuario y esribir /ban
 trade - Crear un contrato compra venta
 trade2user - Lista de todas las operaciones de un usuario
 tradec - Calificar Conrtato
 traderef - Buscar Referencias de usuario
-yt2mp3 - Convierte video youtube a mp3
+
 
