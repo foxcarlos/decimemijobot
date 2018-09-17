@@ -907,7 +907,7 @@ def all_coins(bot, update):
 
 
 def valida_calcula_moneda(moneda, monto, data):
-    if moneda == 'VEF':
+    if moneda == 'VEF' or moneda == 'VES':
         total_btc = float(monto) / (data.get("USD") * get_dolartoday())
         total_dolar = float(monto) / get_dolartoday()
         total_dolar_airtm = float(monto) / float(get_price_from_twiter('theairtm').strip())
@@ -915,7 +915,7 @@ def valida_calcula_moneda(moneda, monto, data):
         try:
             total_btc = float(monto) / data.get(moneda)
             total_dolar = float(monto) / (data.get(moneda) / data.get('USD'))
-            total_dolar_airtm = float(monto) / float(get_price_from_twiter('theairtm').strip())
+            total_dolar_airtm = float(monto) * float(get_price_from_twiter('theairtm').strip())
         except Exception as E:
             total_btc = 0
             total_dolar = 0
@@ -967,8 +967,13 @@ def func_calc(params, market='coinbase'):
             monto, total_btc, total_dolar, total_dolar_airtm = valida_calcula_moneda(
                     moneda.upper(), monto, data)
 
-            response = """:moneybag: El calculo para <b>{0}</b> <i>{4}</i> es de :\n\n\u0243 BTC: {1:,.9f}\n:dollar: Dolares: {2:,.2f}\n:dollar: Dolares Airtm: {5:,.2f}\n\n<b>Nota:</b> Precios basados en: {3}""".format(
+            if moneda.upper() == 'VES':
+                response = """:moneybag: El calculo para <b>{0}</b> <i>{4}</i> es de :\n\n\u0243 BTC: {1:,.9f}\n:dollar: Dolares: {2:,.2f}\n:dollar: Dolares Airtm: {5:,.2f}\n\n<b>Nota:</b> Precios basados en: {3}""".format(
                     monto, total_btc, total_dolar, market.capitalize(), moneda.upper(), total_dolar_airtm)
+            else:
+                response = """:moneybag: El calculo para <b>{0}</b> <i>{4}</i> es de :\n\n\u0243 BTC: {1:,.9f}\n:dollar: Dolares: {2:,.2f}\n\U0001F1FB\U0001F1EA VES: {5:,.2f}\n\n<b>Nota:</b> Precios basados en: {3}""".format(
+                    monto, total_btc, total_dolar, market.capitalize(), moneda.upper(), total_dolar * get_dolartoday())
+
 
         elif moneda.upper() == 'AREPA':
             response = calc_arepa(monto, 'arepa')
@@ -1554,7 +1559,6 @@ def reglas(bot, update):
 
 
 def nuevo_miembro(bot, update):
-    # import ipdb;ipdb.set_trace()
     grupo = update.message.chat
     nuevo_usuario = update.message.new_chat_member
 

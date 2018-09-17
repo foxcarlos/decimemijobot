@@ -363,6 +363,8 @@ def get_dolartoday_parse():
 
     # USD
     dolartoday = float(rq.json().get('USD').get('transferencia'))
+    dolartoday_btc = float(rq.json().get('USD').get('bitcoin_ref'))
+
     implicito = float(rq.json().get("USD").get("efectivo"))
     dicom = float(rq.json().get("USD").get("sicad2"))
     cucuta = float(rq.json().get("USD").get("efectivo_cucuta"))
@@ -392,6 +394,7 @@ def get_dolartoday_parse():
     response = """:speaker: FoxBot Today USD/EUR: {0}:\n\n\
     {14} <b>Casas Cambio</b>: {17}\n\
     {14} <b>DolarToday</b>: {1:0,.2f}\n\
+    {14} <b>DT Bitcoin</b>: {18:0,.2f}\n\
     {14} <b>Dolar LBTC</b>: {5:0,.2f}\n\
     {14} <b>Dolar AirTM</b>: {15:0,.2f}\n\n\
     :euro: <b>DolarToday</b>: {6:0,.2f}\n\
@@ -416,7 +419,8 @@ def get_dolartoday_parse():
                     emoji_bandera_vzla,
                     float(precio_airtm) if precio_airtm else 0,
                     emoji_barril,
-                    precio_dolar_gobierno
+                    precio_dolar_gobierno,
+                    dolartoday_btc
                     )
 
     return response
