@@ -986,17 +986,29 @@ def func_calc(params, market='coinbase'):
     return response
 
 def calc(bot, update):
+    def parse_parametros(parametros):
+        calcular_calc = dict({'moneda': '', 'monto': '1'})
+        for f in parametros.split()[:2]:
+            if f.strip().isalpha():
+                calcular_calc.update({'moneda': f.strip()})
+                continue
+
+            if f.strip().isdigit():
+                calcular_calc.update({'monto': f.strip()})
+                continue
+        return calcular_calc
+
     market = 'coinbase'
     parameters = update.message.text
     cadena_sin_el_comando = ' '.join(parameters.split()[1:])
-    params = cadena_sin_el_comando.split() if \
-            len(cadena_sin_el_comando.split()) == 2 else []
+    params = parse_parametros(cadena_sin_el_comando)  # .split() if len(cadena_sin_el_comando.split()) == 2 else []
     ve = u'\U0001F1FB' + u'\U0001F1EA'
     response = "<b>{0}</b> Debes indicar <b>/clc coin_ticker monto</b>\n\n<i>Ej</i>: /clc btc 0.0002 \n\nSi desea calcular VEF a bitcoin y Dolar ejecute\n\n/clc vef 2500000\n\n Tambien puedes calcular en moneda de otro pais Ej. <b>/clc USD 1000</b>".format(":question:")
     if not params:
         response = "<b>{0}</b> Debes indicar <b>/clc coin_ticker monto</b>\n\n<i>Ej</i>: /clc btc 0.0002 \n\nSi desea calcular VEF a bitcoin y Dolar ejecute\n\n/clc vef 2500000\n\n Tambien puedes calcular en moneda de otro pais Ej. <b>/clc USD 1000</b>".format(":question:")
     else:
-        response = func_calc(params)
+        moneda, monto = params.get('moneda'), params.get('monto')
+        response = func_calc([moneda, monto])
 
     bot.sendMessage(update.message.chat_id, parse_mode="html",
             text=emojize(response, use_aliases=True))
