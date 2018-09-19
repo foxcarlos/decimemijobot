@@ -1003,9 +1003,9 @@ def calc(bot, update):
     cadena_sin_el_comando = ' '.join(parameters.split()[1:])
     params = parse_parametros(cadena_sin_el_comando)  # .split() if len(cadena_sin_el_comando.split()) == 2 else []
     ve = u'\U0001F1FB' + u'\U0001F1EA'
-    response = "<b>{0}</b> Debes indicar <b>/clc coin_ticker monto</b>\n\n<i>Ej</i>: /clc btc 0.0002 \n\nSi desea calcular VEF a bitcoin y Dolar ejecute\n\n/clc vef 2500000\n\n Tambien puedes calcular en moneda de otro pais Ej. <b>/clc USD 1000</b>".format(":question:")
+    response = "<b>{0}</b> Debes indicar <b>/clc coin_ticker monto</b>\n\n<i>Ej</i>: /clc btc 0.0002 \nSi desea calcular VES a bitcoin y Dolar ejecute\n/clc vef 250\n Tambien puedes calcular en moneda de otro pais Ej. <b>/clc USD 1000</b>".format(":question:")
     if not params.get('moneda'):
-        response = "<b>{0}</b> Debes indicar <b>/clc coin_ticker monto</b>\n\n<i>Ej</i>: /clc btc 0.0002 \n\nSi desea calcular VEF a bitcoin y Dolar ejecute\n\n/clc vef 2500000\n\n Tambien puedes calcular en moneda de otro pais Ej. <b>/clc USD 1000</b>".format(":question:")
+        response = "<b>{0}</b> Debes indicar <b>/clc coin_ticker monto</b>\n\n<i>Ej</i>: /clc btc 0.0002 \nSi desea calcular VES a bitcoin y Dolar ejecute\n/clc vef 250\n Tambien puedes calcular en moneda de otro pais Ej. <b>/clc USD 1000</b>".format(":question:")
     else:
         moneda, monto = params.get('moneda'), params.get('monto')
         response = func_calc([moneda, monto])
