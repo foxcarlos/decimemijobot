@@ -993,9 +993,12 @@ def calc(bot, update):
                 calcular_calc.update({'moneda': f.strip()})
                 continue
 
-            if f.strip().isdigit():
+            try:
+                valor = float(f.strip())
                 calcular_calc.update({'monto': f.strip()})
                 continue
+            except:
+                pass
         return calcular_calc
 
     market = 'coinbase'
