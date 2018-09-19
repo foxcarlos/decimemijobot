@@ -12,7 +12,6 @@ grafico - <coin_ticker> <market>
 clc - <coin_ticker> <monto> - Calcula el valor del BTC de un monto of coin pasado
 clc - <VES> <monto> - Calcula cuantos BTC y Dolar son los Bs Soberanos pasado en monto
 yt2mp3 - Convierte video youtube a mp3
-
 set_alarma_bitcoin - <estado> Ej: /set_alarma_bitcoin on
 set_alarma_dolarairtm - <estado> Ej: /set_alarma_dolarairtm on
 set_alarma_dolartoday - <estado> Ej: /set_alarma_dolartoday on
