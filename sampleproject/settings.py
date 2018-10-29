@@ -234,6 +234,6 @@ CRIPTO_MONEDAS = {
         "URL_LOCALBITCOIN": "https://min-api.cryptocompare.com/data/price?fsym=USD&tsyms=VEF",
         # "URL_AREPACOIN": "https://www.latamcoincap.io/api/v1/prices/ticker",
         "URL_AREPACOIN": "https://api.coinmarketcap.com/v1/ticker/arepacoin/",
-        "URL_WCC": "https://trade.thexchanger.io/api/v1/public/getmarketsummary?market=BTC-WCC"
+        "URL_WCC": "http://trade.thexchanger.io/api/v1/public/getmarketsummary?market=BTC-WCC"
         }
 

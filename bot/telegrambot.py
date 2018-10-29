@@ -1709,6 +1709,13 @@ def test_envio(bot, update, args):
 
     bot.send_message(chat_id=-1001185618743, parse_mode="html", text=emojize(texto, use_aliases=True))
 
+def  codear(bot, update):
+
+    parameters = update.message.text
+    msg_response = ' '.join(parameters.split()[1:])
+    update.message.reply_text(parse_mode="html", text=emojize('<code>{0}</code>'.format(msg_response),
+	use_aliases=True))
+
 def main():
     logger.info("Loading handlers for telegram bot")
 
@@ -1748,6 +1755,8 @@ def main():
     dp.add_handler(CommandHandler("chart", historico))
 
     dp.add_handler(CommandHandler("simular", simular))
+
+    dp.add_handler(CommandHandler("code", codear))
 
     dp.add_handler(CommandHandler("calc", calc))
     dp.add_handler(CommandHandler("clc", calc))
