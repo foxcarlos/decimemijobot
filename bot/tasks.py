@@ -48,6 +48,7 @@ def get_dolar_gobierno():
         resultado_bs = 0
 
     if resultado_bs:
+        print(resultado_bs[0].text)
         dolar_gobierno = resultado_bs[0].text.replace('Bs.S.', '').strip()
     return dolar_gobierno
 
@@ -108,7 +109,6 @@ def yt2mp3_2(chat_id, url):
         archivo = os.path.join(settings.BASE_DIR,
                 '{0}.mp3'.format(descargar_archivo.get('title')))
 
-        import ipdb; ipdb.set_trace() # BREAKPOINT
         file_ = open("{0}".format(archivo), "rb")
         DjangoTelegramBot.dispatcher.bot.sendAudio(chat_id,
             audio=file_, caption=archivo)

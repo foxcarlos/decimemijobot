@@ -95,7 +95,6 @@ class Command(BaseCommand):
         return paso, mensaje_a_chat
 
     def generar_alerta(self, comando):
-
         precio_actual = self.obtener_precio(comando)
 
         lista_de_alertas = AlertaUsuario.objects.filter(
@@ -121,7 +120,7 @@ class Command(BaseCommand):
 
                 except Exception as E:
                     print('Error Alarmas', E)
-                    AlertaUsuario.objects.filter(chat_id=chat.chat_id).delete()
+                    # AlertaUsuario.objects.filter(chat_id=chat.chat_id).delete()
                     continue
 
                 # Actualizo la Fecha
