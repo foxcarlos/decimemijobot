@@ -441,7 +441,7 @@ def get_dolartoday_parse():
     emoji_bandera_vzla = u'\U0001F1FB\U0001F1EA'
     precio_airtm = get_price_from_twiter('theairtm').strip()
     precio_dolar_bolivar_cucuta = get_dolar_bolivar_cucuta()
-    precio_dolar_gobierno = get_dolar_gobierno()
+    precio_dolar_gobierno = dicom  #  get_dolar_gobierno()
 
     # dolar_suma = dolartoday + dolartoday_btc + float(precio_airtm) + precio_dolar_bolivar_cucuta
     dolar_suma = dolartoday + dolartoday_btc + localbitcoin + float(precio_airtm) + precio_dolar_bolivar_cucuta
