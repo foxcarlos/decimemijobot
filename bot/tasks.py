@@ -75,9 +75,37 @@ def  get_dolar_bolivar_cucuta():
             dolar_bolivar_cucuta = 0
     return dolar_bolivar_cucuta
 
-def get_localbitcoin_precio(coin_ticker):
+def get_rublo_precio(coin_ticker='RUB'):
+    # 26 Ene 2019
     data = get_price_usd_eur("USD", 'coinbase')
     monto = data.get('VES') / data.get(coin_ticker.upper())
+
+def get_localbitcoin_precio(coin_ticker=''):
+    # 26 Ene 2019
+    # data = get_price_usd_eur("USD", 'coinbase')
+    # monto = data.get('VES') / data.get(coin_ticker.upper())
+
+    monto= 0
+    url = 'https://localbitcoins.com/bitcoinaverage/ticker-all-currencies/'
+    todas_las_monedas = requests.get(url).json()
+    info_usd = todas_las_monedas.get('USD')
+    info_ves = todas_las_monedas.get('VES')
+
+    promedio_usd_1h = info_usd.get('avg_1h')
+    promedio_usd_12 = info_usd.get('avg_12h')
+
+    promedio_ves_1h = info_ves.get('avg_1h')
+    promedio_ves_12 = info_ves.get('avg_12h')
+
+    monto_usd = promedio_usd_1h if promedio_usd_1h else promedio_usd_12
+    monto_ves = promedio_ves_1h if promedio_ves_1h else promedio_ves_12
+
+    try:
+        monto = float(monto_ves) / float(monto_usd)
+    except Exception as error:
+        monto = 0
+        print('Error al calcular precio del localbitcoin', error)
+
     return monto
 
 def get_dicom_gobierno():
@@ -404,10 +432,10 @@ def get_dolartoday_parse():
 
     # LocalBitcoin
     # https://min-api.cryptocompare.com/data/price?fsym=USD&tsyms=VEF
-    localbitcoin = 0  # get_localbitcoin_precio("USD")
+    localbitcoin = get_localbitcoin_precio()
 
     # RUB
-    rublo_vef = get_localbitcoin_precio("RUB")
+    rublo_vef = get_rublo_precio("RUB")
 
     emoji_bandera_rusa = u'\U0001F1F7\U0001F1FA'
     emoji_bandera_vzla = u'\U0001F1FB\U0001F1EA'
