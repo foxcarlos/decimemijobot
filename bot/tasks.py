@@ -48,9 +48,32 @@ def get_dolar_gobierno():
         resultado_bs = 0
 
     if resultado_bs:
-        print(resultado_bs[0].text)
-        dolar_gobierno = resultado_bs[0].text.replace('Bs.S.', '').strip()
+        try:
+            print('aqui', resultado_bs[0].text)
+            dolar_gobierno = resultado_bs[0].text.replace('Bs.S.', '').strip()
+        except:
+            dolar_gobierno = '0'
     return dolar_gobierno
+
+def  get_dolar_bolivar_cucuta():
+    dolar_bolivar_cucuta = '0'
+    URL = 'http://bolivarcucuta.com/'
+    ruta = '//*[@id="dolar"]'
+
+    try:
+        page = requests.get(URL, timeout=10)
+        tree = html.fromstring(page.content)
+        resultado_bs = tree.xpath(ruta)
+    except:
+        resultado_bs = 0
+
+    if resultado_bs:
+        try:
+            print('BolivarCucuta scrapy:', resultado_bs[0].text)
+            dolar_bolivar_cucuta =  float(resultado_bs[0].text.replace('BsF', '').replace(',', '').strip())
+        except:
+            dolar_bolivar_cucuta = 0
+    return dolar_bolivar_cucuta
 
 def get_localbitcoin_precio(coin_ticker):
     data = get_price_usd_eur("USD", 'coinbase')
@@ -70,7 +93,7 @@ def get_dicom_gobierno():
         pass
 
     if resultado_eur:
-        eur_dicom_gobierno = resultado_eur[0].text.replace(',', '.')
+        eur_dicom_gobierno = resultado_eur[0].text.replace('.', '').replace(',', '.')
     return eur_dicom_gobierno
 
 @app.task
@@ -381,7 +404,7 @@ def get_dolartoday_parse():
 
     # LocalBitcoin
     # https://min-api.cryptocompare.com/data/price?fsym=USD&tsyms=VEF
-    localbitcoin = get_localbitcoin_precio("USD")
+    localbitcoin = 0  # get_localbitcoin_precio("USD")
 
     # RUB
     rublo_vef = get_localbitcoin_precio("RUB")
@@ -389,19 +412,28 @@ def get_dolartoday_parse():
     emoji_bandera_rusa = u'\U0001F1F7\U0001F1FA'
     emoji_bandera_vzla = u'\U0001F1FB\U0001F1EA'
     precio_airtm = get_price_from_twiter('theairtm').strip()
+    precio_dolar_bolivar_cucuta = get_dolar_bolivar_cucuta()
     precio_dolar_gobierno = get_dolar_gobierno()
+
+    dolar_suma = dolartoday + dolartoday_btc + float(precio_airtm) + precio_dolar_bolivar_cucuta
+    # dolar_suma = dolartoday + dolartoday_btc + localbitcoin + float(precio_airtm) + precio_dolar_bolivar_cucuta
+    dolar_promedio = dolar_suma / 4
+    print('Dolar promedio', dolar_promedio)
 
     response = """:speaker: FoxBot Today USD/EUR: {0}:\n\n\
     {14} <b>Casas Cambio</b>: {17}\n\
     {14} <b>DolarToday</b>: {1:0,.2f}\n\
     {14} <b>DT Bitcoin</b>: {18:0,.2f}\n\
     {14} <b>Dolar LBTC</b>: {5:0,.2f}\n\
-    {14} <b>Dolar AirTM</b>: {15:0,.2f}\n\n\
+    {14} <b>Dolar AirTM</b>: {15:0,.2f}\n\
+    {14} <b>Dolar BolivarCucuta</b>: {19:0,.2f}\n\n\
     :euro: <b>DolarToday</b>: {6:0,.2f}\n\
     :euro: <b>Dicom</b>: {8:0,.2f}\n\
     {12} <b>RUB Bs</b>: {13:0,.2f}\n\n\
     {16} <b>Petroleo</b> USD: {10:0,.2f}\n\
-    :moneybag: <b>Oro</b> USD: {11:0,.2f}\n\
+    :moneybag: <b>Oro</b> USD: {11:0,.2f}\n\n\
+    {14} <b>Bs Dolar Promedio</b>: {20:0,.2f}\n\n\
+    Seguime en Twiter: https://twitter.com/decimemijobot\n\
         """.format(fecha,
                     dolartoday,
                     implicito,
@@ -420,7 +452,9 @@ def get_dolartoday_parse():
                     float(precio_airtm) if precio_airtm else 0,
                     emoji_barril,
                     precio_dolar_gobierno,
-                    dolartoday_btc
+                    dolartoday_btc,
+                    precio_dolar_bolivar_cucuta,
+                    dolar_promedio
                     )
 
     return response
