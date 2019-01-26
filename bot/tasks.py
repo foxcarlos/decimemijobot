@@ -75,7 +75,7 @@ def  get_dolar_bolivar_cucuta():
             dolar_bolivar_cucuta = 0
     return dolar_bolivar_cucuta
 
-def get_rublo_precio(coin_ticker='RUB'):
+def get_rublo_precio(coin_ticker):
     # 26 Ene 2019
     data = get_price_usd_eur("USD", 'coinbase')
     monto = data.get('VES') / data.get(coin_ticker.upper())
@@ -435,7 +435,7 @@ def get_dolartoday_parse():
     localbitcoin = get_localbitcoin_precio()
 
     # RUB
-    rublo_vef = get_rublo_precio("RUB")
+    rublo_vef = 0  # get_rublo_precio("RUB")
 
     emoji_bandera_rusa = u'\U0001F1F7\U0001F1FA'
     emoji_bandera_vzla = u'\U0001F1FB\U0001F1EA'
