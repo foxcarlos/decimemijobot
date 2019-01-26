@@ -443,9 +443,9 @@ def get_dolartoday_parse():
     precio_dolar_bolivar_cucuta = get_dolar_bolivar_cucuta()
     precio_dolar_gobierno = get_dolar_gobierno()
 
-    dolar_suma = dolartoday + dolartoday_btc + float(precio_airtm) + precio_dolar_bolivar_cucuta
-    # dolar_suma = dolartoday + dolartoday_btc + localbitcoin + float(precio_airtm) + precio_dolar_bolivar_cucuta
-    dolar_promedio = dolar_suma / 4
+    # dolar_suma = dolartoday + dolartoday_btc + float(precio_airtm) + precio_dolar_bolivar_cucuta
+    dolar_suma = dolartoday + dolartoday_btc + localbitcoin + float(precio_airtm) + precio_dolar_bolivar_cucuta
+    dolar_promedio = dolar_suma / 5
     print('Dolar promedio', dolar_promedio)
 
     response = """:speaker: FoxBot Today USD/EUR: {0}:\n\n\
