@@ -1,5 +1,6 @@
 # -*- encoding: utf-8 -*-
 from selenium import webdriver
+from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.keys import Keys
 from pyvirtualdisplay import Display
 
@@ -35,6 +36,30 @@ def get_price_usd_eur(coin_ticker, market='coinbase'):
     data = requests.get(url)
     response = data.json() if data else ''
     return response
+
+def get_dolar_interbanex():
+    vdisplay = Display(visible=0, size=(1024, 768))
+    vdisplay.start()
+
+    driver = webdriver.Firefox(executable_path="/usr/local/bin/geckodriver")
+    url = 'https://www.interbanex.com'
+    ruta_xpath = "//*[contains(@class, 'value')]"
+    driver.get(url)
+    wait = WebDriverWait(driver, 3)
+    monto = 0
+
+    try:
+        if driver.find_elements_by_xpath(ruta_xpath)[0]:
+            monto = driver.find_elements_by_xpath(ruta_xpath)[0].text
+            monto = monto.replace('Bs', '').replace('.', '').replace(',', '.').strip()
+    except Exception as error:
+        monto = 0
+        print('Error al consultar interbanex', error)
+
+    driver.close()
+    vdisplay.stop()
+
+    return float(monto)
 
 def get_dolar_gobierno():
     dolar_gobierno = '0'
