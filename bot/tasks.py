@@ -440,6 +440,7 @@ def get_dolartoday_parse():
     # USD
     dolartoday = float(rq.json().get('USD').get('transferencia'))
     dolartoday_btc = float(rq.json().get('USD').get('bitcoin_ref'))
+    dolar_interbanex = get_dolar_interbanex()
 
     implicito = float(rq.json().get("USD").get("efectivo"))
     dicom = float(rq.json().get("USD").get("sicad2"))
@@ -469,12 +470,13 @@ def get_dolartoday_parse():
     precio_dolar_gobierno = dicom  #  get_dolar_gobierno()
 
     # dolar_suma = dolartoday + dolartoday_btc + float(precio_airtm) + precio_dolar_bolivar_cucuta
-    dolar_suma = dolartoday + dolartoday_btc + localbitcoin + float(precio_airtm) + precio_dolar_bolivar_cucuta
-    dolar_promedio = dolar_suma / 5
+    dolar_suma = dolartoday + dolartoday_btc + localbitcoin + float(precio_airtm) + precio_dolar_bolivar_cucuta + dolar_interbanex
+    dolar_promedio = dolar_suma / 6
     print('Dolar promedio', dolar_promedio)
 
     response = """:speaker: FoxBot Today USD/EUR: {0}:\n\n\
     {14} <b>Casas Cambio</b>: {17}\n\
+    {14} <b>Dolar Interbanex</b>: {21:,.2f}\n\
     {14} <b>DolarToday</b>: {1:0,.2f}\n\
     {14} <b>DT Bitcoin</b>: {18:0,.2f}\n\
     {14} <b>Dolar LBTC</b>: {5:0,.2f}\n\
@@ -507,7 +509,8 @@ def get_dolartoday_parse():
                     precio_dolar_gobierno,
                     dolartoday_btc,
                     precio_dolar_bolivar_cucuta,
-                    dolar_promedio
+                    dolar_promedio,
+                    dolar_interbanex
                     )
 
     return response
