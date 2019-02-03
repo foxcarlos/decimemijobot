@@ -41,7 +41,7 @@ def get_dolar_interbanex():
     vdisplay = Display(visible=0, size=(1024, 768))
     vdisplay.start()
 
-    driver = webdriver.Firefox(executable_path="/usr/local/bin/geckodriver")
+    driver = webdriver.Firefox(firefox_profile='/usr/local/bin/')  # executable_path="/usr/local/bin/geckodriver")
     url = 'https://www.interbanex.com'
     ruta_xpath = "//*[contains(@class, 'value')]"
     driver.get(url)
