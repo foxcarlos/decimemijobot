@@ -55,6 +55,26 @@ def get_dolar_gobierno():
             dolar_gobierno = '0'
     return dolar_gobierno
 
+def  get_dolar_interbanex():
+    dolar_bolivar_interbanex = '0'
+    URL = 'https://www.interbanex.com'
+    ruta = '/html/body/app-root/app-login/div/div[1]/div[1]/div[1]/div[2]/div[2]/app-instrument/div/div/div[2]/div[3]/div[1]/span[2]'
+
+    try:
+        page = requests.get(URL, timeout=10)
+        tree = html.fromstring(page.content)
+        resultado_bs = tree.xpath(ruta)
+    except:
+        resultado_bs = 0
+
+    if resultado_bs:
+        try:
+            print('BolivarInterbanex scrapy:', resultado_bs[0].text)
+            dolar_bolivar_interbanex =  float(resultado_bs[0].text.replace('.', '').replace(',', '.').strip())
+        except:
+            dolar_bolivar_interbanex = 0
+    return dolar_bolivar_interbanex
+
 def  get_dolar_bolivar_cucuta():
     dolar_bolivar_cucuta = '0'
     URL = 'http://bolivarcucuta.com/'
