@@ -5,7 +5,7 @@ from django.core.management.base import BaseCommand
 from django_telegrambot.apps import DjangoTelegramBot
 from django.conf import settings
 
-from bot.models import Alerta, AlertaUsuario
+from bot.models import Alerta, AlertaUsuario, User, Grupo
 from django.db.models import Q
 
 import requests
