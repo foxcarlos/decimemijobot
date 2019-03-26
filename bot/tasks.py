@@ -462,7 +462,8 @@ def get_dolartoday_parse():
     dolartoday_btc = float(rq.json().get('USD').get('bitcoin_ref'))
     dolar_interbanex = 0  # get_dolar_interbanex()
 
-    implicito = float(rq.json().get("USD").get("efectivo"))
+    # implicito = float(rq.json().get("USD").get("efectivo"))
+    implicito = float(rq.json().get("USD").get("efectivo_real"))
     dicom = float(rq.json().get("USD").get("sicad2"))
     cucuta = float(rq.json().get("USD").get("efectivo_cucuta"))
     barril = float(rq.json().get("MISC").get("petroleo").replace(",", "."))
@@ -471,7 +472,8 @@ def get_dolartoday_parse():
 
     # EUR
     dolartoday_e = float(rq.json().get('EUR').get('transferencia'))
-    implicito_e = float(rq.json().get("EUR").get("efectivo"))
+    # implicito_e = float(rq.json().get("EUR").get("efectivo"))
+    implicito_e = float(rq.json().get("EUR").get("efectivo_real"))
     dicom_e = float(get_dicom_gobierno())  # float(rq.json().get("EUR").get("sicad2"))
     cucuta_e = float(rq.json().get("EUR").get("efectivo_cucuta"))
     emoji_barril = u'\U0001F6E2'
@@ -485,13 +487,14 @@ def get_dolartoday_parse():
 
     emoji_bandera_rusa = u'\U0001F1F7\U0001F1FA'
     emoji_bandera_vzla = u'\U0001F1FB\U0001F1EA'
-    precio_airtm = get_price_from_twiter('theairtm').strip()
+    precio_airtm = get_price_from_twiter('theairtm').strip() if get_price_from_twiter('theairtm').strip() else 0
     precio_dolar_bolivar_cucuta = get_dolar_bolivar_cucuta()
     precio_dolar_gobierno = dicom  #  get_dolar_gobierno()
 
     # dolar_suma = dolartoday + dolartoday_btc + float(precio_airtm) + precio_dolar_bolivar_cucuta
-    dolar_suma = dolartoday + dolartoday_btc + localbitcoin + float(precio_airtm) + precio_dolar_bolivar_cucuta #  + dolar_interbanex
-    dolar_promedio = dolar_suma / 5
+    dolar_suma = dolartoday + dolartoday_btc + localbitcoin + float(precio_airtm) + precio_dolar_bolivar_cucuta + dolar_interbanex
+    cantidad_a_promediar = len([f for f in (dolartoday, dolartoday_btc, localbitcoin, float(precio_airtm), precio_dolar_bolivar_cucuta, dolar_interbanex) if f])
+    dolar_promedio = dolar_suma / cantidad_a_promediar
     print('Dolar promedio', dolar_promedio)
 
     response = """:speaker: FoxBot Today USD/EUR: {0}:\n\n\
