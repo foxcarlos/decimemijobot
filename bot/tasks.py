@@ -148,10 +148,10 @@ def get_localbitcoin_precio(coin_ticker=''):
             monto_usd = promedio_usd_1h if promedio_usd_1h else promedio_usd_12
             monto_ves = promedio_ves_1h if promedio_ves_1h else promedio_ves_12
             monto = float(monto_ves) / float(monto_usd)
-            
+
         except Exception as errorGet:
             monto = 0
-            print('Error al calcular precio del localbitcoin', error)
+            print('Error al calcular precio del localbitcoin', errorGet)
 
     return monto
 
