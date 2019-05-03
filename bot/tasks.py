@@ -499,9 +499,8 @@ def get_dolartoday_parse():
     dolar_promedio = dolar_suma / cantidad_a_promediar
     print('Dolar promedio', dolar_promedio)
 
-    response = """:speaker: FoxBot Today USD/EUR: {0}:\n\n\
+    response = """:speaker: DecimeMijoBot USD/EUR: {0}:\n\n\
     {14} <b>Casas Cambio</b>: {17}\n\
-    {14} <b>Dolar Interbanex</b>: {21:,.2f}\n\
     {14} <b>DolarToday</b>: {1:0,.2f}\n\
     {14} <b>DT Bitcoin</b>: {18:0,.2f}\n\
     {14} <b>Dolar LBTC</b>: {5:0,.2f}\n\
