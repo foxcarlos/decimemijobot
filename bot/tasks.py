@@ -132,24 +132,26 @@ def get_localbitcoin_precio(coin_ticker=''):
 
     monto= 0
     url = 'https://localbitcoins.com/bitcoinaverage/ticker-all-currencies/'
-    todas_las_monedas = requests.get(url).json()
-    info_usd = todas_las_monedas.get('USD')
-    info_ves = todas_las_monedas.get('VES')
+    get_todas_las_monedas = requests.get(url)
+    if get_todas_las_monedas.status_code == 200:
+        try:
+            todas_las_monedas = get_todas_las_monedas.json()
+            info_usd = todas_las_monedas.get('USD')
+            info_ves = todas_las_monedas.get('VES')
 
-    promedio_usd_1h = info_usd.get('avg_1h')
-    promedio_usd_12 = info_usd.get('avg_12h')
+            promedio_usd_1h = info_usd.get('avg_1h')
+            promedio_usd_12 = info_usd.get('avg_12h')
 
-    promedio_ves_1h = info_ves.get('avg_1h')
-    promedio_ves_12 = info_ves.get('avg_12h')
+            promedio_ves_1h = info_ves.get('avg_1h')
+            promedio_ves_12 = info_ves.get('avg_12h')
 
-    monto_usd = promedio_usd_1h if promedio_usd_1h else promedio_usd_12
-    monto_ves = promedio_ves_1h if promedio_ves_1h else promedio_ves_12
-
-    try:
-        monto = float(monto_ves) / float(monto_usd)
-    except Exception as error:
-        monto = 0
-        print('Error al calcular precio del localbitcoin', error)
+            monto_usd = promedio_usd_1h if promedio_usd_1h else promedio_usd_12
+            monto_ves = promedio_ves_1h if promedio_ves_1h else promedio_ves_12
+            monto = float(monto_ves) / float(monto_usd)
+            
+        except Exception as errorGet:
+            monto = 0
+            print('Error al calcular precio del localbitcoin', error)
 
     return monto
 
