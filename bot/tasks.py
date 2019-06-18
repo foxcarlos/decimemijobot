@@ -28,6 +28,7 @@ from lib.airtm import AirTM
 
 URL_AREPA_BTC_USD = settings.CRIPTO_MONEDAS.get("URL_AREPACOIN")
 URL_WCC = settings.CRIPTO_MONEDAS.get("URL_WCC")
+URL_RIL = settings.CRIPTO_MONEDAS.get("URL_RIL")
 URL_PRICE_USD_EUR_MARKET = settings.CRIPTO_MONEDAS.get("URL_PRICE_USD_EUR_MARKET")
 URL_DOLARTODAY = settings.CRIPTO_MONEDAS.get("URL_DOLARTODAY")
 
@@ -414,6 +415,43 @@ def get_price_wcc(dolartoday):
 def wolfclover(chat_id, dolartoday):
     precio_usd_arepa, precio_vef_arepa, precio_vef_arepa_airtm, precio_btc_arepa  = get_price_wcc(dolartoday)
     response = """El precio de WolfCloverCoin es:\n\n\U0001F1FB\U0001F1EA <b>VEF Dolartoday:</b> {0:,.2f}\n\U0001F1FB\U0001F1EA <b>VEF AirTM:</b> {2:,.2f}\n<b>:dollar: USD:</b> {1:,.8f}\n\u0243 <b>BTC</b> {3:,.8f}\n\n <b>Precios Basados en https://trade.thexchanger.io</b>""".format(precio_vef_arepa, precio_usd_arepa, precio_vef_arepa_airtm, precio_btc_arepa)
+    DjangoTelegramBot.dispatcher.bot.sendMessage(chat_id, parse_mode="html", text=emojize(response, use_aliases=True))
+
+
+def get_price_ril(dolartoday):
+    def get_price_usd_eur(coin_ticker, market='coinbase'):
+        url = URL_PRICE_USD_EUR_MARKET.format(coin_ticker.upper())
+        data = requests.get(url)
+        response = data.json() if data else ''
+        return response
+
+    precio_dtd = dolartoday if dolartoday else 0
+    precio_airtm = float(get_price_from_twiter('theairtm').strip()) if \
+            get_price_from_twiter('theairtm') else 0
+    dolartoday if dolartoday else 0
+
+    precio_usd_ril = 0
+    precio_vef_ril = 0
+    precio_btc_ril = 0
+    precio_vef_ril_airtm = 0
+
+    rq = requests.get(URL_RIL).json()
+    if rq:
+        if rq[0].get('instrument'):
+            precio_btc_ril = float(rq[0].get('last') if rq[0].get('last') else '0')
+
+    precio_usd_ril = float(get_price_usd_eur("BTC", "bitfinex").get('USD')) * precio_btc_ril
+    precio_vef_ril = precio_usd_ril * precio_dtd
+    precio_vef_ril_airtm = precio_usd_ril * precio_airtm
+
+    return precio_usd_ril, precio_vef_ril, precio_vef_ril_airtm, precio_btc_ril
+
+@app.task
+def rilcoin(chat_id, dolartoday):
+    precio_usd_ril, precio_vef_ril, precio_vef_ril_airtm, precio_btc_ril  = get_price_ril(dolartoday)
+
+    response = """El precio de RilCoin es:\n\n\U0001F1FB\U0001F1EA <b>VEF Dolartoday:</b> {0:,.2f}\n\U0001F1FB\U0001F1EA <b>VEF AirTM:</b> {2:,.2f}\n<b>:dollar: USD:</b> {1:,.8f}\n\u0243 <b>BTC</b> {3:,.8f}\n""".format(precio_vef_ril, precio_usd_ril, precio_vef_ril_airtm, precio_btc_ril)
+
     DjangoTelegramBot.dispatcher.bot.sendMessage(chat_id, parse_mode="html", text=emojize(response, use_aliases=True))
 
 def get_price_arepacoin(dolartoday):

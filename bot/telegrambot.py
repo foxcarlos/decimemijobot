@@ -19,7 +19,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from bot.scrapy import NoticiasPanorama
 from bot.models import Alerta, AlertaUsuario, User, Grupo, Comando, ComandoEstado, Contrato, PersonaContrato
 
-from bot.tasks import pool_message, grupo_message, yt2mp3, get_price_from_twiter, arepacoin, wolfclover, get_price_arepacoin, get_price_wcc, get_dolartoday_comando, get_price_usd_eur
+from bot.tasks import pool_message, grupo_message, yt2mp3, get_price_from_twiter, arepacoin, wolfclover, get_price_arepacoin, get_price_wcc, get_dolartoday_comando, get_price_usd_eur, rilcoin, get_price_ril
 
 from lib.airtm import AirTM
 from datetime import datetime
@@ -52,6 +52,7 @@ URL_PRICE_USD = settings.CRIPTO_MONEDAS.get("URL_PRICE_USD")
 URL_PRICE_USD_EUR_MARKET = settings.CRIPTO_MONEDAS.get("URL_PRICE_USD_EUR_MARKET")
 URL_DOLARTODAY = settings.CRIPTO_MONEDAS.get("URL_DOLARTODAY")
 URL_WCC = settings.CRIPTO_MONEDAS.get("URL_WCC")
+URL_RIL = settings.CRIPTO_MONEDAS.get("URL_RIL")
 
 global buyer_seller
 global inf_operacion
@@ -932,6 +933,14 @@ def calc_wcc(monto=0, moneda='wolfc'):
             monto, precio_usd_wcc*monto, 0, precio_btc_wcc*monto, precio_vef_wcc*monto, precio_vef_wcc_airtm*monto, moneda.upper())
     return response
 
+def calc_ril(monto=0, moneda=''):
+    monto = float(monto)
+    precio_usd_ril, precio_vef_ril, precio_vef_ril_airtm, precio_btc_ril = get_price_ril(get_dolartoday())
+
+    response = """:moneybag: El calculo de <b>{0}</b> <i>{6}</i> es :\n\n:dollar: Dolar: {1:,.8f}\n:euro: Euro: {2:,.8f}\n\u0243 BTC: {3:,.8f}\n\U0001F1FB\U0001F1EA  VES AirTM: {4:,.2f}\n\U0001F1FB\U0001F1EA  VEF: {5:,.2f}\n\n <b>Precios basados en (CoinMarketCap, DolarToday,DolarAirTM)</b>""".format(
+            monto, precio_usd_ril*monto, 0, precio_btc_ril*monto, precio_vef_ril*monto, precio_vef_ril_airtm*monto, moneda.upper())
+    return response
+
 def calc_arepa(monto=0, moneda=''):
     monto = float(monto)
     precio_usd_arepa, precio_vef_arepa, precio_vef_arepa_airtm, precio_btc_arepa = get_price_arepacoin(get_dolartoday())
@@ -978,8 +987,8 @@ def func_calc(params, market='coinbase'):
         elif moneda.upper() == 'AREPA':
             response = calc_arepa(monto, 'arepa')
 
-        elif moneda.upper() == 'WCC':
-            response = calc_wcc(monto, 'wcc')
+        elif moneda.upper() == 'RIL':
+            response = calc_ril(monto, 'ril')
 
     except Exception as e:
         response = 'Verifica que el monto tenga como separacion decimal . Ej: /clc btc 0.001'
@@ -1315,6 +1324,10 @@ def arepa_coin(bot, update):
     chat_id = update.message.chat_id
     arepacoin.delay(chat_id, get_dolartoday())
 
+def ril_coin(bot, update):
+    chat_id = update.message.chat_id
+    rilcoin.delay(chat_id, get_dolartoday())
+
 def dolar_otros(bot, update, nombre):
     chat_id = update.message.chat_id
     get_price_from_twiter.delay(chat_id, nombre)
@@ -1371,7 +1384,7 @@ def help(bot, update):
     /bitcoin - Muestra el Precio(segun coinbase)
     /dolartoday
     /arepacoin - arepacoin
-    /wcc - WolfClover Coin
+    /ril - Ril Coin
 
     /set_alarma_bitcoin - Configura alertas
     /set_alarma_ethereum - Configura alertas
@@ -1774,6 +1787,7 @@ def main():
     dp.add_handler(CommandHandler("wolfclover", wolfclover_coin))
     dp.add_handler(CommandHandler("wcc", wolfclover_coin))
     dp.add_handler(CommandHandler("arepacoin", arepa_coin))
+    dp.add_handler(CommandHandler("ril", ril_coin))
     dp.add_handler(CommandHandler("arepa", arepa_coin))
     dp.add_handler(CommandHandler("dolar_procom", dolar_procom))
     dp.add_handler(CommandHandler("masivo", enviar_mensajes_todos))
