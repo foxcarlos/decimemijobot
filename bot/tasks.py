@@ -202,11 +202,12 @@ def yt2mp3_2(chat_id, url):
             'noplaylist' : True,}
 
     ydl = youtube_dl.YoutubeDL(ydl_opts)
+    # import ipdb;ipdb.set_trace()
     descargar_archivo = ydl.extract_info(url)
 
     if descargar_archivo.get('title'):
         archivo = os.path.join(settings.BASE_DIR,
-                '{0}.mp3'.format(descargar_archivo.get('title')))
+                '{0}.mp3'.format(descargar_archivo.get('id')))
         return archivo
 
         # file_ = open("{0}".format(archivo), "rb")
