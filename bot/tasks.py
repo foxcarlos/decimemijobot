@@ -207,10 +207,12 @@ def yt2mp3_2(chat_id, url):
     if descargar_archivo.get('title'):
         archivo = os.path.join(settings.BASE_DIR,
                 '{0}.mp3'.format(descargar_archivo.get('title')))
+        return archivo
 
-        file_ = open("{0}".format(archivo), "rb")
-        DjangoTelegramBot.dispatcher.bot.sendAudio(chat_id,
-            audio=file_, caption=archivo)
+        # file_ = open("{0}".format(archivo), "rb")
+        #DjangoTelegramBot.dispatcher.bot.sendAudio(chat_id,
+        #    audio=file_, caption=archivo)
+    return False
 
 @app.task
 def yt2mp3(chat_id, url):
