@@ -194,63 +194,44 @@ def grupo_message(grupos, cadena_sin_el_comando):
         sleep(3)
 
 
-def yt2mp3_2(chat_id, url):
+def yt2mp3_download(chat_id, url):
     import youtube_dl
     ydl_opts = {
             'format': 'worstaudio[ext=mp3]/worst',
-            'outtmpl': '%(title)s.mp3',
+            'outtmpl': '%(id)s',
             'noplaylist' : True,}
 
     ydl = youtube_dl.YoutubeDL(ydl_opts)
-    # import ipdb;ipdb.set_trace()
     descargar_archivo = ydl.extract_info(url)
 
-    if descargar_archivo.get('title'):
+    if descargar_archivo.get('id'):
         archivo = os.path.join(settings.BASE_DIR,
-                '{0}.mp3'.format(descargar_archivo.get('id')))
+                '{0}'.format(descargar_archivo.get('id')))
         return archivo
 
-        # file_ = open("{0}".format(archivo), "rb")
-        #DjangoTelegramBot.dispatcher.bot.sendAudio(chat_id,
-        #    audio=file_, caption=archivo)
     return False
+
+def yt2mp3_convert(archivo):
+    comando = 'ffmpeg -i "{0}" -vn -ar 44100 -ac 2 -ab 56k -f mp3 {1}'.format(
+    archivo, archivo + '.mp3')
+    print(comando)
+    os.system(comando)
+    return True
 
 @app.task
 def yt2mp3(chat_id, url):
-    msg_response = []
-
-    def convert_to_mp3(stream, file_handle):
-        import os
-        import re
-        try:
-            nombre = os.path.split(os.path.abspath(file_handle.name))[1]
-            print('Nombre', nombre)
-            filename = nombre.replace(" ", "_").replace("mp4", "")
-            filename_2 = ''.join(re.findall('\w', filename))
-            filename_mp3 = "{0}.mp3".format(filename_2)
-            comando = 'ffmpeg -i "{0}" -vn -ar 44100 -ac 2 -ab 192 -f mp3 {1}'.format(nombre, filename_mp3)
-            print(comando)
-            os.system(comando)
-            msg_response.append("{0}".format(filename_mp3))
-            os.remove(nombre)
-        except Exception as E:
-            print('error', E)
-            os.remove(nombre)
-            msg_response.append(":x: <b>Ocurrio un error al procesar el arachivo</b>")
-        return msg_response
-
     try:
-        yt = YouTube(url)
-        yt.register_on_complete_callback(convert_to_mp3)
-        yt.streams.filter(only_audio=True).first().download()
+        archivo = yt2mp3_download('', url)
+        archivo_mp3 = yt2mp3_convert(archivo)
 
-        archivo = msg_response[0]
-        file_ = open("{0}".format(archivo), "rb")
+        print(archivo)
+        file_ = open("{0}".format(archivo + '.mp3'), "rb")
         DjangoTelegramBot.dispatcher.bot.sendAudio(chat_id,
-                audio=file_, caption=archivo)
+                audio=file_, caption=archivo, timeout=1000)
 
         file_.close()
         os.remove(archivo)
+        os.remove(archivo + '.mp3')
     except Exception as E:
         print(E)
 
