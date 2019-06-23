@@ -168,6 +168,16 @@ class SendMail(View):
         from email.mime.multipart import MIMEMultipart
         from email.mime.text import MIMEText
 
+        # Para enviar contennido HTML
+        # msg = email.message.Message()
+        # msg.add_header('Content-Type', 'text/html')
+        # email_content = """
+        #    <html>
+        #    <head></head>
+        #    </html>
+        #    """
+        # msg.set_payload(email_content)
+
         msg = MIMEMultipart()
         message = "Test de envio"
         password = "Sm4bur34u"
