@@ -38,6 +38,8 @@ INSTALLED_APPS = [
     'bot',
     'django_telegrambot',
     'djcelery',
+    'send_mail',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [

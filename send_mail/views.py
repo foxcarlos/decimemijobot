@@ -14,33 +14,30 @@ from rest_framework import serializers
 
 # Models y serializer
 from django.db.models import Q
-from calculos.views import CalculoRapido
 from django.core.exceptions import ObjectDoesNotExist
 from .models import *
-from exchange.models import Exchange
-from perfil.serializers import DatosPersonalesSerializer
 
-class DatosPersonales(APIView):
+class SendMail(APIView):
     '''.'''
     def get(self, request):
-        instancia_paises = CalculoRapido()
-        paises = instancia_paises.buscar_paises(request)
 
-        return render(request, 'perfil_index_datosp.html', paises)
-    
+        #return render(request, 'perfil_index_datosp.html', paises)
+        return 'Get'
+
     def post(self, request):
         '''.'''
         import ipdb;ipdb.set_trace()
         request.data._mutable = True
         request.data['pais_residencia']= 1
 
-        serializer = DatosPersonalesSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        #serializer = DatosPersonalesSerializer(data=request.data)
+        #if serializer.is_valid():
+        #    serializer.save()
+        #    return Response(serializer.data, status=status.HTTP_201_CREATED)
+        #return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return 'post'
 
-    
+
     def put(self, request):
         pass
 
@@ -51,6 +48,7 @@ class Calculo(View):
     '''.'''
     def get(self, request):
         '''.'''
+        import ipdb; ipdb.set_trace() # BREAKPOINT
         instancia_paises = CalculoRapido()
         paises = instancia_paises.buscar_paises(request)
 
