@@ -102,7 +102,7 @@ def  get_dolar_interbanex():
     return dolar_bolivar_interbanex
 
 def  get_dolar_bolivar_cucuta():
-    dolar_bolivar_cucuta = '0'
+    dolar_bolivar_cucuta = 0
     URL = 'http://bolivarcucuta.com/'
     ruta = '//*[@id="dolar"]'
 
@@ -511,7 +511,7 @@ def get_dolartoday_parse():
 
     emoji_bandera_rusa = u'\U0001F1F7\U0001F1FA'
     emoji_bandera_vzla = u'\U0001F1FB\U0001F1EA'
-    precio_airtm = get_price_from_twiter('theairtm').strip() if get_price_from_twiter('theairtm').strip() else 0
+    precio_airtm = 0  # get_price_from_twiter('theairtm').strip() if get_price_from_twiter('theairtm').strip() else 0
     precio_dolar_bolivar_cucuta = get_dolar_bolivar_cucuta()
     precio_dolar_gobierno = dicom  #  get_dolar_gobierno()
 
