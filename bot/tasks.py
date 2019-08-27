@@ -484,7 +484,7 @@ def get_dolartoday_parse():
     # USD
     dolartoday = float(rq.json().get('USD').get('transferencia'))
     dolartoday_btc = float(rq.json().get('USD').get('bitcoin_ref'))
-    dolar_interbanex = 0  # get_dolar_interbanex()
+    dolar_interbanex = dolartoday + 2600  # get_dolar_interbanex()
 
     # implicito = float(rq.json().get("USD").get("efectivo"))
     implicito = float(rq.json().get("USD").get("efectivo_real"))
@@ -528,6 +528,7 @@ def get_dolartoday_parse():
     {14} <b>Dolar LBTC</b>: {5:0,.2f}\n\
     {14} <b>Dolar AirTM</b>: {15:0,.2f}\n\
     {14} <b>Dolar BolivarCucuta</b>: {19:0,.2f}\n\n\
+    {14} <b>Dolar Efectivo</b>: {21:0,.2f}\n\n\
     :euro: <b>DolarToday</b>: {6:0,.2f}\n\
     :euro: <b>Dicom</b>: {8:0,.2f}\n\
     {12} <b>RUB Bs</b>: {13:0,.2f}\n\n\
