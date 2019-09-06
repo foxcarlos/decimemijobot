@@ -74,6 +74,25 @@ def get_dolar_interbanex():
 
     return float(monto)
 
+def get_dolar_airtm():
+    dolar_airtm = '0'
+    URL = 'https://rates.airtm.com/'
+    ruta ='/html/body/div[1]/div[1]/div[4]/div[1]/div/span'
+    try:
+        page = requests.get(URL, timeout=10)
+        tree = html.fromstring(page.content)
+        resultado_bs = tree.xpath(ruta)
+    except:
+        resultado_bs = 0
+
+    if resultado_bs:
+        try:
+            print('aqui', resultado_bs[0].text)
+            dolar_airtm = float(resultado_bs[0].text.strip())
+        except:
+            dolar_airtm = '0'
+    return dolar_airtm
+
 def get_dolar_gobierno():
     dolar_gobierno = '0'
     URL = 'https://www.casadecambiozoom.com/'
@@ -523,14 +542,15 @@ def get_dolartoday_parse():
 
     emoji_bandera_rusa = u'\U0001F1F7\U0001F1FA'
     emoji_bandera_vzla = u'\U0001F1FB\U0001F1EA'
-    precio_airtm = 0  # get_price_from_twiter('theairtm').strip() if get_price_from_twiter('theairtm').strip() else 0
+    datm = get_dolar_airtm()
+    precio_airtm = datm if datm else 0
     precio_dolar_bolivar_cucuta = get_dolar_bolivar_cucuta()
     precio_dolar_yadio = get_price_yadio()
     precio_dolar_gobierno = dicom  #  get_dolar_gobierno()
 
     # dolar_suma = dolartoday + dolartoday_btc + float(precio_airtm) + precio_dolar_bolivar_cucuta
-    dolar_suma = dolartoday + dolartoday_btc + localbitcoin + float(precio_airtm) + precio_dolar_bolivar_cucuta + dolar_efectivo + precio_dolar_yadio
-    cantidad_a_promediar = len([f for f in (dolartoday, dolartoday_btc, localbitcoin, float(precio_airtm), precio_dolar_bolivar_cucuta, dolar_efectivo, precio_dolar_yadio) if f])
+    dolar_suma = dolartoday + dolartoday_btc + localbitcoin + precio_airtm + precio_dolar_bolivar_cucuta + dolar_efectivo + precio_dolar_yadio
+    cantidad_a_promediar = len([f for f in (dolartoday, dolartoday_btc, localbitcoin, precio_airtm, precio_dolar_bolivar_cucuta, dolar_efectivo, precio_dolar_yadio) if f])
     dolar_promedio = dolar_suma / cantidad_a_promediar
     print('Dolar promedio', dolar_promedio)
 
@@ -565,7 +585,7 @@ def get_dolartoday_parse():
                     emoji_bandera_rusa,
                     rublo_vef,
                     emoji_bandera_vzla,
-                    float(precio_airtm) if precio_airtm else 0,
+                    precio_airtm,
                     emoji_barril,
                     precio_dolar_gobierno,
                     dolartoday_btc,
