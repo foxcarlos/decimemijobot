@@ -32,6 +32,18 @@ URL_RIL = settings.CRIPTO_MONEDAS.get("URL_RIL")
 URL_PRICE_USD_EUR_MARKET = settings.CRIPTO_MONEDAS.get("URL_PRICE_USD_EUR_MARKET")
 URL_DOLARTODAY = settings.CRIPTO_MONEDAS.get("URL_DOLARTODAY")
 
+
+def get_price_yadio():
+    response = 0
+    url = 'https://api.yadio.io/json'
+    ok = requests.get(url)
+    try:
+        response = ok.json().get('USD').get('rate')
+        response = float(response)
+    except Exception as e:
+        response = 0
+    return response
+    
 def get_price_usd_eur(coin_ticker, market='coinbase'):
     url = URL_PRICE_USD_EUR_MARKET.format(coin_ticker.upper())
     data = requests.get(url)
@@ -484,7 +496,7 @@ def get_dolartoday_parse():
     # USD
     dolartoday = float(rq.json().get('USD').get('transferencia'))
     dolartoday_btc = float(rq.json().get('USD').get('bitcoin_ref'))
-    dolar_interbanex = dolartoday + 2600  # get_dolar_interbanex()
+    dolar_efectivo = dolartoday + 2600  # get_dolar_interbanex()
 
     # implicito = float(rq.json().get("USD").get("efectivo"))
     implicito = float(rq.json().get("USD").get("efectivo_real"))
@@ -513,11 +525,12 @@ def get_dolartoday_parse():
     emoji_bandera_vzla = u'\U0001F1FB\U0001F1EA'
     precio_airtm = 0  # get_price_from_twiter('theairtm').strip() if get_price_from_twiter('theairtm').strip() else 0
     precio_dolar_bolivar_cucuta = get_dolar_bolivar_cucuta()
+    precio_dolar_yadio = get_price_yadio()
     precio_dolar_gobierno = dicom  #  get_dolar_gobierno()
 
     # dolar_suma = dolartoday + dolartoday_btc + float(precio_airtm) + precio_dolar_bolivar_cucuta
-    dolar_suma = dolartoday + dolartoday_btc + localbitcoin + float(precio_airtm) + precio_dolar_bolivar_cucuta + dolar_interbanex
-    cantidad_a_promediar = len([f for f in (dolartoday, dolartoday_btc, localbitcoin, float(precio_airtm), precio_dolar_bolivar_cucuta, dolar_interbanex) if f])
+    dolar_suma = dolartoday + dolartoday_btc + localbitcoin + float(precio_airtm) + precio_dolar_bolivar_cucuta + dolar_efectivo + precio_dolar_yadio
+    cantidad_a_promediar = len([f for f in (dolartoday, dolartoday_btc, localbitcoin, float(precio_airtm), precio_dolar_bolivar_cucuta, dolar_efectivo, precio_dolar_yadio) if f])
     dolar_promedio = dolar_suma / cantidad_a_promediar
     print('Dolar promedio', dolar_promedio)
 
@@ -525,16 +538,17 @@ def get_dolartoday_parse():
     {14} <b>Casas Cambio</b>: {17}\n\
     {14} <b>DolarToday</b>: {1:0,.2f}\n\
     {14} <b>DT Bitcoin</b>: {18:0,.2f}\n\
-    {14} <b>Dolar LBTC</b>: {5:0,.2f}\n\
-    {14} <b>Dolar AirTM</b>: {15:0,.2f}\n\
-    {14} <b>Dolar BolivarCucuta</b>: {19:0,.2f}\n\n\
-    {14} <b>Dolar Efectivo</b>: {21:0,.2f}\n\n\
+    {14} <b>Localbitcoin</b>: {5:0,.2f}\n\
+    {14} <b>AirTM</b>: {15:0,.2f}\n\
+    {14} <b>BolivarCucuta</b>: {19:0,.2f}\n\
+    {14} <b>Yadio</b>: {20:0,.2f}\n\
+    {14} <b>Dolar Efectivo</b>: {22:0,.2f}\n\n\
     :euro: <b>DolarToday</b>: {6:0,.2f}\n\
     :euro: <b>Dicom</b>: {8:0,.2f}\n\
     {12} <b>RUB Bs</b>: {13:0,.2f}\n\n\
     {16} <b>Petroleo</b> USD: {10:0,.2f}\n\
     :moneybag: <b>Oro</b> USD: {11:0,.2f}\n\n\
-    {14} <b>Bs Dolar Promedio</b>: {20:0,.2f}\n\n\
+    {14} <b>Bs Dolar Promedio</b>: {21:0,.2f}\n\n\
     Seguime en Twiter: https://twitter.com/decimemijobot\n\
         """.format(fecha,
                     dolartoday,
@@ -556,8 +570,9 @@ def get_dolartoday_parse():
                     precio_dolar_gobierno,
                     dolartoday_btc,
                     precio_dolar_bolivar_cucuta,
+                    precio_dolar_yadio,
                     dolar_promedio,
-                    dolar_interbanex
+                    dolar_efectivo
                     )
 
     return response

@@ -9,14 +9,15 @@ from django.http import HttpResponseRedirect
 from django.views.generic.base import View
 
 # Django Rest
-from rest_framework.views import APIView
-from rest_framework import serializers
+# from rest_framework.views import APIView
+# from rest_framework import serializers
 
 # Models y serializer
 from django.db.models import Q
 from django.core.exceptions import ObjectDoesNotExist
 from .models import *
 
+"""
 class SendMail(APIView):
     '''.'''
     def get(self, request):
@@ -43,6 +44,7 @@ class SendMail(APIView):
 
     def delete(self, request):
         pass
+"""
 
 class Calculo(View):
     '''.'''

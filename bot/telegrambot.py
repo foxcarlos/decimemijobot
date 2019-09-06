@@ -968,28 +968,6 @@ def func_calc(params, market='coinbase'):
             response = """:moneybag: El calculo de <b>{0}</b> <i>{5}</i> es :\n\n:dollar: Dolar: {1:,.2f}\n:euro: Euro: {2:,.2f}\n\u0243 BTC: {3:,.6f}\n\U0001F1FB\U0001F1EA  VES: {4:,.2f} """.format(
                     monto, total_dolar, total_euros, total_btc, total_vef, moneda.upper())
 
-        # Esto es para que solo pase por aqui cuando se solicite
-        # cualquier moneda menos el BTC porque ese se calcula en la
-        # sentecia de arriba
-        if moneda.upper() != "BTC" and moneda.upper() in list(data):
-            data = get_price_usd_eur("btc", market)
-            monto, total_btc, total_dolar, total_dolar_airtm = valida_calcula_moneda(
-                    moneda.upper(), monto, data)
-
-            if moneda.upper() == 'VES':
-                response = """:moneybag: El calculo para <b>{0}</b> <i>{4}</i> es de :\n\n\u0243 BTC: {1:,.9f}\n:dollar: Dolares: {2:,.2f}\n:dollar: Dolares Airtm: {5:,.2f}\n\n<b>Nota:</b> Precios basados en: {3}""".format(
-                    monto, total_btc, total_dolar, market.capitalize(), moneda.upper(), total_dolar_airtm)
-            else:
-                response = """:moneybag: El calculo para <b>{0}</b> <i>{4}</i> es de :\n\n\u0243 BTC: {1:,.9f}\n:dollar: Dolares: {2:,.2f}\n\U0001F1FB\U0001F1EA VES: {5:,.2f}\n\n<b>Nota:</b> Precios basados en: {3}""".format(
-                    monto, total_btc, total_dolar, market.capitalize(), moneda.upper(), total_dolar * get_dolartoday())
-
-
-        elif moneda.upper() == 'AREPA':
-            response = calc_arepa(monto, 'arepa')
-
-        elif moneda.upper() == 'RIL':
-            response = calc_ril(monto, 'ril')
-
     except Exception as e:
         response = 'Verifica que el monto tenga como separacion decimal . Ej: /clc btc 0.001'
     return response
@@ -1383,8 +1361,6 @@ def help(bot, update):
     /allcoins - Precios de varias criptos
     /bitcoin - Muestra el Precio(segun coinbase)
     /dolartoday
-    /arepacoin - arepacoin
-    /ril - Ril Coin
 
     /set_alarma_bitcoin - Configura alertas
     /set_alarma_ethereum - Configura alertas
@@ -1406,12 +1382,6 @@ def help(bot, update):
 
     /ban Expulsa a un usuario sin derecho a regresar
     /kick Expulsa a un uusario y puede volver cuando lo desee
-
-    /trade - Crea un contrato compra venta
-    /trade ? - Para obtener ayuda
-    /tradec - Calificar Conrtato
-    /trade2user - Listas todas las operaciones de un usuario
-    /traderef - Referencias de usuario
 
     /yt2mp3 <link youtube> - Convierte video youtube a mp3
 
