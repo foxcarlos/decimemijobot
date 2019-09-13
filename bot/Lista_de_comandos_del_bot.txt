@@ -14,6 +14,9 @@ clc - <VES> <monto> - Calcula cuantos BTC y Dolar son los Bs Soberanos pasado en
 yt2mp3 - Convierte video youtube a mp3
 set_alarma_bitcoin - <estado> Ej: /set_alarma_bitcoin on
 set_alarma_dolarairtm - <estado> Ej: /set_alarma_dolarairtm on
+set_alarma_dolaryadio - <estado> Ej: /set_alarma_dolaryadio on
+set_alarma_dolarlocalbitcoin - <estado> Ej: /set_alarma_dolarlocalbitcoin on
+set_alarma_dolarcasasdecambio - <estado> Ej: /set_alarma_dolarcasasdecambio on
 set_alarma_dolartoday - <estado> Ej: /set_alarma_dolartoday on
 set_alarma_ethereum - <estado> Ej: /set_alarma_ethereum on
 set_alarma_litecoin - <estado> Ej: /set_alarma_litecoin on
