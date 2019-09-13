@@ -11,7 +11,7 @@ from django.db.models import Q
 import requests
 from datetime import datetime, timedelta
 from emoji import emojize
-from bot.tasks import get_price_from_twiter
+from bot.tasks import get_price_from_twiter, get_dolar_airtm, get_price_yadio, get_localbitcoin_precio, get_dolar_gobierno
 
 
 URL_BTC_USD = settings.CRIPTO_MONEDAS.get("URL_BTC_USD")
@@ -51,9 +51,25 @@ class Command(BaseCommand):
             ultimo_precio = float(self.get_price(URL_LTC_USD))
         elif comando == 'dolarairtm':
             try:
-                ultimo_precio = float(get_price_from_twiter('theairtm').replace(',', ''))
+                ultimo_precio = float(get_dolar_airtm())
             except:
                 ultimo_precio = 0
+        elif comando == 'dolaryadio':
+            try:
+                ultimo_precio = float(get_price_yadio())
+            except:
+                ultimo_precio = 0
+        elif comando == 'dolarlocalbitcoin':
+            try:
+                ultimo_precio = float(get_localbitcoin_precio())
+            except:
+                ultimo_precio = 0
+        elif comando == 'dolarcasasdecambio':
+            try:
+                ultimo_precio = float(get_dolar_gobierno())
+            except:
+                ultimo_precio = 0
+
         else:
             ultimo_precio = 0
         return ultimo_precio
@@ -141,5 +157,11 @@ class Command(BaseCommand):
             self.generar_alerta("litecoin")
         elif 'dolarairtm' in options.get("comando"):
             self.generar_alerta("dolarairtm")
+        elif 'dolaryadio' in options.get("comando"):
+            self.generar_alerta("dolaryadio")
+        elif 'dolarlocalbitcoin' in options.get("comando"):
+            self.generar_alerta("dolarlocalbitcoin")
+        elif 'dolarcasasdecambio' in options.get("comando"):
+            self.generar_alerta("dolarcasasdecambio")
 
         self.stdout.write('Ejecutando comando')

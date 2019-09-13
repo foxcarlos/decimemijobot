@@ -90,27 +90,18 @@ def get_dolar_airtm():
             print('aqui', resultado_bs[0].text)
             dolar_airtm = float(resultado_bs[0].text.strip())
         except:
-            dolar_airtm = '0'
+            dolar_airtm = 0
     return dolar_airtm
 
 def get_dolar_gobierno():
-    dolar_gobierno = '0'
-    URL = 'https://www.casadecambiozoom.com/'
-    ruta ='/html/body/div[3]/div/div[2]/a/font'
+
     try:
-        page = requests.get(URL, timeout=10)
-        tree = html.fromstring(page.content)
-        resultado_bs = tree.xpath(ruta)
+       rq = requests.get(URL_DOLARTODAY)
+       resultado_bs = float(rq.json().get("USD").get("sicad2"))
     except:
         resultado_bs = 0
 
-    if resultado_bs:
-        try:
-            print('aqui', resultado_bs[0].text)
-            dolar_gobierno = resultado_bs[0].text.replace('Bs.S.', '').strip()
-        except:
-            dolar_gobierno = '0'
-    return dolar_gobierno
+    return resultado_bs
 
 def  get_dolar_interbanex():
     dolar_bolivar_interbanex = '0'

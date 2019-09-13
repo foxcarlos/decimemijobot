@@ -1446,6 +1446,21 @@ def set_alarma_dolarairtm(bot, update):
     if valida_permiso_comando(bot, update):
         set_alarma(bot, update, "dolarairtm")
 
+def set_alarma_dolaryadio(bot, update):
+    usuario_nuevo(update)
+    if valida_permiso_comando(bot, update):
+        set_alarma(bot, update, "dolaryadio")
+
+def set_alarma_dolarlocalbitcoin(bot, update):
+    usuario_nuevo(update)
+    if valida_permiso_comando(bot, update):
+        set_alarma(bot, update, "dolarlocalbitcoin")
+
+def set_alarma_dolarcasasdecambio(bot, update):
+    usuario_nuevo(update)
+    if valida_permiso_comando(bot, update):
+        set_alarma(bot, update, "dolarcasasdecambio")
+
 def set_alarma_bitcoin(bot, update):
     usuario_nuevo(update)
     if valida_permiso_comando(bot, update):
@@ -1751,6 +1766,9 @@ def main():
 
     dp.add_handler(CommandHandler("set_alarma_dolartoday", set_alarma_dolartoday))
     dp.add_handler(CommandHandler("set_alarma_dolarairtm", set_alarma_dolarairtm))
+    dp.add_handler(CommandHandler("set_alarma_dolaryadio", set_alarma_dolaryadio))
+    dp.add_handler(CommandHandler("set_alarma_dolarlocalbitcoin", set_alarma_dolarlocalbitcoin))
+    dp.add_handler(CommandHandler("set_alarma_dolarcasasdecambio", set_alarma_dolarcasasdecambio))
     dp.add_handler(CommandHandler("set_alarma_ethereum", set_alarma_ethereum))
     dp.add_handler(CommandHandler("set_alarma_litecoin", set_alarma_litecoin))
     dp.add_handler(CommandHandler("dolartoday", dolartoday))
