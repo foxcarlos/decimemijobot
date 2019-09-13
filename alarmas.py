@@ -39,3 +39,18 @@ while True:
     run_comando(comando5)
     sleep(30)
 
+    print("Ejecutando Alarma dolarYadio")
+    comando6 = "python {0} alerta_bitcoin dolaryadio".format(django_mng)
+    run_comando(comando6)
+    sleep(30)
+
+    print("Ejecutando Alarma dolarlocalbitcoin")
+    comando7 = "python {0} alerta_bitcoin dolar localbitcoin".format(django_mng)
+    run_comando(comando7)
+    sleep(30)
+
+    print("Ejecutando Alarma dolar casas de cambio")
+    comando8 = "python {0} alerta_bitcoin dolarcasasdecambio".format(django_mng)
+    run_comando(comando8)
+    sleep(30)
+
