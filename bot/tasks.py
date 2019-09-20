@@ -29,8 +29,12 @@ URL_DOLARTODAY = settings.CRIPTO_MONEDAS.get("URL_DOLARTODAY")
 
 def get_price_yadio():
     response = 0
-    url = 'https://api.yadio.io/json'
-    ok = requests.get(url)
+    try:
+        url = 'https://api.yadio.io/json'
+        ok = requests.get(url)
+    except Exception as e:
+        ok = False
+
     try:
         response = ok.json().get('USD').get('rate')
         response = float(response)
