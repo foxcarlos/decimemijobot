@@ -49,7 +49,7 @@ def get_price_usd_eur(coin_ticker, market='coinbase'):
     return response
 
 def get_dolar_airtm():
-    dolar_airtm = '0'
+    dolar_airtm = 0
     URL = 'https://rates.airtm.com/'
     ruta ='/html/body/div[1]/div[1]/div[4]/div[1]/div/span'
     try:
