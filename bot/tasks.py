@@ -290,7 +290,7 @@ def get_dolartoday_parse():
     {16} <b>Petroleo</b> USD: {10:0,.2f}\n\
     :moneybag: <b>Oro</b> USD: {11:0,.2f}\n\n\
     {14} <b>Bs Dolar Promedio</b>: {21:0,.2f}\n\n\
-    Seguime en Twiter: https://twitter.com/decimemijobot\n\
+    Publica aqui tu anuncio, para mas Inf escribeme: @foxcarlos \n\
         """.format(fecha,
                     dolartoday,
                     implicito,
