@@ -1,5 +1,3 @@
-# -*- encoding: utf-8 -*-
-from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.keys import Keys
 from pyvirtualdisplay import Display
@@ -19,24 +17,24 @@ import tweepy
 from django_telegrambot.apps import DjangoTelegramBot
 from sampleproject.celery import app
 
-# from bot.telegrambot import get_dicom_gobierno, get_localbitcoin_precio, get_dolar_gobierno
 from django.conf import settings
 # celery -A pyloro worker -l info
 
 
 from lib.airtm import AirTM
 
-URL_AREPA_BTC_USD = settings.CRIPTO_MONEDAS.get("URL_AREPACOIN")
-URL_WCC = settings.CRIPTO_MONEDAS.get("URL_WCC")
-URL_RIL = settings.CRIPTO_MONEDAS.get("URL_RIL")
 URL_PRICE_USD_EUR_MARKET = settings.CRIPTO_MONEDAS.get("URL_PRICE_USD_EUR_MARKET")
 URL_DOLARTODAY = settings.CRIPTO_MONEDAS.get("URL_DOLARTODAY")
 
 
 def get_price_yadio():
     response = 0
-    url = 'https://api.yadio.io/json'
-    ok = requests.get(url)
+    try:
+        url = 'https://api.yadio.io/json'
+        ok = requests.get(url)
+    except Exception as e:
+        ok = False
+
     try:
         response = ok.json().get('USD').get('rate')
         response = float(response)
@@ -50,32 +48,8 @@ def get_price_usd_eur(coin_ticker, market='coinbase'):
     response = data.json() if data else ''
     return response
 
-def get_dolar_interbanex():
-    vdisplay = Display(visible=0, size=(1024, 768))
-    vdisplay.start()
-
-    driver = webdriver.Firefox(firefox_profile='/usr/local/bin/')  # executable_path="/usr/local/bin/geckodriver")
-    url = 'https://www.interbanex.com'
-    ruta_xpath = "//*[contains(@class, 'value')]"
-    driver.get(url)
-    wait = WebDriverWait(driver, 3)
-    monto = 0
-
-    try:
-        if driver.find_elements_by_xpath(ruta_xpath)[0]:
-            monto = driver.find_elements_by_xpath(ruta_xpath)[0].text
-            monto = monto.replace('Bs', '').replace('.', '').replace(',', '.').strip()
-    except Exception as error:
-        monto = 0
-        print('Error al consultar interbanex', error)
-
-    driver.close()
-    vdisplay.stop()
-
-    return float(monto)
-
 def get_dolar_airtm():
-    dolar_airtm = '0'
+    dolar_airtm = 0
     URL = 'https://rates.airtm.com/'
     ruta ='/html/body/div[1]/div[1]/div[4]/div[1]/div/span'
     try:
@@ -102,26 +76,6 @@ def get_dolar_gobierno():
         resultado_bs = 0
 
     return resultado_bs
-
-def  get_dolar_interbanex():
-    dolar_bolivar_interbanex = '0'
-    URL = 'https://www.interbanex.com'
-    ruta = '/html/body/app-root/app-login/div/div[1]/div[1]/div[1]/div[2]/div[2]/app-instrument/div/div/div[2]/div[3]/div[1]/span[2]'
-
-    try:
-        page = requests.get(URL, timeout=10)
-        tree = html.fromstring(page.content)
-        resultado_bs = tree.xpath(ruta)
-    except:
-        resultado_bs = 0
-
-    if resultado_bs:
-        try:
-            print('BolivarInterbanex scrapy:', resultado_bs[0].text)
-            dolar_bolivar_interbanex =  float(resultado_bs[0].text.replace('.', '').replace(',', '.').strip())
-        except:
-            dolar_bolivar_interbanex = 0
-    return dolar_bolivar_interbanex
 
 def  get_dolar_bolivar_cucuta():
     dolar_bolivar_cucuta = 0
@@ -257,91 +211,6 @@ def yt2mp3(chat_id, url):
     except Exception as E:
         print(E)
 
-
-def api_tuiter():
-    consumer_key = "wz6LRrWGEj0cfOsSqNKLg"
-    consumer_secret = "JQUF9IFiFOpzjpTKYxsbKl5QV6o0baoD37fxFpBEE"
-    access_token = "23130430-jfgPU8pnQks4AuW5XpS9Wfg3IaYMd4jB88zw8nPm4"
-    access_token_secret = "8q9haKn2GrtqDmqMjxRCH0x8UEst1Ckt33AsnJYk"
-
-    auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
-    auth.set_access_token(access_token, access_token_secret)
-    api = tweepy.API(auth)
-    return api
-
-
-# @app.task
-def get_price_from_twiter(nombre):
-
-    def _validar_condicion(usuario_tuiter, status):
-        if usuario_tuiter == 'theairtm':
-            if 'tasa' in status.text.lower() and '#ven' in status.text.lower():
-                return True
-        elif usuario_tuiter == 'dolarprocom':
-            if 'PRECIO DEL MERCADO PARALELO' in status.text:
-                return True
-        elif usuario_tuiter == 'MonitorDolarVe':
-            if u'paralelo en Venezuela (en Bs.)' in status.text:
-                return True
-        else:
-            return False
-        return False
-
-    def get_stuff(nombre=None):
-        api = api_tuiter()
-        stuff = tweepy.Cursor(api.user_timeline, screen_name=nombre, include_rts=True)
-        return stuff
-
-    def descargar_imagen(nombre, status):
-        if _validar_condicion(nombre, status):
-            response = ''
-            media = status.entities.get('media')
-            if media:
-                url_imagen = media[0].get('media_url')
-                if url_imagen:
-                    ruta_imagen_tasa = 'graficos/tasa_{0}.jpg'.format(nombre)
-                    # urllib2.urlretrieve(url_imagen, ruta_imagen_tasa)
-                    response = ruta_imagen_tasa
-            return response
-
-    def get_tweets(stuff, n, nombre):
-        for index, status in enumerate(stuff.items(n)):
-            today = status.created_at.date()
-            # response_ruta = descargar_imagen(nombre, status)
-            # Por ahora se harcodea esta opcion, no recuerdo que funcion hacia
-            # descargar imagen
-            response_ruta = True
-            texto = status.text
-
-            #if response_ruta:
-            if _validar_condicion(nombre, status):
-                if today == datetime.now().date():
-                    response = True, response_ruta, texto
-                    break
-                else:
-                    response = False, response_ruta, texto
-                    break
-            else:
-                response = False, '', 'No disponible'
-        return response
-
-    def parsear_tasa(texto):
-        response = ''
-        texto_descomponer = texto.split() if len(texto.split()) >= 3 else ''
-        if texto_descomponer:
-            tasa = [float(palabra.replace(',', '')) for palabra in texto.split() if len(palabra) > 3 and palabra.replace(',', '').replace('.', '').isdigit()]
-            # tasa = texto_descomponer[0] if texto_descomponer[0].lower() == 'tasa' or texto_descomponer[0].upper() == u'ACTUALIZACIÓN' else ''
-            # moneda = texto_descomponer[3] if texto_descomponer[3].lower() == 'bsf' else ''
-            moneda = 'tasa' in texto.lower() and 'bs.s' in texto.lower() and '#ven' in texto.lower()
-            if tasa and moneda:
-                response = str(tasa[0])
-        return response
-
-    stuff = get_stuff(nombre)
-    hoy, ruta_img, texto = get_tweets(stuff, 50, nombre)
-    return parsear_tasa(texto)
-
-
 @app.task
 def airtm_dolar_vef(chat_id):
     # instancia = AirTM()
@@ -359,145 +228,6 @@ def airtm_dolar_vef(chat_id):
         response = """El precio del Dolar AirTM es:\n\n\U0001F1FB\U0001F1EA <b>VEF:</b> {0:,.2f}""".format(dolar_airtm)
     else:
         response = ':x: <b>Error al consultar AirTM</b>'
-    DjangoTelegramBot.dispatcher.bot.sendMessage(chat_id, parse_mode="html", text=emojize(response, use_aliases=True))
-
-def get_price_arepacoin2(dolartoday):
-    precio_dtd = dolartoday if dolartoday else 0
-    precio_airtm = float(get_price_from_twiter('theairtm').strip()) if \
-            get_price_from_twiter('theairtm') else 0
-    dolartoday if dolartoday else 0
-
-    precio_usd_arepa = 0
-    precio_vef_arepa = 0
-    precio_btc_arepa = 0
-    precio_vef_arepa_airtm = 0
-
-    URL = "https://coinlib.io/coin/AREPA/ArepaCoin"
-
-    page = requests.get(URL)
-    tree = html.fromstring(page.content)
-    resultado_usd = tree.xpath('//*[@id="coin-main-price"]')
-    resultado_btc = tree.xpath('//*[@id="altprice-859"]')
-
-    if resultado_btc:
-        precio_btc_arepa = float(resultado_btc[0].text.replace('BTC', '').strip())
-
-    if resultado_usd:
-        precio_usd_arepa = float(resultado_usd[0].text.replace(u'\xa0', '').replace(u'\n', '').replace('$', ''))
-
-    precio_vef_arepa = precio_usd_arepa * precio_dtd
-    precio_vef_arepa_airtm = precio_usd_arepa * precio_airtm
-
-    return precio_usd_arepa, precio_vef_arepa, precio_vef_arepa_airtm, precio_btc_arepa
-
-def get_price_wcc(dolartoday):
-    def get_price_usd_eur(coin_ticker, market='coinbase'):
-        url = URL_PRICE_USD_EUR_MARKET.format(coin_ticker.upper())
-        data = requests.get(url)
-        response = data.json() if data else ''
-        return response
-
-    precio_dtd = dolartoday if dolartoday else 0
-    precio_airtm = float(get_price_from_twiter('theairtm').strip()) if \
-            get_price_from_twiter('theairtm') else 0
-    dolartoday if dolartoday else 0
-
-    precio_usd_wcc = 0
-    precio_vef_wcc = 0
-    precio_btc_wcc = 0
-    precio_vef_wcc_airtm = 0
-
-    rq = requests.get(URL_WCC).json()
-    if rq.get('success'):
-        precio_btc_wcc = float(rq.get('result').get('Last') if rq.get('result').get('Last') else '0')
-
-    precio_usd_wcc = float(get_price_usd_eur("BTC", "bitfinex").get('USD')) * precio_btc_wcc
-    precio_vef_wcc = precio_usd_wcc * precio_dtd
-    precio_vef_wcc_airtm = precio_usd_wcc * precio_airtm
-
-    return precio_usd_wcc, precio_vef_wcc, precio_vef_wcc_airtm, precio_btc_wcc
-
-@app.task
-def wolfclover(chat_id, dolartoday):
-    precio_usd_arepa, precio_vef_arepa, precio_vef_arepa_airtm, precio_btc_arepa  = get_price_wcc(dolartoday)
-    response = """El precio de WolfCloverCoin es:\n\n\U0001F1FB\U0001F1EA <b>VEF Dolartoday:</b> {0:,.2f}\n\U0001F1FB\U0001F1EA <b>VEF AirTM:</b> {2:,.2f}\n<b>:dollar: USD:</b> {1:,.8f}\n\u0243 <b>BTC</b> {3:,.8f}\n\n <b>Precios Basados en https://trade.thexchanger.io</b>""".format(precio_vef_arepa, precio_usd_arepa, precio_vef_arepa_airtm, precio_btc_arepa)
-    DjangoTelegramBot.dispatcher.bot.sendMessage(chat_id, parse_mode="html", text=emojize(response, use_aliases=True))
-
-
-def get_price_ril(dolartoday):
-    def get_price_usd_eur(coin_ticker, market='coinbase'):
-        url = URL_PRICE_USD_EUR_MARKET.format(coin_ticker.upper())
-        data = requests.get(url)
-        response = data.json() if data else ''
-        return response
-
-    precio_dtd = dolartoday if dolartoday else 0
-    precio_airtm = float(get_price_from_twiter('theairtm').strip()) if \
-            get_price_from_twiter('theairtm') else 0
-    dolartoday if dolartoday else 0
-
-    precio_usd_ril = 0
-    precio_vef_ril = 0
-    precio_btc_ril = 0
-    precio_vef_ril_airtm = 0
-
-    rq = requests.get(URL_RIL).json()
-    if rq:
-        if rq[0].get('instrument'):
-            precio_btc_ril = float(rq[0].get('last') if rq[0].get('last') else '0')
-
-    precio_usd_ril = float(get_price_usd_eur("BTC", "bitfinex").get('USD')) * precio_btc_ril
-    precio_vef_ril = precio_usd_ril * precio_dtd
-    precio_vef_ril_airtm = precio_usd_ril * precio_airtm
-
-    return precio_usd_ril, precio_vef_ril, precio_vef_ril_airtm, precio_btc_ril
-
-@app.task
-def rilcoin(chat_id, dolartoday):
-    precio_usd_ril, precio_vef_ril, precio_vef_ril_airtm, precio_btc_ril  = get_price_ril(dolartoday)
-
-    response = """El precio de RilCoin es:\n\n\U0001F1FB\U0001F1EA <b>VEF Dolartoday:</b> {0:,.2f}\n\U0001F1FB\U0001F1EA <b>VEF AirTM:</b> {2:,.2f}\n<b>:dollar: USD:</b> {1:,.8f}\n\u0243 <b>BTC</b> {3:,.8f}\n""".format(precio_vef_ril, precio_usd_ril, precio_vef_ril_airtm, precio_btc_ril)
-
-    DjangoTelegramBot.dispatcher.bot.sendMessage(chat_id, parse_mode="html", text=emojize(response, use_aliases=True))
-
-def get_price_arepacoin(dolartoday):
-    precio_dtd = dolartoday if dolartoday else 0
-    precio_airtm = float(get_price_from_twiter('theairtm').strip()) if \
-            get_price_from_twiter('theairtm') else 0
-    dolartoday if dolartoday else 0
-
-    precio_usd_arepa = 0
-    precio_vef_arepa = 0
-    precio_btc_arepa = 0
-    precio_vef_arepa_airtm = 0
-
-    coincap_data = requests.get(URL_AREPA_BTC_USD).json()
-    # coincap_json = coincap_data.get('data') if \
-    #        coincap_data.get('status') == 'success' else {}
-
-    coincap_json = coincap_data[0] if coincap_data else {}
-
-    # arepa_values = [coin for coin in coincap_json \
-    #        if coin.get('name').lower() == 'arepacoin'][0]
-
-    if coincap_json:
-        try:
-            precio_btc_arepa = float(coincap_json.get('price_btc')) if coincap_json.get('price_btc') else 0
-            precio_usd_arepa = float(coincap_json.get('price_usd')) if coincap_json.get('price_usd') else 0
-        except:
-            pass
-
-    precio_vef_arepa = precio_usd_arepa * precio_dtd
-    precio_vef_arepa_airtm = precio_usd_arepa * precio_airtm
-
-    return precio_usd_arepa, precio_vef_arepa, precio_vef_arepa_airtm, precio_btc_arepa
-
-@app.task
-def arepacoin(chat_id, dolartoday):
-    precio_usd_arepa, precio_vef_arepa, precio_vef_arepa_airtm, precio_btc_arepa  = get_price_arepacoin(dolartoday)
-
-    response = """El precio de ArepaCoin es:\n\n\U0001F1FB\U0001F1EA <b>VEF Dolartoday:</b> {0:,.2f}\n\U0001F1FB\U0001F1EA <b>VEF AirTM:</b> {2:,.2f}\n<b>:dollar: USD:</b> {1:,.8f}\n\u0243 <b>BTC</b> {3:,.8f}\n""".format(precio_vef_arepa, precio_usd_arepa, precio_vef_arepa_airtm, precio_btc_arepa)
-
     DjangoTelegramBot.dispatcher.bot.sendMessage(chat_id, parse_mode="html", text=emojize(response, use_aliases=True))
 
 def get_dolartoday_parse():

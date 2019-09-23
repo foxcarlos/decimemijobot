@@ -11,7 +11,7 @@ from django.db.models import Q
 import requests
 from datetime import datetime, timedelta
 from emoji import emojize
-from bot.tasks import get_price_from_twiter, get_dolar_airtm, get_price_yadio, get_localbitcoin_precio, get_dolar_gobierno
+from bot.tasks import get_dolar_airtm, get_price_yadio, get_localbitcoin_precio, get_dolar_gobierno
 
 
 URL_BTC_USD = settings.CRIPTO_MONEDAS.get("URL_BTC_USD")
