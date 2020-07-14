@@ -1,4 +1,5 @@
 # from django.conf import settings
+# cometario
 from sampleproject import settings
 
 import os
@@ -14,10 +15,10 @@ while True:
     base = settings.BASE_DIR
     django_mng = os.path.join(base, "manage.py")
 
-    print("Ejecutando Alarma bitcoin")
-    comando = "python {} alerta_bitcoin bitcoin".format(django_mng)
-    run_comando(comando)
-    sleep(30)
+    # print("Ejecutando Alarma bitcoin")
+    # comando = "python {} alerta_bitcoin bitcoin".format(django_mng)
+    # run_comando(comando)
+    # sleep(30)
 
     print("Ejecutando Alarma dolartoday")
     comando2 = "python {0} alerta_bitcoin dolartoday".format(django_mng)

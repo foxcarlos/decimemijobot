@@ -5,14 +5,13 @@ from pyvirtualdisplay import Display
 import requests
 from lxml import html
 from time import sleep
-from pytube import YouTube
+# from pytube import YouTube
 import os
 from datetime import datetime
 import urllib.request as urllib2
 import urllib
 from emoji import emojize
 from bs4 import BeautifulSoup
-import tweepy
 
 from django_telegrambot.apps import DjangoTelegramBot
 from sampleproject.celery import app

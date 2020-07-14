@@ -19,7 +19,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from bot.scrapy import NoticiasPanorama
 from bot.models import Alerta, AlertaUsuario, User, Grupo, Comando, ComandoEstado, Contrato, PersonaContrato
 
-from bot.tasks import pool_message, grupo_message, yt2mp3, get_price_from_twiter, arepacoin, wolfclover, get_price_arepacoin, get_price_wcc, get_dolartoday_comando, get_price_usd_eur, rilcoin, get_price_ril
+from bot.tasks import pool_message, grupo_message, yt2mp3, arepacoin, wolfclover, get_price_arepacoin, get_price_wcc, get_dolartoday_comando, get_price_usd_eur, rilcoin, get_price_ril
 
 from lib.airtm import AirTM
 from datetime import datetime
@@ -907,47 +907,6 @@ def all_coins(bot, update):
     usuario_nuevo(update)
 
 
-def valida_calcula_moneda(moneda, monto, data):
-    if moneda == 'VEF' or moneda == 'VES':
-        total_btc = float(monto) / (data.get("USD") * get_dolartoday())
-        total_dolar = float(monto) / get_dolartoday()
-        total_dolar_airtm = float(monto) / float(get_price_from_twiter('theairtm').strip())
-    else:
-        try:
-            total_btc = float(monto) / data.get(moneda)
-            total_dolar = float(monto) / (data.get(moneda) / data.get('USD'))
-            total_dolar_airtm = float(monto) * float(get_price_from_twiter('theairtm').strip())
-        except Exception as E:
-            total_btc = 0
-            total_dolar = 0
-            total_dolar_airtm = 0
-
-    return monto, total_btc, total_dolar, total_dolar_airtm
-
-def calc_wcc(monto=0, moneda='wolfc'):
-    monto = float(monto)
-    # precio_usd_wcc, precio_vef_wcc, precio_vef_wcc_airtm, precio_btc_wcc = 0.005, 0.2961, 0, 0.000001
-    precio_usd_wcc, precio_vef_wcc, precio_vef_wcc_airtm, precio_btc_wcc = get_price_wcc(get_dolartoday())
-
-    response = """:moneybag: El calculo de <b>{0}</b> <i>{6}</i> es :\n\n:dollar: Dolar: {1:,.8f}\n:euro: Euro: {2:,.8f}\n\u0243 BTC: {3:,.8f}\n\U0001F1FB\U0001F1EA  VES WCC: {4:,.2f}\n\U0001F1FB\U0001F1EA  VEF DolarToday: {5:,.2f}\n\n <b>Precios basados en (https://trade.thexchanger.io)</b>""".format(
-            monto, precio_usd_wcc*monto, 0, precio_btc_wcc*monto, precio_vef_wcc*monto, precio_vef_wcc_airtm*monto, moneda.upper())
-    return response
-
-def calc_ril(monto=0, moneda=''):
-    monto = float(monto)
-    precio_usd_ril, precio_vef_ril, precio_vef_ril_airtm, precio_btc_ril = get_price_ril(get_dolartoday())
-
-    response = """:moneybag: El calculo de <b>{0}</b> <i>{6}</i> es :\n\n:dollar: Dolar: {1:,.8f}\n:euro: Euro: {2:,.8f}\n\u0243 BTC: {3:,.8f}\n\U0001F1FB\U0001F1EA  VES AirTM: {4:,.2f}\n\U0001F1FB\U0001F1EA  VEF: {5:,.2f}\n\n <b>Precios basados en (CoinMarketCap, DolarToday,DolarAirTM)</b>""".format(
-            monto, precio_usd_ril*monto, 0, precio_btc_ril*monto, precio_vef_ril*monto, precio_vef_ril_airtm*monto, moneda.upper())
-    return response
-
-def calc_arepa(monto=0, moneda=''):
-    monto = float(monto)
-    precio_usd_arepa, precio_vef_arepa, precio_vef_arepa_airtm, precio_btc_arepa = get_price_arepacoin(get_dolartoday())
-
-    response = """:moneybag: El calculo de <b>{0}</b> <i>{6}</i> es :\n\n:dollar: Dolar: {1:,.8f}\n:euro: Euro: {2:,.8f}\n\u0243 BTC: {3:,.8f}\n\U0001F1FB\U0001F1EA  VES AirTM: {4:,.2f}\n\U0001F1FB\U0001F1EA  VEF: {5:,.2f}\n\n <b>Precios basados en (CoinMarketCap, DolarToday,DolarAirTM)</b>""".format(
-            monto, precio_usd_arepa*monto, 0, precio_btc_arepa*monto, precio_vef_arepa*monto, precio_vef_arepa_airtm*monto, moneda.upper())
-    return response
 
 def func_calc(params, market='coinbase'):
     response = ''

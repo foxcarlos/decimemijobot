@@ -25,7 +25,8 @@ SECRET_KEY = '2+(!v-t9)skqad%3637&#kj+!04!74q$ja@@ccavtf(h0)%1x!'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['ec2-18-236-66-28.us-west-2.compute.amazonaws.com', "foxbot-foxcarlos.codeanyapp.com", "localhost", '86430a18.ngrok.io']
+ALLOWED_HOSTS = ['127.0.0.1', '192.168.1.70', 'localhost'] 
+# ['ec2-18-236-66-28.us-west-2.compute.amazonaws.com', "foxbot-foxcarlos.codeanyapp.com", "localhost", '86430a18.ngrok.io']
 # Application definition
 
 INSTALLED_APPS = [
@@ -175,7 +176,7 @@ DJANGO_TELEGRAMBOT = {
 
 	'BOTS' : [
         {
-            'TOKEN': '336382255:AAFRkDSPnTZ6wmg0EGRuq83GGh5EhlGKKIE', #'520939560:AAGhLKr-T_hIsl50scMKY6AYpzLNfnT9Wtw', #Your bot token.
+            'TOKEN': '336382255:AAF8PObLE4h11nEr76UdKk98BOKc-ddjJ9I', #'520939560:AAGhLKr-T_hIsl50scMKY6AYpzLNfnT9Wtw', #Your bot token.
 
 		   #'ALLOWED_UPDATES':(Optional[list[str]]), # List the types of
 						   #updates you want your bot to receive. For example, specify
