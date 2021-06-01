@@ -50,6 +50,6 @@ six==1.11.0
 traitlets==4.3.2
 tweepy==3.6.0
 typing==3.6.4
-urllib3==1.23
+urllib3==1.26.5
 wcwidth==0.1.7
 youtube-dl==2018.8.4
